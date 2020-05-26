@@ -19,11 +19,14 @@ SOURCES += \
         src/abstractsuggestionprovider.cpp \
         src/dbmanager.cpp \
         src/document.cpp \
+        src/editorbackend.cpp \
         src/filemanager.cpp \
         src/fileparser.cpp \
         src/linksuggestionprovider.cpp \
         src/main.cpp \
+        src/sqlqueryclient.cpp \
         src/suggestion.cpp \
+        src/titlesuggestionprovider.cpp \
         src/utilities.cpp
 
 RESOURCES += qml.qrc
@@ -43,9 +46,12 @@ HEADERS += \
     src/abstractsuggestionprovider.h \
     src/dbmanager.h \
     src/document.h \
+    src/editorbackend.h \
     src/filemanager.h \
     src/fileparser.h \
     src/linksuggestionprovider.h \
+    src/sqlqueryclient.h \
     src/suggestion.h \
+    src/titlesuggestionprovider.h \
     src/utilities.h
 

@@ -6,6 +6,7 @@
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlQueryModel>
 
 class DBManager : public QObject
 {
@@ -18,6 +19,7 @@ public:
     void close();
     // return read-only query
     std::optional<QSqlQuery> getQuery();
+    //std::optional<QSqlQueryModel*> getQueryModel();
 
 public slots:
     bool slotCreateNewDB(const QString& directoryPath);
@@ -25,6 +27,10 @@ public slots:
     void slotFileRenamed(const QString& oldFilePath, const QString& newFilePath);
     void slotFileModified(const QString& filePath);
     void slotFilesDeleted(const QStringList& filePaths);
+
+signals:
+    void signalDBOpened();
+    void signalDBClosed();
 
 private:
 

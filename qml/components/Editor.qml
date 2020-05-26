@@ -2,70 +2,102 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.3
 
 Item {
     id: textEditor
-    visible: true
-    width: 640
-    height: 480
 
-    ToolBar {
-        id: toolBar
-        anchors.left: textEditor.left
-        anchors.top: textEditor.top
-        anchors.right: textEditor.right
-        RowLayout {
-            ToolButton {
-                text: "Bold"
-            }
-            ToolSeparator {
+    Shortcut {
+        sequence: "Ctrl+M"
+        onActivated:
+            textArea.textFormat = textArea.textFormat == TextEdit.MarkdownText ? TextEdit.AutoText : TextEdit.MarkdownText;
+    }
 
-            }
-            ToolButton {
-                text: "Italic"
-            }
-            ToolSeparator {
+    Shortcut {
+        sequence: "Ctrl+Tab"
+        onActivated: {
+            editorTabBar.incrementCurrentIndex();
+        }
+    }
 
-            }
-            ToolButton {
-                text: "Add Link"
+//    TabBar {
+//        id: editorTabBar
+//        height: 20
+//        contentWidth: 40
+//        contentHeight: 20
+//        anchors.top: parent.top
+//        anchors.left: parent.left
+//        anchors.right: parent.right
+
+//        Repeater {
+//            model: ["First", "Second", "Third", "Fourth", "Fifth"]
+//            TabButton {
+//                text: modelData
+//                width: implicitWidth
+//            }
+//        }
+//    }
+
+    StackLayout {
+        id: edtorStackLayout
+        currentIndex: 0
+
+        anchors.fill: parent
+
+//        anchors.top: editorTabBar.bottom
+//        anchors.left: parent.left
+//        anchors.right: parent.right
+//        anchors.bottom: parent.bottom
+
+        ScrollView {
+            id: view
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            TextArea {
+                id: textArea
+                placeholderText: qsTr("Text Area")
+                anchors.fill: parent
+                selectByMouse: true
+                textFormat: TextEdit.MarkdownText
+
+                Connections {
+                    target: editorFileDialog
+                    onFileChosen: textArea.text = theEditorBackend.readFile(Qt.resolvedUrl(filePath))
+                }
+
+                MouseArea {
+                    id: mouseTextArea
+                    anchors.fill:parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: {
+                        if (mouse.button === Qt.RightButton)
+                            contextMenu.popup()
+                    }
+                }
             }
         }
     }
 
-    ScrollView {
-        id: view
-        anchors.top: toolBar.bottom
-        anchors.left: textEditor.left
-        anchors.right: textEditor.right
-        anchors.bottom: textEditor.bottom
+    Menu {
+        id: contextMenu
+        MenuItem {
+            text: "Open ..."
+            onClicked: editorFileDialog.open()
+        }
+    }
 
-        TextArea {
-            id: textArea
-            placeholderText: qsTr("Text Area")
-            anchors.fill: view
-        }
-
-        MouseArea {
-            id: mouseTextArea
-            anchors.fill:parent
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: {
-                    if (mouse.button === Qt.RightButton)
-                        contextMenu.popup()
-                }
-        }
-        Menu {
-            id: contextMenu
-            MenuItem {text: "Copy"}
-            MenuItem {text: "Cut"}
-            MenuItem {text: "Paste"}
-        }
+    FileDialog {
+        id: editorFileDialog
+        title: "Please choose a file"
+        folder: shortcuts.home
+        signal fileChosen(string filePath)
+        onAccepted: this.fileChosen(this.fileUrl)
     }
 }
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.8999999761581421}
+    D{i:0;autoSize:true;formeditorZoom:0.8999999761581421;height:480;width:640}
 }
 ##^##*/

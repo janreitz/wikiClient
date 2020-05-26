@@ -1,6 +1,8 @@
 #include "linksuggestionprovider.h"
+#include "titlesuggestionprovider.h"
 #include "filemanager.h"
 #include "dbmanager.h"
+#include "editorbackend.h"
 
 #include <QObject>
 #include <QQuickItem>
@@ -16,16 +18,14 @@ int main(int argc, char *argv[])
 
     FileManager theFileManager;
     DBManager theDBManager;
+    EditorBackend theEditorBackend;
+    TitleSuggestionProvider theTitleSuggestionProvider(&theDBManager);
 
     QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
     QObject::connect(&theFileManager, &FileManager::signalFileRenamed, &theDBManager, &DBManager::slotFileRenamed);
     QObject::connect(&theFileManager, &FileManager::signalFileModified, &theDBManager, &DBManager::slotFileModified);
     QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, &theDBManager, &DBManager::slotFilesDeleted);
     QObject::connect(&theFileManager, &FileManager::signalNewWorkingDirectory, &theDBManager, &DBManager::slotCreateNewDB);
-
-    // qmlRegisterSingletonInstance("WikiClient.DataBackend", 1, 0, "FileManager", &theFileManager);
-    // qmlRegisterSingletonInstance("WikiClient.DataBackend", 1, 0, "DBManager", &theDBManager);
-    qmlRegisterType<LinkSuggestionProvider>("WikiClient.Suggestions", 1, 0, "LinkSuggestionProvider");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/qml/views/main.qml"));
@@ -36,12 +36,9 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-    QObject* root = engine.rootObjects().value(0);
-
-
-
-    QObject::connect(root, SIGNAL(signalSetDirectory(QString)), &theFileManager, SLOT(slotSetDirectory(QString)));
-    QObject::connect(root, SIGNAL(signalScanDirectory()), &theFileManager, SLOT(slotScanDirectory()));
+    engine.rootContext()->setContextProperty("theFileManager", &theFileManager);
+    engine.rootContext()->setContextProperty("theEditorBackend", &theEditorBackend);
+    engine.rootContext()->setContextProperty("theTitleSuggestionProvider", &theTitleSuggestionProvider);
 
     return app.exec();
 }

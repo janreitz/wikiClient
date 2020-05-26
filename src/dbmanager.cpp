@@ -15,7 +15,12 @@ bool DBManager::slotCreateNewDB(const QString& directoryPath)
 {
     mDB = QSqlDatabase::addDatabase("QSQLITE");
 
-    const QString filePath = directoryPath + QString("\\wikiClient.db");
+    QString filePath = directoryPath + QString("\\wikiClient.db");
+    // Prevent error on existing .db
+    while (QFile(filePath).exists())
+    {
+        filePath.append("_new");
+    }
 
     if (!open(filePath))
         return false;
@@ -60,13 +65,14 @@ bool DBManager::open(const QString& filePath)
         qDebug() << "DBManager::open -> could not open " << filePath;
         return false;
     }
-
+    emit signalDBOpened();
     return true;
 }
 
 void DBManager::close()
 {
     mDB.close();
+    emit signalDBClosed();
 }
 
 std::optional<QSqlQuery> DBManager::getQuery()

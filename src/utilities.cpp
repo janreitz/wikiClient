@@ -6,8 +6,15 @@
 
 namespace Utilities
 {
-    std::optional<QString> stringFromFile(const QString& filePath)
+    std::optional<QString> stringFromFile(const QString& originalFilePath)
     {
+        auto filePath = originalFilePath;
+
+        if (filePath.contains("file:///"))
+        {
+            filePath.remove(0,8);
+        }
+
         auto file = QFile(filePath);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
