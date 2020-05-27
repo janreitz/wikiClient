@@ -22,6 +22,7 @@ Item {
 
     TextField {
         id: searchBarInput
+        objectName: "searchBarInput"
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom

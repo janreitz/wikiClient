@@ -12,49 +12,12 @@ Window {
     height: 480
     title: qsTr("WikiClient")
 
-    TabBar {
-        id: tabBar
-        height: 20
-        contentWidth: 40
-        contentHeight: 20
-        anchors.top: searchbar.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-
-        TabButton {
-               text: qsTr("Editor")
-        }
-        TabButton {
-               text: qsTr("Blue")
-        }
-    }
-
-    StackLayout {
+    TilingLayout {
         id: workArea
-        anchors.top: tabBar.bottom
+        anchors.top: searchbar.bottom
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-
-        currentIndex: tabBar.currentIndex
-
-        Editor {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-        }
-
-        Rectangle {
-            id: blueTestRect
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            color: "blue"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    blueTestRect.color = blueTestRect.color == "#0000ff" ? "red" : "blue"
-                }
-            }
-        }
     }
 
     SearchBar {

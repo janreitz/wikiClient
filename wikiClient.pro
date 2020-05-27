@@ -55,3 +55,8 @@ HEADERS += \
     src/titlesuggestionprovider.h \
     src/utilities.h
 
+DISTFILES += \
+    qml/components/MyColumnLayout.qml \
+    qml/components/MyRowLayout.qml \
+    qml/js/TilingManager.js
+

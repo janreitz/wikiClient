@@ -3,6 +3,12 @@
         <file>qml/components/Editor.qml</file>
         <file>qml/components/SearchBar.qml</file>
         <file>qml/components/SuggestionBox.qml</file>
+        <file>qml/components/MultiTabEditor.qml</file>
+        <file>qml/components/TilingLayout.qml</file>
+        <file>qml/components/MyColumnLayout.qml</file>
+        <file>qml/components/MyRowLayout.qml</file>
+        <file>qml/components/TestRect.qml</file>
         <file>qml/views/main.qml</file>
+        <file>qml/js/TilingManager.js</file>
     </qresource>
 </RCC>
