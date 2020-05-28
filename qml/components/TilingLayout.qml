@@ -11,47 +11,46 @@ Item {
         objectName: "rootLayout"
         anchors.fill:parent;
         MultiTabEditor {
-            objectName: "editor"
+            objectName: "tile_1"
         }
-        TestRect {
-            id: testRect_1;
-            focus: true
-            objectName: "existingItem"
-        }
+//        TestRect {
+//            id: testRect_1;
+//            focus: true
+//            objectName: "tile_2"
+//        }
     }
 
     Shortcut {
-        sequence: "Alt++"
+        sequence: "Alt+Shift+Down"
         onActivated: {
             console.log("TilingLayout::container -> Vertical split triggered")
+
             var focusItem = rootLayout.Window.activeFocusItem;
-            console.log("TilingLayout::container -> activeFocusItem: " + focusItem.objectName)
-            if (isChildOf(focusItem, rootLayout))
+
+            var existingItem = firstParentWithObjectNameTile(focusItem)
+
+            if (isChildOf(existingItem, rootLayout))
             {
                 TilingManager.verticalSplit(
-                            focusItem.parent,
-                            focusItem,
-                            "qrc:/qml/components/MultiTabEditor.qml",
-                            {
-                                text: "verticallySplit",
-                            })
+                    existingItem.parent,
+                    existingItem,
+                    "qrc:/qml/components/MultiTabEditor.qml")
             }
         }
     }
     Shortcut {
-        sequence: "Alt+-"
+        sequence: "Alt+Shift+Right"
         onActivated: {
             console.log("TilingLayout::container -> Horizontal split triggered")
             var focusItem = rootLayout.Window.activeFocusItem;
-            if (isChildOf(focusItem, rootLayout))
+            var existingItem = firstParentWithObjectNameTile(focusItem)
+
+            if (isChildOf(existingItem, rootLayout))
             {
                 TilingManager.horizontalSplit(
-                            focusItem.parent,
-                            focusItem,
-                            "qrc:/qml/components/MultiTabEditor.qml",
-                            {
-                                text: "horizontallySplit",
-                            })
+                    existingItem.parent,
+                    existingItem,
+                    "qrc:/qml/components/MultiTabEditor.qml")
             }
         }
     }
@@ -61,6 +60,15 @@ Item {
         {
             if (child === parent) { return true;}
             else {child = child.parent; }
+        }
+        return false;
+    }
+
+    function firstParentWithObjectNameTile(child) {
+        while (child)
+        {
+            if (child.objectName.match("tile")) { return child; }
+            child = child.parent;
         }
         return false;
     }

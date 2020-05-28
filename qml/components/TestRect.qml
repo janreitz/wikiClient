@@ -8,10 +8,11 @@ Rectangle {
     color: activeFocus ? "green" : "blue"
     onActiveFocusChanged: {
         if (activeFocus)
-            console.log("TilingLayout::" + objectName + "onActiveFocusChanged -> received active focus");
+            console.log("TestRect::" + objectName + "::onActiveFocusChanged -> received active focus");
         else
-            console.log("TilingLayout::" + objectName + "onActiveFocusChanged -> lost active focus");
+            console.log("TestRect::" + objectName + "::onActiveFocusChanged -> lost active focus");
     }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {

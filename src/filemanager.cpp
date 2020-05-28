@@ -3,6 +3,7 @@
 #include <QDirIterator>
 #include <QDebug>
 #include <QSet>
+#include <QUrl>
 
 FileManager::FileManager()
 {
@@ -12,6 +13,10 @@ FileManager::FileManager()
 
 void FileManager::slotSetDirectory(QString dirPath)
 {
+    if (dirPath.startsWith("file://")) {
+        dirPath = QUrl(dirPath).toLocalFile();
+    }
+
     if (mDir.path() == dirPath) {return;}
     auto newDir = QDir(dirPath);
     if (newDir.exists())

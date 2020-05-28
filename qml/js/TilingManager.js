@@ -1,34 +1,39 @@
-var tileCount = 1;
-// Add ColumnLayout under ParentLayout
-// Reassign existing Item to ColumnLayout
-// Create new Item under ColumnLayout
+var tileCount = 100; // account for initial population
 
-function verticalSplit(parentLayout, existingItem, newItem, props)
+function verticalSplit(parentLayout, existingTile, newTile, newTileProps = {})
 {
     ++tileCount;
-    var newLayoutId = "columnLayout" + tileCount
-    props.objectName = "tile_" + tileCount
+    var newLayout ="qrc:/qml/components/MyColumnLayout.qml"
+    var newLayoutId = "tile_" + tileCount
+    var newLayoutProps = {id: newLayoutId, objectName: newLayoutId}
+    newTileProps.objectName = "t1le_" + tileCount + "-item_" + tileCount
 
-    createNewItem("qrc:/qml/components/MyColumnLayout.qml",
-                  parentLayout,
-                  {id: newLayoutId, objectName: newLayoutId},
-                  function(obj) {
-                      existingItem.parent = obj;
-                      createNewItem(newItem, obj, props);
-                  });
+    splitTile(parentLayout, existingTile, newLayout, newLayoutProps, newTile, newLayoutProps);
 }
 
-function horizontalSplit(parentLayout, existingItem, newItem, props)
+function horizontalSplit(parentLayout, existingTile, newTile, newTileProps = {})
 {
     ++tileCount;
-    var newLayoutId = "rowLayout" + tileCount
+    var newLayout ="qrc:/qml/components/MyRowLayout.qml"
+    var newLayoutId = "tile_" + tileCount
+    var newLayoutProps = {id: newLayoutId, objectName: newLayoutId}
+    newTileProps.objectName = "t1le_" + tileCount + "-item_" + tileCount
 
-    createNewItem("qrc:/qml/components/MyRowLayout.qml",
+    splitTile(parentLayout, existingTile, newLayout, newLayoutProps, newTile, newLayoutProps);
+}
+
+function splitTile(parentLayout, existingTile, newLayout, newLayoutProps, newTile, newTileProps = {})
+{
+    // Add ColumnLayout under ParentLayout
+    // Reassign existing Item to ColumnLayout
+    // Create new Item under ColumnLayout
+
+    createNewItem(newLayout,
                   parentLayout,
-                  {id: newLayoutId, objectName: newLayoutId},
+                  newLayoutProps,
                   function(obj) {
-                      existingItem.parent = obj;
-                      createNewItem(newItem, obj, props);
+                      existingTile.parent = obj;
+                      createNewItem(newTile, obj, newTileProps);
                   });
 }
 

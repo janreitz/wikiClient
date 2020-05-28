@@ -19,7 +19,8 @@ bool DBManager::slotCreateNewDB(const QString& directoryPath)
     // Prevent error on existing .db
     while (QFile(filePath).exists())
     {
-        filePath.append("_new");
+        auto fileInfo = QFileInfo(filePath);
+        filePath = fileInfo.baseName().append("_new.").append(fileInfo.completeSuffix());
     }
 
     if (!open(filePath))

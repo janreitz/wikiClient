@@ -58,5 +58,6 @@ HEADERS += \
 DISTFILES += \
     qml/components/MyColumnLayout.qml \
     qml/components/MyRowLayout.qml \
+    qml/components/SideBar.qml \
     qml/js/TilingManager.js
 
