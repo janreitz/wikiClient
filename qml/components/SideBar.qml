@@ -54,9 +54,39 @@ Item {
         anchors.bottom: permanentSidebar.bottom
         width: 0
         property int slideoutWidth: 300
+        state: "slideIn"
+        states: [
+            State {
+                name: "slideIn"
+                PropertyChanges {
+                    target: slideoutSidebar
+                    width: 0
+                }
+            },
+            State {
+                name: "slideOut"
+                PropertyChanges {
+                    target: slideoutSidebar
+                    width: slideoutWidth
+                }
+            }
+        ]
+
+        transitions: [
+            Transition {
+                from: "slideIn"
+                to: "slideOut"
+                PropertyAnimation { properties: "width"; easing.type: Easing.InOutQuad; duration: 200  }
+            },
+            Transition {
+                from: "slideOut"
+                to: "slideIn"
+                PropertyAnimation { properties: "width"; easing.type: Easing.InOutQuad; duration: 200  }
+            }
+        ]
 
         function toggleSlideout() {
-            width = width == slideoutWidth ? 0 : slideoutWidth
+            state = state == "slideIn" ? "slideOut" : "slideIn"
         }
 
         Connections {
