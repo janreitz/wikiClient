@@ -1,7 +1,6 @@
 import QtQuick 2.14
 import QtQuick.Window 2.12
 import "../components"
-import "../views"
 import QtQuick.Controls 2.13
 import QtQuick.Dialogs.qml 1.0
 import QtQuick.Layouts 1.3
@@ -13,7 +12,7 @@ Window {
     height: 960
     title: qsTr("WikiClient")
 
-    TilingLayout {
+    WorkArea {
         id: workArea
         anchors.top: searchbar.bottom
         anchors.left: sideBar.right

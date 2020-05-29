@@ -5,8 +5,7 @@ import QtQuick.Layouts 1.3
 
 Rectangle {
     color: "pink"
-    Layout.fillHeight: true
-    Layout.fillWidth: true
+    anchors.fill:parent
 
     TabBar {
         id: editorTabBar
