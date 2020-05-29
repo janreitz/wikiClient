@@ -12,13 +12,20 @@ Window {
     Text {
         id: workingDirectoryLabel
         text: qsTr("Set working directory:")
+        anchors.bottom: workingDirectorySettings.top
+        anchors.bottomMargin: 10
+        anchors.left: workingDirectorySettings.left
+        anchors.leftMargin: 10
     }
 
     RowLayout {
         id: workingDirectorySettings
-        anchors.top: workingDirectoryLabel.bottom
+        anchors.verticalCenter : parent.verticalCenter
         anchors.left: parent.left
+        anchors.leftMargin: 10
         anchors.right: parent.right
+        anchors.rightMargin: 10
+        height: 50
 
         TextField {
             id: pathInput
