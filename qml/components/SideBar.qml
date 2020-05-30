@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.12
+import "../views"
 
 Item {
     id: root
@@ -129,15 +130,21 @@ Item {
 
     Component {
         id: fileView
-        TestRect {
+        FileView {
             anchors.fill: parent
             anchors.margins: 20
-            color: "yellow"
             objectName: "fileView"
-            Text {
-                text: "Coming Soon"
-            }
         }
+
+//        TestRect {
+//            anchors.fill: parent
+//            anchors.margins: 20
+//            color: "yellow"
+//            objectName: "fileView"
+//            Text {
+//                text: "Coming Soon"
+//            }
+//        }
     }
 
     Component {

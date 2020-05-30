@@ -21,5 +21,6 @@
         <file>resources/icons/network.svg</file>
         <file>qml/components/IconButton.qml</file>
         <file>qml/components/SlideOutRectangle.qml</file>
+        <file>qml/views/FileView.qml</file>
     </qresource>
 </RCC>

@@ -13,19 +13,7 @@ FileManager::FileManager()
 
 void FileManager::slotSetDirectory(QString dirPath)
 {
-    if (dirPath.startsWith("file://")) {
-        dirPath = QUrl(dirPath).toLocalFile();
-    }
-
-    if (mDir.path() == dirPath) {return;}
-    auto newDir = QDir(dirPath);
-    if (newDir.exists())
-    {
-        mDir.setPath(dirPath);
-        emit signalNewWorkingDirectory(dirPath);
-        return;
-    }
-    qDebug() << "FileManager::slotSetDirectory -> Directory doesn't exist";
+    setRootPath(dirPath);
 }
 
 // This slot is called when the file at the specified path is modified,
@@ -50,7 +38,7 @@ void FileManager::slotFileChanged(const QString& filePath)
     }
     else
     {
-        auto actualFilePaths = mDir.entryList();
+        auto actualFilePaths = rootDirectory().entryList();
 
         auto actualFilePathsSet = QSet<QString>(actualFilePaths.begin(), actualFilePaths.end());
         auto storedFilePathsSet = QSet<QString>(mFileInfosByPaths.keyBegin(), mFileInfosByPaths.keyEnd());
@@ -66,7 +54,7 @@ void FileManager::slotFileChanged(const QString& filePath)
             Q_ASSERT(newNameSet.size()==1);
 
             // Returns a non-const STL-style iterator positioned at the first item in the set.
-            emit signalFileRenamed(*oldNameSet.begin(), *newNameSet.begin());
+            //emit fileRenamed(*oldNameSet.begin(), *newNameSet.begin());
         }
         else
         {
@@ -97,7 +85,7 @@ void FileManager::slotDirChanged(const QString& dirPath)
 
 void FileManager::slotScanDirectory()
 {
-    if(!mDir.exists())
+    if(!rootDirectory().exists())
         return;
 
     QStringList newFiles;
@@ -106,7 +94,7 @@ void FileManager::slotScanDirectory()
     QSet<QString> storedFilePaths(mFileInfosByPaths.keyBegin(), mFileInfosByPaths.keyEnd());
     QSet<QString> actualFilePaths;
 
-    auto iter = QDirIterator(mDir.path(), QDirIterator::Subdirectories);
+    auto iter = QDirIterator(rootDirectory().path(), QDirIterator::Subdirectories);
     while (iter.hasNext())
     {
         const QString filePath = iter.next();

@@ -22,9 +22,9 @@ public:
     //std::optional<QSqlQueryModel*> getQueryModel();
 
 public slots:
-    bool slotCreateNewDB(const QString& directoryPath);
+    bool slotDirectoryLoaded(const QString& directoryPath);
     void slotNewFiles(const QStringList& filePaths);
-    void slotFileRenamed(const QString& oldFilePath, const QString& newFilePath);
+    void slotFileRenamed(const QString &path, const QString &oldName, const QString &newName);
     void slotFileModified(const QString& filePath);
     void slotFilesDeleted(const QStringList& filePaths);
 

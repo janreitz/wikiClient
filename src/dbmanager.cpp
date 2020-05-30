@@ -11,7 +11,7 @@ DBManager::DBManager()
 }
 
 
-bool DBManager::slotCreateNewDB(const QString& directoryPath)
+bool DBManager::slotDirectoryLoaded(const QString& directoryPath)
 {
     mDB = QSqlDatabase::addDatabase("QSQLITE");
 
@@ -87,11 +87,12 @@ void DBManager::slotNewFiles(const QStringList& filePaths)
 {
     addDocuments(filePaths);
 }
-void DBManager::slotFileRenamed(const QString& oldFilePath, const QString& newFilePath)
+void DBManager::slotFileRenamed(const QString &path, const QString &oldName, const QString &newName)
 {
     // SQL Query to change file name
-    Q_UNUSED(oldFilePath)
-    Q_UNUSED(newFilePath)
+    Q_UNUSED(path)
+    Q_UNUSED(oldName)
+    Q_UNUSED(newName)
 }
 void DBManager::slotFileModified(const QString& filePath)
 {

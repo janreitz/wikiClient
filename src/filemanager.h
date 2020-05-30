@@ -5,8 +5,9 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QFileSystemWatcher>
+#include <QFileSystemModel>
 
-class FileManager : public QObject
+class FileManager : public QFileSystemModel
 {
     Q_OBJECT
 public:
@@ -21,15 +22,11 @@ public slots:
     void slotDirChanged(const QString& dirPath);
 
 signals:
-    void signalNewWorkingDirectory(const QString& newDirectoryPath);
     void signalNewFiles(const QStringList& filePaths);
-    void signalFileRenamed(const QString& oldFilePath, const QString& newFilePath);
     void signalFileModified(const QString& filePath);
     void signalFilesDeleted(const QStringList& filePaths);
 
 private:
-
-    QDir mDir;
     QFileSystemWatcher mFileWatcher;
     QHash<QString, QFileInfo> mFileInfosByPaths;
 };

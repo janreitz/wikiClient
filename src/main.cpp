@@ -10,6 +10,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -22,10 +23,10 @@ int main(int argc, char *argv[])
     TitleSuggestionProvider theTitleSuggestionProvider(&theDBManager);
 
     QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
-    QObject::connect(&theFileManager, &FileManager::signalFileRenamed, &theDBManager, &DBManager::slotFileRenamed);
+    QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
     QObject::connect(&theFileManager, &FileManager::signalFileModified, &theDBManager, &DBManager::slotFileModified);
     QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, &theDBManager, &DBManager::slotFilesDeleted);
-    QObject::connect(&theFileManager, &FileManager::signalNewWorkingDirectory, &theDBManager, &DBManager::slotCreateNewDB);
+    QObject::connect(&theFileManager, &FileManager::directoryLoaded, &theDBManager, &DBManager::slotDirectoryLoaded);
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/qml/views/main.qml"));
