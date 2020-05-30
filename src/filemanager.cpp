@@ -11,8 +11,17 @@ FileManager::FileManager()
     connect(&mFileWatcher, &QFileSystemWatcher::directoryChanged, this,&FileManager::slotFileChanged);
 }
 
+QModelIndex FileManager::getCurrentPathIndex()
+{
+    return index(rootPath());
+}
+
 void FileManager::slotSetDirectory(QString dirPath)
 {
+    if (dirPath.startsWith("file:"))
+    {
+        dirPath = QUrl(dirPath).toLocalFile();
+    }
     setRootPath(dirPath);
 }
 

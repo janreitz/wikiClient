@@ -11,7 +11,7 @@ DBManager::DBManager()
 }
 
 
-bool DBManager::slotDirectoryLoaded(const QString& directoryPath)
+bool DBManager::slotRootPathChanged(const QString& directoryPath)
 {
     mDB = QSqlDatabase::addDatabase("QSQLITE");
 
@@ -20,7 +20,11 @@ bool DBManager::slotDirectoryLoaded(const QString& directoryPath)
     while (QFile(filePath).exists())
     {
         auto fileInfo = QFileInfo(filePath);
-        filePath = fileInfo.baseName().append("_new.").append(fileInfo.completeSuffix());
+        filePath = fileInfo.canonicalPath()
+                + "/"
+                + fileInfo.baseName()
+                + "_new."
+                + fileInfo.completeSuffix();
     }
 
     if (!open(filePath))

@@ -13,6 +13,8 @@ class FileManager : public QFileSystemModel
 public:
     explicit FileManager();
 
+    Q_INVOKABLE QModelIndex getCurrentPathIndex();
+
 public slots:
     void slotSetDirectory(QString dirPath);
     // Recursively iterate through dirPath updating the internal representation,
