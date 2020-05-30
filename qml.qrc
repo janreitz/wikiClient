@@ -13,5 +13,12 @@
         <file>qml/components/TilingLayout/TileDivider.qml</file>
         <file>qml/components/TilingLayout/Tile.qml</file>
         <file>qml/components/WorkArea.qml</file>
+        <file>resources/icons/database.svg</file>
+        <file>resources/icons/files_filled.svg</file>
+        <file>resources/icons/files_outline.svg</file>
+        <file>resources/icons/gear_filled.svg</file>
+        <file>resources/icons/link.svg</file>
+        <file>resources/icons/network.svg</file>
+        <file>qml/components/IconButton.qml</file>
     </qresource>
 </RCC>

@@ -2,47 +2,70 @@ import QtQuick 2.15
 import QtQuick.Controls 2.12
 
 Item {
+    id: root
     width: childrenRect.width
+
+    property alias settingsButton: settingsButton
+    signal signalSettingsButtonPressed()
 
     Rectangle {
         id: permanentSidebar
-        color: "gray"
+        color: "#1E1E1E"
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        width: settingsButton.width * 1.2
-
-        property alias settingsButton: settingsButton
-        signal signalSettingsButtonPressed()
+        width: 50
 
         Column {
             id: col
-            spacing: 10
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
+            spacing: 20
+            anchors.horizontalCenter: permanentSidebar.horizontalCenter
+            anchors.top: permanentSidebar.top
             anchors.topMargin: 20
-            RoundButton {
+            IconButton {
                 id: filesButton
-                text: "F"
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: permanentSidebar.width * 0.7
+                height: width
+                source: "qrc:/resources/icons/files_outline.svg"
+                onPressed: root.signalSettingsButtonPressed()
             }
-            RoundButton {
+            IconButton {
                 id: linksButton
-                text: "L"
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: permanentSidebar.width * 0.7
+                height: width
+                source: "qrc:/resources/icons/link.svg"
+                onPressed: root.signalSettingsButtonPressed()
             }
-            RoundButton {
+            IconButton {
                 id: networkButton
-                text: "N"
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: permanentSidebar.width * 0.7
+                height: width
+                source: "qrc:/resources/icons/network.svg"
+                onPressed: root.signalSettingsButtonPressed()
+            }
+            IconButton {
+                id: sqlButton
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: permanentSidebar.width * 0.7
+                height: width
+                source: "qrc:/resources/icons/database.svg"
+                onPressed: root.signalSettingsButtonPressed()
             }
         }
 
-        RoundButton {
+        IconButton {
             id: settingsButton
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: permanentSidebar.horizontalCenter
+            width: permanentSidebar.width * 0.7
+            height: width
+            anchors.bottom: permanentSidebar.bottom
             anchors.bottomMargin: 20
-            icon.source: "qrc:/resources/icons/gear.svg"
-            onPressed: root.signalSettingsButtonPressed()
+            source: "qrc:/resources/icons/gear_filled.svg"
+            onPressed: permanentSidebar.signalSettingsButtonPressed()
         }
     }
 
