@@ -69,54 +69,29 @@ Item {
         }
     }
 
-    Rectangle {
-        id: slideoutSidebar
-        color: "blue"
+    SlideOutRectangle {
+        id: slideOutSidebar
+        color: "pink"
         anchors.left: permanentSidebar.right
         anchors.top: permanentSidebar.top
         anchors.bottom: permanentSidebar.bottom
-        width: 0
-        property int slideoutWidth: 300
-        state: "slideIn"
-        states: [
-            State {
-                name: "slideIn"
-                PropertyChanges {
-                    target: slideoutSidebar
-                    width: 0
-                }
-            },
-            State {
-                name: "slideOut"
-                PropertyChanges {
-                    target: slideoutSidebar
-                    width: slideoutWidth
-                }
-            }
-        ]
-
-        transitions: [
-            Transition {
-                from: "slideIn"
-                to: "slideOut"
-                PropertyAnimation { properties: "width"; easing.type: Easing.InOutQuad; duration: 200  }
-            },
-            Transition {
-                from: "slideOut"
-                to: "slideIn"
-                PropertyAnimation { properties: "width"; easing.type: Easing.InOutQuad; duration: 200  }
-            }
-        ]
-
-        function toggleSlideout() {
-            state = state == "slideIn" ? "slideOut" : "slideIn"
+        slideoutWidth: 400
+        contentItem: TestRect {
+            anchors.fill: parent
+            anchors.margins: 20
+            color: "green"
         }
+    }
 
-        Connections {
-            target: linksButton
-            function onPressed() {
-                slideoutSidebar.toggleSlideout()
-            }
+//    StackView {
+//        id: slideOutStackView
+//        anchors.fill: parent
+//    }
+
+    Connections {
+        target: linksButton
+        function onPressed() {
+            slideOutSidebar.toggleSlideout()
         }
     }
 }

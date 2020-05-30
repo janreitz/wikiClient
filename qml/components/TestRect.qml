@@ -5,6 +5,7 @@ Rectangle {
     id: blueTestRect
     Layout.fillHeight: true
     Layout.fillWidth: true
+    objectName: "TestRect"
     color: activeFocus ? "green" : "blue"
     onActiveFocusChanged: {
         if (activeFocus)

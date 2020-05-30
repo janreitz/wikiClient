@@ -20,5 +20,6 @@
         <file>resources/icons/link.svg</file>
         <file>resources/icons/network.svg</file>
         <file>qml/components/IconButton.qml</file>
+        <file>qml/components/SlideOutRectangle.qml</file>
     </qresource>
 </RCC>
