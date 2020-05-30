@@ -1,9 +1,8 @@
 var tileCount = 100;
 var dividerUrl = "qrc:/qml/components/TilingLayout/TileDivider.qml"
 var tileUrl = "qrc:/qml/components/TilingLayout/Tile.qml"
-var dividerThickness = 15;
+var dividerThickness = 10;
 var backgroundColor = "#2d2d2d"
-var dividerColor = "#99cc99"
 
 function verticalSplit(existingTile, newContentItem = 0) {
 
@@ -23,10 +22,9 @@ function verticalSplit(existingTile, newContentItem = 0) {
     }
 
     var dividerProps = {
-        height: dividerThickness,
+        //height: dividerThickness,
         isVDivider: true,
         objectName: "divider_v_"+(tileCount-1)+"_"+tileCount,
-        color: dividerColor
     }
     if (dividerComp.status === Component.Ready) {
         divider = finishCreation(dividerComp, existingTile, dividerProps);
@@ -76,10 +74,10 @@ function horizontalSplit(existingTile, newContentItem = 0) {
     }
 
     var dividerProps = {
-        width: dividerThickness,
+        //width: dividerThickness,
         isVDivider: false,
         objectName: "divider_h_"+(tileCount-1)+"_"+tileCount,
-        color: dividerColor
+        //color: dividerColor
     }
     if (dividerComp.status === Component.Ready) {
         divider = finishCreation(dividerComp, existingTile, dividerProps);
