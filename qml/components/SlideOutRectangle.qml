@@ -65,6 +65,10 @@ Item {
                 x: 0
                 width: 0
             }
+            PropertyChanges {
+                target: contentItem
+                visible: false
+            }
         },
         State {
             name: "slideOut"
@@ -72,6 +76,10 @@ Item {
                 target: dragHandle
                 x: slideoutWidth
                 width: 10
+            }
+            PropertyChanges {
+                target: contentItem
+                visible: true
             }
         }
     ]
