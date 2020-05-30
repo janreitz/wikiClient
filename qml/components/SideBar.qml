@@ -114,7 +114,7 @@ Item {
 
         Connections {
             target: linksButton
-            onPressed: {
+            function onPressed() {
                 slideoutSidebar.toggleSlideout()
             }
         }

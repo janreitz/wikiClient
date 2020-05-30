@@ -14,7 +14,7 @@ Window {
 
     WorkArea {
         id: workArea
-        anchors.top: searchbar.bottom
+        anchors.top: searchBar.bottom
         anchors.left: sideBar.right
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -28,12 +28,14 @@ Window {
     }
 
     SearchBar {
-        id: searchbar
+        id: searchBar
         height:30
         anchors.top: parent.top
         anchors.left: sideBar.right
         anchors.right: parent.right
     }
+
+
 
     SettingsWindow {
         id: settingsWindow

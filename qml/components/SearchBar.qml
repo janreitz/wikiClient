@@ -5,8 +5,10 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls.Styles 1.4
 
 Item {
-    id: searchBar
+    id: root
     visible: true
+    property alias queryInput: searchBarInput
+
     signal signalSearch(string searchString)
 
     Shortcut {
@@ -20,67 +22,95 @@ Item {
         onActivated: theFileManager.slotScanDirectory();
     }
 
-    TextField {
-        id: searchBarInput
-        objectName: "searchBarInput"
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        selectByMouse: true
-        width: parent.width * 0.7
-        leftPadding: 10
-        font.pointSize: 12
-        verticalAlignment: Text.AlignVCenter
-        Keys.onPressed: {
-            switch (event.key)
-            {
-            case Qt.Key_Down:
-                //console.log("Searchbar DownArrow");
-                suggestionBox.focus = true;
-                break;
-            case Qt.Key_Return
-            :
-                doSearch();
-                break;
+    FocusScope {
+        id: focusScope
+        anchors.fill: parent
+
+        TextField {
+            id: searchBarInput
+            focus: true
+            objectName: "searchBarInput"
+            anchors.left: parent.left
+            anchors.leftMargin: 20
+            anchors.right: searchTypeComboBox.left
+            anchors.rightMargin: 20
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            selectByMouse: true
+            width: root.width * 0.7
+            leftPadding: 10
+            font.pointSize: 12
+            verticalAlignment: Text.AlignVCenter
+            Keys.onPressed: {
+                switch (event.key)
+                {
+                case Qt.Key_Down:
+                    suggestionBox.focus = true
+                    break;
+                case Qt.Key_Return:
+                    doSearch();
+                    break;
+                }
+            }
+            onTextChanged: {
+                // suggestion according to search mode
+                suggestionBox.suggestions = theTitleSuggestionProvider.getSuggestion(text)
             }
         }
-        onTextChanged: {
-            // suggestion according to search mode
-            suggestionBox.suggestions = theTitleSuggestionProvider.getSuggestion(text)
+
+        SuggestionBox {
+            id: suggestionBox
+            enabled: searchBarInput.activeFocus
+            anchors.top: searchBarInput.bottom
+            anchors.left: searchBarInput.left
+            anchors.right: searchBarInput.right
+            suggestionHeight: searchBarInput.height
+            maxHeight: 150
+            onSignalSuggestionAccepted: {
+                queryInput.text = suggestion;
+                searchBarInput.focus = true
+            }
+            onSignalExitedAbove: {
+                searchBarInput.focus = true
+            }
         }
-    }
 
-    SuggestionBox {
-        id: suggestionBox
-        visible: searchBarInput.activeFocus || activeFocus //suggestions.length > 0
-        height: visible ? childrenRect.height : 0
-        anchors.top: searchBarInput.bottom
-        anchors.left: searchBarInput.left
-        anchors.right: searchBarInput.right
-        suggestionHeight: searchBarInput.height
-        onSignalSuggestionAccepted: {
-            searchBarInput.text = suggestion;
-            searchBarInput.focus = true;
+        ComboBox {
+            id: searchTypeComboBox
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: searchButton.left
+            width: 100
+            model: ["Full text", "Titles", "SQL"]
         }
+
+        Button {
+            id: searchButton
+            text: "Go"
+            anchors.right: loadDemoDirButton.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 50
+            onClicked: doSearch()
+            Keys.onReturnPressed: doSearch()
+        }
+
+        Button {
+            id: loadDemoDirButton
+            text: "LoadDemoDir"
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 125
+            onClicked: loadDemoDir()
+            Keys.onReturnPressed: loadDemoDir()
+        }
+
     }
 
-    ComboBox {
-        id: searchTypeComboBox
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.left: searchBarInput.right
-        model: ["Full text", "Titles", "SQL"]
-    }
-
-    Button {
-        id: searchButton
-        text: "Go"
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.left: searchTypeComboBox.right
-        onClicked: doSearch()
-        Keys.onReturnPressed: doSearch()
+    function loadDemoDir () {
+        theFileManager.slotSetDirectory("C:/Users/jan-r/projects/wikiClient/demo");
+        theFileManager.slotScanDirectory();
     }
 
     function doSearch()
