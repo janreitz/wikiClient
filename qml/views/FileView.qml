@@ -12,5 +12,6 @@ Item {
             width: 300
         }
         model: theFileManager
+        rootIndex: theFileManager.getCurrentPathIndex()
     }
 }
