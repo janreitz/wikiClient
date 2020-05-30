@@ -7,16 +7,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   data-name="Layer 1"
-   viewBox="0 0 30 34"
-   x="0px"
-   y="0px"
-   version="1.1"
-   id="svg2684"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   height="50"
+   width="44.117649"
    sodipodi:docname="files_outline.svg"
-   width="30"
-   height="34"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)">
+   id="svg2684"
+   version="1.1"
+   y="0px"
+   x="0px"
+   viewBox="0 0 44.117649 50"
+   data-name="Layer 1">
   <metadata
      id="metadata2690">
     <rdf:RDF>
@@ -32,51 +32,51 @@
   <defs
      id="defs2688" />
   <sodipodi:namedview
-     inkscape:document-rotation="0"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1842"
-     inkscape:window-height="1051"
-     id="namedview2686"
-     showgrid="false"
-     inkscape:zoom="12.25"
-     inkscape:cx="15"
-     inkscape:cy="23.62585"
-     inkscape:window-x="-9"
-     inkscape:window-y="-9"
+     inkscape:current-layer="svg2684"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg2684" />
+     inkscape:window-y="-9"
+     inkscape:window-x="-9"
+     inkscape:cy="31.62585"
+     inkscape:cx="22.058823"
+     inkscape:zoom="12.25"
+     showgrid="false"
+     id="namedview2686"
+     inkscape:window-height="1051"
+     inkscape:window-width="1842"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     inkscape:document-rotation="0" />
   <title
      id="title2670">expand-black-pp-web</title>
   <path
-     style="fill:#ffffff"
-     d="M 8,0 V 6 H 0 v 28 h 22 v -6 h 8 V 0 Z M 20,32 H 2 V 8 h 18 z m 8,-6 H 22 V 6 H 10 V 2 h 18 z"
-     id="path2672" />
+     id="path2672"
+     d="M 11.764706,0 V 8.8235294 H 0 V 50 H 32.352941 V 41.176471 H 44.117648 V 0 Z M 29.411764,47.058824 H 2.9411764 V 11.764706 H 29.411764 Z m 11.764707,-8.82353 h -8.82353 V 8.8235294 H 14.705882 V 2.9411765 H 41.17647 Z"
+     style="fill:#ffffff;stroke-width:1.47059" />
   <rect
-     style="fill:#ffffff"
-     x="6"
-     y="14"
-     width="10"
-     height="2"
-     id="rect2674" />
+     id="rect2674"
+     height="2.9411764"
+     width="14.705882"
+     y="20.588234"
+     x="8.8235292"
+     style="fill:#ffffff;stroke-width:1.47059" />
   <rect
-     style="fill:#ffffff"
-     x="6"
-     y="19"
-     width="10"
-     height="2"
-     id="rect2676" />
+     id="rect2676"
+     height="2.9411764"
+     width="14.705882"
+     y="27.941177"
+     x="8.8235292"
+     style="fill:#ffffff;stroke-width:1.47059" />
   <rect
-     style="fill:#ffffff"
-     x="6"
-     y="24"
-     width="10"
-     height="2"
-     id="rect2678" />
+     id="rect2678"
+     height="2.9411764"
+     width="14.705882"
+     y="35.294117"
+     x="8.8235292"
+     style="fill:#ffffff;stroke-width:1.47059" />
 </svg>
