@@ -29,7 +29,16 @@ Item {
                 width: permanentSidebar.width * 0.7
                 height: width
                 source: "qrc:/resources/icons/files_outline.svg"
-                onPressed: root.signalSettingsButtonPressed()
+                onPressed: {
+                    if (slideOutSidebar.contentItem) {
+                        if (slideOutSidebar.contentItem.objectName == "fileView") {
+                            slideOutSidebar.toggleSlideout();
+                            return;
+                        }
+                    }
+                    slideOutSidebar.contentComp = fileView;
+                    slideOutSidebar.slideout()
+                }
             }
             IconButton {
                 id: linksButton
@@ -37,7 +46,16 @@ Item {
                 width: permanentSidebar.width * 0.7
                 height: width
                 source: "qrc:/resources/icons/link.svg"
-                onPressed: root.signalSettingsButtonPressed()
+                onPressed: {
+                    if (slideOutSidebar.contentItem) {
+                        if (slideOutSidebar.contentItem.objectName == "linkView") {
+                            slideOutSidebar.toggleSlideout();
+                            return;
+                        }
+                    }
+                    slideOutSidebar.contentComp = linkView;
+                    slideOutSidebar.slideout()
+                }
             }
             IconButton {
                 id: networkButton
@@ -76,22 +94,25 @@ Item {
         anchors.top: permanentSidebar.top
         anchors.bottom: permanentSidebar.bottom
         slideoutWidth: 400
-        contentItem: TestRect {
+    }
+
+    Component {
+        id: linkView
+        TestRect {
             anchors.fill: parent
             anchors.margins: 20
             color: "green"
+            objectName: "linkView"
         }
     }
 
-//    StackView {
-//        id: slideOutStackView
-//        anchors.fill: parent
-//    }
-
-    Connections {
-        target: linksButton
-        function onPressed() {
-            slideOutSidebar.toggleSlideout()
+    Component {
+        id: fileView
+        TestRect {
+            anchors.fill: parent
+            anchors.margins: 20
+            color: "yellow"
+            objectName: "fileView"
         }
     }
 }

@@ -6,12 +6,31 @@ Rectangle {
     width: 0
     property int slideoutWidth: 300
     property Item contentItem
+    property Component contentComp
+
     function toggleSlideout() {
         state = state == "slideIn" ? "slideOut" : "slideIn"
     }
 
+    function slideout() {
+        if (state === "slideIn") {
+            toggleSlideout()
+        }
+    }
+
+    function slidein() {
+        if (state === "slideOut") {
+            toggleSlideout()
+        }
+    }
+
     onContentItemChanged: {
         contentItem.parent = this
+    }
+
+    onContentCompChanged: {
+        var obj = contentComp.createObject(root)
+        contentItem = obj
     }
 
     state: "slideIn"
