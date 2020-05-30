@@ -14,7 +14,6 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-
         width: 50
 
         Column {
@@ -63,7 +62,16 @@ Item {
                 width: permanentSidebar.width * 0.7
                 height: width
                 source: "qrc:/resources/icons/network.svg"
-                onPressed: root.signalSettingsButtonPressed()
+                onPressed: {
+                    if (slideOutSidebar.contentItem) {
+                        if (slideOutSidebar.contentItem.objectName == "networkView") {
+                            slideOutSidebar.toggleSlideout();
+                            return;
+                        }
+                    }
+                    slideOutSidebar.contentComp = networkView;
+                    slideOutSidebar.slideout()
+                }
             }
             IconButton {
                 id: sqlButton
@@ -71,7 +79,16 @@ Item {
                 width: permanentSidebar.width * 0.7
                 height: width
                 source: "qrc:/resources/icons/database.svg"
-                onPressed: root.signalSettingsButtonPressed()
+                onPressed: {
+                    if (slideOutSidebar.contentItem) {
+                        if (slideOutSidebar.contentItem.objectName == "sqlView") {
+                            slideOutSidebar.toggleSlideout();
+                            return;
+                        }
+                    }
+                    slideOutSidebar.contentComp = sqlView;
+                    slideOutSidebar.slideout()
+                }
             }
         }
 
@@ -89,11 +106,12 @@ Item {
 
     SlideOutRectangle {
         id: slideOutSidebar
-        color: "pink"
+        backgroundColor: "pink"
         anchors.left: permanentSidebar.right
         anchors.top: permanentSidebar.top
         anchors.bottom: permanentSidebar.bottom
-        slideoutWidth: 400
+        state: "slideIn"
+        slideoutWidth: 600
     }
 
     Component {
@@ -103,6 +121,9 @@ Item {
             anchors.margins: 20
             color: "green"
             objectName: "linkView"
+            Text {
+                text: "Coming Soon"
+            }
         }
     }
 
@@ -113,6 +134,35 @@ Item {
             anchors.margins: 20
             color: "yellow"
             objectName: "fileView"
+            Text {
+                text: "Coming Soon"
+            }
+        }
+    }
+
+    Component {
+        id: networkView
+        TestRect {
+            anchors.fill: parent
+            anchors.margins: 20
+            color: "steelblue"
+            objectName: "networkView"
+            Text {
+                text: "Coming Soon"
+            }
+        }
+    }
+
+    Component {
+        id: sqlView
+        TestRect {
+            anchors.fill: parent
+            anchors.margins: 20
+            color: "blueviolet"
+            objectName: "sqlView"
+            Text {
+                text: "Coming Soon"
+            }
         }
     }
 }

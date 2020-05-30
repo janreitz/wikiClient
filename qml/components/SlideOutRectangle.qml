@@ -1,12 +1,13 @@
 import QtQuick 2.15
 
-Rectangle {
+Item {
     id: root
-    color: "blue"
-    width: 0
+    width: childrenRect.width
+    property alias backgroundColor: contentArea.color
     property int slideoutWidth: 300
     property Item contentItem
     property Component contentComp
+    state: "slideIn"
 
     function toggleSlideout() {
         state = state == "slideIn" ? "slideOut" : "slideIn"
@@ -25,28 +26,52 @@ Rectangle {
     }
 
     onContentItemChanged: {
-        contentItem.parent = this
+        contentItem.parent = contentArea
     }
 
     onContentCompChanged: {
-        var obj = contentComp.createObject(root)
+        var obj = contentComp.createObject(contentArea)
         contentItem = obj
     }
 
-    state: "slideIn"
+    Rectangle {
+        id: contentArea
+        color: "blue"
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: dragHandle.left
+    }
+
+    Rectangle {
+        id: dragHandle
+        anchors.top: slideOutSidebar.top
+        anchors.bottom: slideOutSidebar.bottom
+        width: 10
+        color: dragHandler.active ? "#9c9" : "#ccc"
+
+        DragHandler {
+            id: dragHandler
+            target: dragHandle
+            cursorShape: Qt.SplitHCursor
+        }
+    }
+
     states: [
         State {
             name: "slideIn"
             PropertyChanges {
-                target: root
+                target: dragHandle
+                x: 0
                 width: 0
             }
         },
         State {
             name: "slideOut"
             PropertyChanges {
-                target: root
-                width: slideoutWidth
+                target: dragHandle
+                x: slideoutWidth
+                width: 10
             }
         }
     ]
@@ -55,12 +80,12 @@ Rectangle {
         Transition {
             from: "slideIn"
             to: "slideOut"
-            PropertyAnimation { properties: "width"; easing.type: Easing.InOutQuad; duration: 200  }
+            PropertyAnimation { properties: "x"; easing.type: Easing.InOutQuad; duration: 200  }
         },
         Transition {
             from: "slideOut"
             to: "slideIn"
-            PropertyAnimation { properties: "width"; easing.type: Easing.InOutQuad; duration: 200  }
+            PropertyAnimation { properties: "x"; easing.type: Easing.InOutQuad; duration: 200  }
         }
     ]
 }

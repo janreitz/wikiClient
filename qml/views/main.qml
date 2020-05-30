@@ -35,8 +35,6 @@ Window {
         anchors.right: parent.right
     }
 
-
-
     SettingsWindow {
         id: settingsWindow
         visible: false
