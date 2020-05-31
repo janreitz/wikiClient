@@ -62,14 +62,13 @@ Item {
                 height: width
                 source: "qrc:/resources/icons/network.svg"
                 onPressed: {
-                    if (slideOutSidebar.contentItem) {
-                        if (slideOutSidebar.contentItem.objectName == "networkView") {
-                            slideOutSidebar.toggleSlideout();
-                            return;
-                        }
+                    // Is my item already loaded?
+                    if (networkViewLoader.status !== Loader.Ready) {
+                        // the loader will "press the button" after loading
+                        networkViewLoader.sourceComponent = networkViewComp;
+                    } else {
+                        root.sideBarButtonPress(networkViewLoader.item)
                     }
-                    slideOutSidebar.setContentItem(networkView);
-                    slideOutSidebar.slideout()
                 }
             }
             IconButton {
@@ -79,14 +78,13 @@ Item {
                 height: width
                 source: "qrc:/resources/icons/database.svg"
                 onPressed: {
-                    if (slideOutSidebar.contentItem) {
-                        if (slideOutSidebar.contentItem.objectName == "sqlView") {
-                            slideOutSidebar.toggleSlideout();
-                            return;
-                        }
+                    // Is my item already loaded?
+                    if (sqlViewLoader.status !== Loader.Ready) {
+                        // the loader will "press the button" after loading
+                        sqlViewLoader.sourceComponent = sqlViewComp;
+                    } else {
+                        root.sideBarButtonPress(sqlViewLoader.item)
                     }
-                    slideOutSidebar.setContentItem(sqlView);
-                    slideOutSidebar.slideout()
                 }
             }
         }
@@ -151,6 +149,14 @@ Item {
         }
     }
 
+    Loader {
+        id: networkViewLoader
+        onLoaded: {
+            console.log("fileViewLoader -> loaded")
+            root.sideBarButtonPress(item)
+        }
+    }
+
     Component {
         id: networkViewComp
         TestRect {
@@ -162,6 +168,14 @@ Item {
             Text {
                 text: "Coming Soon"
             }
+        }
+    }
+
+    Loader {
+        id: sqlViewLoader
+        onLoaded: {
+            console.log("fileViewLoader -> loaded")
+            root.sideBarButtonPress(item)
         }
     }
 
