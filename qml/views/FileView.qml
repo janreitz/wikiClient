@@ -18,7 +18,7 @@ Item {
 
     Connections {
         target: theFileManager
-        onRootPathChanged: {
+        function onRootPathChanged() {
             console.log("rootPath changed")
             treeView.rootIndex = theFileManager.getCurrentPathIndex()
         }
