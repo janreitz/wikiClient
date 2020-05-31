@@ -6,6 +6,7 @@ import QtQuick.Dialogs 1.3
 Flickable {
     id: flickable
     flickableDirection: Flickable.VerticalFlick
+    clip: true
     property alias text: textArea.text
 
     TextArea.flickable: TextArea {
@@ -52,7 +53,7 @@ Flickable {
 
     Connections {
         target: editorFileDialog
-        function onFileChosen() {
+        function onFileChosen(filePath) {
             textArea.text = theEditorBackend.readFile(Qt.resolvedUrl(filePath))
         }
     }
