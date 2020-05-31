@@ -5,9 +5,18 @@ Item {
     width: childrenRect.width
     property alias backgroundColor: contentArea.color
     property int slideoutWidth: 300
-    property Item contentItem
+    property Item contentItem: defaultContent
     property Component contentComp
     state: "slideIn"
+
+    // Removes the old contentItem from the renderScene
+    function setContentItem(newContentItem) {
+        if (contentItem) {
+            contentItem.parent = null
+            contentItem.width = 0
+        }
+        contentItem = newContentItem
+    }
 
     function toggleSlideout() {
         state = state == "slideIn" ? "slideOut" : "slideIn"
@@ -31,7 +40,7 @@ Item {
 
     onContentCompChanged: {
         var obj = contentComp.createObject(contentArea)
-        contentItem = obj
+        setContentItem(obj)
     }
 
     Rectangle {
@@ -96,4 +105,12 @@ Item {
             PropertyAnimation { properties: "x"; easing.type: Easing.InOutQuad; duration: 200  }
         }
     ]
+
+    Rectangle {
+        id: defaultContent
+        color: "steelblue"
+        objectName: "defaultContent"
+        anchors.fill: parent
+        anchors.margins: 20
+    }
 }

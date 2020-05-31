@@ -30,14 +30,13 @@ Item {
                 height: width
                 source: "qrc:/resources/icons/files_outline.svg"
                 onPressed: {
-                    if (slideOutSidebar.contentItem) {
-                        if (slideOutSidebar.contentItem.objectName == "fileView") {
-                            slideOutSidebar.toggleSlideout();
-                            return;
-                        }
+                    // Is my item already loaded?
+                    if (fileViewLoader.status !== Loader.Ready) {
+                        // the loader will "press the button" after loading
+                        fileViewLoader.sourceComponent = fileViewComp;
+                    } else {
+                        root.sideBarButtonPress(fileViewLoader.item)
                     }
-                    slideOutSidebar.contentComp = fileView;
-                    slideOutSidebar.slideout()
                 }
             }
             IconButton {
@@ -47,14 +46,13 @@ Item {
                 height: width
                 source: "qrc:/resources/icons/link.svg"
                 onPressed: {
-                    if (slideOutSidebar.contentItem) {
-                        if (slideOutSidebar.contentItem.objectName == "linkView") {
-                            slideOutSidebar.toggleSlideout();
-                            return;
-                        }
+                    // Is my item already loaded?
+                    if (linkViewLoader.status !== Loader.Ready) {
+                        // the loader will "press the button" after loading
+                        linkViewLoader.sourceComponent = linkViewComp;
+                    } else {
+                        root.sideBarButtonPress(linkViewLoader.item)
                     }
-                    slideOutSidebar.contentComp = linkView;
-                    slideOutSidebar.slideout()
                 }
             }
             IconButton {
@@ -70,7 +68,7 @@ Item {
                             return;
                         }
                     }
-                    slideOutSidebar.contentComp = networkView;
+                    slideOutSidebar.setContentItem(networkView);
                     slideOutSidebar.slideout()
                 }
             }
@@ -87,7 +85,7 @@ Item {
                             return;
                         }
                     }
-                    slideOutSidebar.contentComp = sqlView;
+                    slideOutSidebar.setContentItem(sqlView);
                     slideOutSidebar.slideout()
                 }
             }
@@ -107,49 +105,56 @@ Item {
 
     SlideOutRectangle {
         id: slideOutSidebar
-        backgroundColor: "pink"
         anchors.left: permanentSidebar.right
         anchors.top: permanentSidebar.top
         anchors.bottom: permanentSidebar.bottom
+        backgroundColor: "pink"
         state: "slideIn"
         slideoutWidth: 600
     }
 
-    Component {
-        id: linkView
-        TestRect {
-            anchors.fill: parent
-            anchors.margins: 20
-            color: "green"
-            objectName: "linkView"
-            Text {
-                text: "Coming Soon"
-            }
+    // I want to load views the first time someone clicks the corresponding button
+
+    Loader {
+        id: fileViewLoader
+        onLoaded: {
+            console.log("fileViewLoader -> loaded")
+            root.sideBarButtonPress(item)
         }
     }
 
     Component {
-        id: fileView
+        id: fileViewComp
         FileView {
+            id: fileView
             anchors.fill: parent
             anchors.margins: 20
             objectName: "fileView"
         }
+    }
 
-//        TestRect {
-//            anchors.fill: parent
-//            anchors.margins: 20
-//            color: "yellow"
-//            objectName: "fileView"
-//            Text {
-//                text: "Coming Soon"
-//            }
-//        }
+    Loader {
+        id: linkViewLoader
+        onLoaded: {
+            console.log("linkViewLoader -> loaded")
+            root.sideBarButtonPress(item)
+        }
     }
 
     Component {
-        id: networkView
+        id: linkViewComp
+        LinkView {
+            id: linkView
+            anchors.fill: parent
+            anchors.margins: 20
+            objectName: "linkView"
+        }
+    }
+
+    Component {
+        id: networkViewComp
         TestRect {
+            id: networkView
             anchors.fill: parent
             anchors.margins: 20
             color: "steelblue"
@@ -161,8 +166,9 @@ Item {
     }
 
     Component {
-        id: sqlView
+        id: sqlViewComp
         TestRect {
+            id: sqlView
             anchors.fill: parent
             anchors.margins: 20
             color: "blueviolet"
@@ -172,6 +178,22 @@ Item {
             }
         }
     }
+
+    function sideBarButtonPress (buttonContentItem) {
+        if (slideOutSidebar.contentItem) {
+            // Is it me?
+            if (slideOutSidebar.contentItem.objectName === buttonContentItem.objectName) {
+                slideOutSidebar.toggleSlideout();
+                return;
+            }
+        }
+        // The slidebar has no content, or someone elses
+        slideOutSidebar.setContentItem(buttonContentItem);
+        slideOutSidebar.slideout()
+    }
 }
+
+
+
 
 
