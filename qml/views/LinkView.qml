@@ -31,7 +31,11 @@ Item {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 width: 50
-                text: "Choose"
+                text: "Go!"
+                onPressed: {
+                    links.model = theLinkProvider.getLinks(docChooser.text)
+                    backLinks.model = theLinkProvider.getBackLinks(docChooser.text)
+                }
             }
         }
 

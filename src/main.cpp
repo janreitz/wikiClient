@@ -1,4 +1,4 @@
-#include "linksuggestionprovider.h"
+#include "linkprovider.h"
 #include "titlesuggestionprovider.h"
 #include "filemanager.h"
 #include "dbmanager.h"
@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     DBManager theDBManager;
     EditorBackend theEditorBackend;
     TitleSuggestionProvider theTitleSuggestionProvider(&theDBManager);
+    LinkProvider theLinkProvider(&theDBManager);
 
     QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
     QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("theFileManager", &theFileManager);
     engine.rootContext()->setContextProperty("theEditorBackend", &theEditorBackend);
     engine.rootContext()->setContextProperty("theTitleSuggestionProvider", &theTitleSuggestionProvider);
+    engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
 
     return app.exec();
 }

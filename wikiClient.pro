@@ -23,7 +23,7 @@ SOURCES += \
         src/editorbackend.cpp \
         src/filemanager.cpp \
         src/fileparser.cpp \
-        src/linksuggestionprovider.cpp \
+        src/linkprovider.cpp \
         src/main.cpp \
         src/sqlqueryclient.cpp \
         src/suggestion.cpp \
@@ -50,7 +50,7 @@ HEADERS += \
     src/editorbackend.h \
     src/filemanager.h \
     src/fileparser.h \
-    src/linksuggestionprovider.h \
+    src/linkprovider.h \
     src/sqlqueryclient.h \
     src/suggestion.h \
     src/titlesuggestionprovider.h \
