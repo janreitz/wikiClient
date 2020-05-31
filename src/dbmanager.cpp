@@ -89,7 +89,22 @@ std::optional<QSqlQuery> DBManager::getQuery()
 
 void DBManager::slotNewFiles(const QStringList& filePaths)
 {
-    addDocuments(filePaths);
+    QStringList filteredFilePaths;
+
+    for (auto filePath : filePaths)
+    {
+        // Start writing good code: prevent unnecessary copy on assignment
+        auto fileInfo = std::make_unique<QFileInfo>(QFileInfo(filePath));
+
+        auto suffix = fileInfo->completeSuffix();
+
+        if (fileInfo->exists() && fileInfo->completeSuffix() == "md")
+        {
+            filteredFilePaths << filePath;
+        }
+    }
+
+    addDocuments(filteredFilePaths);
 }
 void DBManager::slotFileRenamed(const QString &path, const QString &oldName, const QString &newName)
 {
