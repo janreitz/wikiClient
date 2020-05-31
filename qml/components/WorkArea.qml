@@ -45,6 +45,14 @@ Item {
         }
     }
 
+    Shortcut {
+        sequences: ["Alt+Shift+Up", "Alt+Shift+Left"]
+        onActivated: {
+            console.log("TilingLayout::container -> Close split triggered")
+            TilingBackend.undoSplit(getActiveTile())
+        }
+    }
+
     function getActiveTile() {
         var focusItem = root.Window.activeFocusItem;
         var existingTile = focusItem;
