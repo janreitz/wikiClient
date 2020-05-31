@@ -5,6 +5,7 @@ Item {
     id: root
 
     TreeView {
+        id: treeView
         anchors.fill: parent
         TableViewColumn {
             title: "Name"
@@ -13,5 +14,13 @@ Item {
         }
         model: theFileManager
         rootIndex: theFileManager.getCurrentPathIndex()
+    }
+
+    Connections {
+        target: theFileManager
+        onRootPathChanged: {
+            console.log("rootPath changed")
+            treeView.rootIndex = theFileManager.getCurrentPathIndex()
+        }
     }
 }
