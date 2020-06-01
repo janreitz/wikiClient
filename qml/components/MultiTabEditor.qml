@@ -10,11 +10,12 @@ FocusScope {
         console.log(objectName + " active focus " + focusReceivedOrLost);
     }
     TabBar {
-        id: editorTabBar
+        id: tabBar
         anchors.top: parent.top
         anchors.left: parent.left
         contentHeight: 30
         objectName: "MultiTabEditor::TabBar"
+        currentIndex: swipeView.currentIndex
         TabButton {
             text: "untitled"
         }
@@ -29,13 +30,14 @@ FocusScope {
         }
     }
 
-    StackLayout {
-        id: editorStackLayout
-        anchors.top: editorTabBar.bottom
+    SwipeView {
+        id: swipeView
+        anchors.top: tabBar.bottom
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         objectName: "MultiTabEditor::StackLayout"
+        currentIndex: tabBar.currentIndex
         onActiveFocusChanged: {
             var focusReceivedOrLost = activeFocus ? "received" : "lost"
             console.log(objectName + " active focus " + focusReceivedOrLost);
@@ -54,7 +56,11 @@ FocusScope {
     Shortcut {
         sequence: "Ctrl+Tab"
         onActivated: {
-            editorTabBar.incrementCurrentIndex();
+            if (tabBar.currentIndex === tabBar.count - 1) {
+                tabBar.setCurrentIndex(0);
+            } else {
+                tabBar.incrementCurrentIndex();
+            }
         }
     }
 }
