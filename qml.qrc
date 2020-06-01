@@ -23,5 +23,19 @@
         <file>qml/components/SlideOutRectangle.qml</file>
         <file>qml/views/FileView.qml</file>
         <file>qml/views/LinkView.qml</file>
+        <file>qml/components/MultiTabEditor/EditorTabButton.qml</file>
+        <file>resources/fonts/Roboto-Black.ttf</file>
+        <file>resources/fonts/Roboto-BlackItalic.ttf</file>
+        <file>resources/fonts/Roboto-Bold.ttf</file>
+        <file>resources/fonts/Roboto-BoldItalic.ttf</file>
+        <file>resources/fonts/Roboto-Italic.ttf</file>
+        <file>resources/fonts/Roboto-Light.ttf</file>
+        <file>resources/fonts/Roboto-LightItalic.ttf</file>
+        <file>resources/fonts/Roboto-Medium.ttf</file>
+        <file>resources/fonts/Roboto-MediumItalic.ttf</file>
+        <file>resources/fonts/Roboto-Regular.ttf</file>
+        <file>resources/fonts/Roboto-Thin.ttf</file>
+        <file>resources/fonts/Roboto-ThinItalic.ttf</file>
+        <file>qml/components/Theme.qml</file>
     </qresource>
 </RCC>

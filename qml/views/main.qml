@@ -12,6 +12,10 @@ Window {
     height: 960
     title: qsTr("WikiClient")
 
+    Theme {
+        id: theme
+    }
+
     WorkArea {
         id: workArea
         anchors.top: searchBar.bottom

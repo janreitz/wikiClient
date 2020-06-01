@@ -10,6 +10,8 @@ Flickable {
     property alias text: textArea.text
     objectName: "Editor::flickable"
 
+
+
     TextArea.flickable: TextArea {
         id: textArea
         objectName: "Editor::textArea"
@@ -20,6 +22,8 @@ Flickable {
         topPadding: 10
         bottomPadding: 10
         focus: true
+        font: theme.fontTextBody
+
         onActiveFocusChanged: {
             var focusReceivedOrLost = activeFocus ? "received" : "lost"
             console.log(objectName + " active focus " + focusReceivedOrLost);

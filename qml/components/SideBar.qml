@@ -106,7 +106,7 @@ Item {
         anchors.left: permanentSidebar.right
         anchors.top: permanentSidebar.top
         anchors.bottom: permanentSidebar.bottom
-        backgroundColor: "pink"
+        backgroundColor: "#2d2d2d"
         state: "slideIn"
         slideoutWidth: 600
     }

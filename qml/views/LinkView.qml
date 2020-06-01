@@ -42,6 +42,8 @@ Item {
         Text {
             id: linksLabel
             text: "Links"
+            font: theme.fontSideBarHeader
+            color: theme.colorSideBarText
         }
 
         ListView {
@@ -56,7 +58,8 @@ Item {
         Text {
             id: backlinksLabel
             text: "Backlinks"
-
+            font: theme.fontSideBarHeader
+            color: theme.colorSideBarText
         }
 
         ListView {
@@ -73,6 +76,13 @@ Item {
         id: linkDelegate
         Text {
             text: modelData
+            font: theme.fontSideBarNormal
+            color: linkMouseArea.containsMouse ? theme.colorSideBarTextHighlight : theme.colorSideBarText
+            MouseArea {
+                id: linkMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+            }
         }
     }
 }
