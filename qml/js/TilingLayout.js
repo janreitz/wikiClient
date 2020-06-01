@@ -181,9 +181,24 @@ function getRightNeighbor(existingTile) {
     if (!existingTile.isTile) {return;}
     if (!existingTile.parent.isTile) {return;}
 
-    if (existingTile.isLeft) {return existingTile.sibling}
+    var currentTile = existingTile;
 
-    return existingTile;
+    // Climb up
+    while (!currentTile.isLeft && currentTile.parent.isTile)
+    {
+        currentTile = currentTile.parent
+    }
+    // There is nothing to the right
+    if (!currentTile.isLeft) {return existingTile; }
+
+    // Climb down, while staying as far left and up as possible
+    currentTile = currentTile.sibling
+    while (currentTile.isSplitVertically || currentTile.isSplitHorizontally)
+    {
+        currentTile = currentTile.firstChild
+    }
+    return currentTile
+
 }
 
 // returns the right neighbor, or existingTile if there is none
@@ -191,9 +206,83 @@ function getLeftNeighbor(existingTile) {
     if (!existingTile.isTile) {return;}
     if (!existingTile.parent.isTile) {return;}
 
-    if (existingTile.isRight) {return existingTile.sibling}
+    var currentTile = existingTile;
 
-    return existingTile;
+    // Climb up
+    while (!currentTile.isRight && currentTile.parent.isTile)
+    {
+        currentTile = currentTile.parent
+    }
+    // There is nothing to the right
+    if (!currentTile.isRight) {return existingTile; }
+
+    // Climb down, while staying as far right and up as possible
+    currentTile = currentTile.sibling
+    while (currentTile.isSplitVertically || currentTile.isSplitHorizontally)
+    {
+        // Take the upper child
+        if (currentTile.isSplitVertically) { currentTile = currentTile.firstChild }
+        // Take the right child
+        else {  currentTile = currentTile.secondChild  }
+
+    }
+    return currentTile
+}
+
+// returns the bottom neighbor, or existingTile if there is none
+function getBottomNeighbor(existingTile) {
+    if (!existingTile.isTile) {return;}
+    if (!existingTile.parent.isTile) {return;}
+
+    var currentTile = existingTile;
+
+    // Climb up
+    while (!currentTile.isTop&& currentTile.parent.isTile)
+    {
+        currentTile = currentTile.parent
+    }
+    // There is nothing to the right
+    if (!currentTile.isTop) {return existingTile; }
+
+    // Climb down, while staying as far left and up as possible
+    currentTile = currentTile.sibling
+    while (currentTile.isSplitVertically || currentTile.isSplitHorizontally)
+    {
+        // Take the upper child
+        if (currentTile.isSplitVertically) { currentTile = currentTile.firstChild }
+        // Take the left child
+        else {  currentTile = currentTile.firstChild  }
+
+    }
+    return currentTile
+}
+
+// returns the right neighbor, or existingTile if there is none
+function getTopNeighbor(existingTile) {
+    if (!existingTile.isTile) {return;}
+    if (!existingTile.parent.isTile) {return;}
+
+    var currentTile = existingTile;
+
+    // Climb up
+    while (!currentTile.isBottom && currentTile.parent.isTile)
+    {
+        currentTile = currentTile.parent
+    }
+    // There is nothing to the right
+    if (!currentTile.isBottom) {return existingTile; }
+
+    // Climb down, while staying as far left and down as possible
+    currentTile = currentTile.sibling
+    while (currentTile.isSplitVertically || currentTile.isSplitHorizontally)
+    {
+        // Take the bottom child
+        if (currentTile.isSplitVertically) { currentTile = currentTile.secondChild }
+        // Take the left child
+        else {  currentTile = currentTile.firstChild  }
+
+    }
+    return currentTile
 }
 
 function finishCreation(comp, parent, props = {}, onCreateCallback = 0) {

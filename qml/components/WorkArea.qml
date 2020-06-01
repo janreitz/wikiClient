@@ -68,11 +68,29 @@ Item {
         sequence: "Alt+Left"
         onActivated: {
             console.log("TilingLayout::container -> Move focus to left")
-            var rightNeighbor = TilingBackend.getLeftNeighbor(getActiveTile())
-            rightNeighbor.forceActiveFocus()
+            var leftNeighbor = TilingBackend.getLeftNeighbor(getActiveTile())
+            leftNeighbor.forceActiveFocus()
         }
     }
 
+    Shortcut {
+        sequence: "Alt+Up"
+        onActivated: {
+            console.log("TilingLayout::container -> Move focus up")
+            var topNeighbor = TilingBackend.getTopNeighbor(getActiveTile())
+            topNeighbor.forceActiveFocus()
+        }
+    }
+
+
+    Shortcut {
+        sequence: "Alt+Down"
+        onActivated: {
+            console.log("TilingLayout::container -> Move focus down")
+            var bottomNeighbor = TilingBackend.getBottomNeighbor(getActiveTile())
+            bottomNeighbor.forceActiveFocus()
+        }
+    }
 
     function getActiveTile() {
         var focusItem = root.Window.activeFocusItem;
