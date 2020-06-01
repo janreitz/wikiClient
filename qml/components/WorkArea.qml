@@ -24,6 +24,7 @@ Item {
         MultiTabEditor {
             anchors.fill: parent
             anchors.margins: 5
+            focus: true
         }
     }
 

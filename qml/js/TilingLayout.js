@@ -153,6 +153,7 @@ function horizontalSplit(existingTile, newContentItem) {
         if (newContentItem) {
             newTileRight.contentItem = newContentItem
             newContentItem.parent = newTileRight
+            newContentItem.focus = true
         }
     }
 }

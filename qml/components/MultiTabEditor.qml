@@ -9,56 +9,53 @@ FocusScope {
         var focusReceivedOrLost = activeFocus ? "received" : "lost"
         console.log(objectName + " active focus " + focusReceivedOrLost);
     }
-    Rectangle {
-        color: "pink"
-        anchors.fill:parent
+    TabBar {
+        id: editorTabBar
+        anchors.top: parent.top
+        anchors.left: parent.left
+        contentHeight: 30
+        objectName: "MultiTabEditor::TabBar"
+        TabButton {
+            text: "untitled"
+        }
+        TabButton {
+            text: "+"
+        }
+    }
 
-        TabBar {
-            id: editorTabBar
-            anchors.top: parent.top
-            anchors.left: parent.left
-            contentHeight: 15
-            objectName: "MultiTabEditor::TabBar"
-            Repeater {
-                model: ["File1", "File2", "File3", "+"]
-                TabButton {
-                    text: modelData
-                    height: 15
-                }
-            }
+    Component {
+        id: tabButtonComp
+        TabButton {
+        }
+    }
+
+    StackLayout {
+        id: editorStackLayout
+        anchors.top: editorTabBar.bottom
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        objectName: "MultiTabEditor::StackLayout"
+        onActiveFocusChanged: {
+            var focusReceivedOrLost = activeFocus ? "received" : "lost"
+            console.log(objectName + " active focus " + focusReceivedOrLost);
         }
 
-        StackLayout {
-            id: editorStackLayout
+        Editor {
+            id: editor
             focus: true
-            anchors.top: editorTabBar.bottom
-            anchors.right: parent.right
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-            objectName: "MultiTabEditor::StackLayout"
-            onActiveFocusChanged: {
-                var focusReceivedOrLost = activeFocus ? "received" : "lost"
-                console.log(objectName + " active focus " + focusReceivedOrLost);
-            }
-
-            Editor {
-                id: editor
-                focus: true
-                Layout.fillHeight:  true
-                Layout.fillWidth: true
-                objectName: "MultiTabEditor::Editor"
-            }
+            Layout.fillHeight:  true
+            Layout.fillWidth: true
+            objectName: "MultiTabEditor::Editor"
         }
+    }
 
-        // Interactions
-
-        Shortcut {
-            sequence: "Ctrl+Tab"
-            onActivated: {
-                editorTabBar.incrementCurrentIndex();
-            }
+    // Interactions
+    Shortcut {
+        sequence: "Ctrl+Tab"
+        onActivated: {
+            editorTabBar.incrementCurrentIndex();
         }
-
     }
 }
 
