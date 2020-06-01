@@ -3,47 +3,63 @@ import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
 
 
-Rectangle {
-    color: "pink"
-    anchors.fill:parent
+FocusScope {
+    objectName: "MultiTabEditor::FocusScope"
+    onActiveFocusChanged: {
+        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+        console.log(objectName + " active focus " + focusReceivedOrLost);
+    }
+    Rectangle {
+        color: "pink"
+        anchors.fill:parent
 
-    TabBar {
-        id: editorTabBar
-        anchors.top: parent.top
-        anchors.left: parent.left
-        contentHeight: 15
-        Repeater {
-            model: ["File1", "File2", "File3", "+"]
-            TabButton {
-                text: modelData
-                height: 15
+        TabBar {
+            id: editorTabBar
+            anchors.top: parent.top
+            anchors.left: parent.left
+            contentHeight: 15
+            objectName: "MultiTabEditor::TabBar"
+            Repeater {
+                model: ["File1", "File2", "File3", "+"]
+                TabButton {
+                    text: modelData
+                    height: 15
+                }
             }
         }
-    }
 
-    StackLayout {
-        id: editorStackLayout
+        StackLayout {
+            id: editorStackLayout
+            focus: true
+            anchors.top: editorTabBar.bottom
+            anchors.right: parent.right
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            objectName: "MultiTabEditor::StackLayout"
+            onActiveFocusChanged: {
+                var focusReceivedOrLost = activeFocus ? "received" : "lost"
+                console.log(objectName + " active focus " + focusReceivedOrLost);
+            }
 
-        anchors.top: editorTabBar.bottom
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-
-        Editor {
-            id: editor
-            Layout.fillHeight:  true
-            Layout.fillWidth: true
-
+            Editor {
+                id: editor
+                focus: true
+                Layout.fillHeight:  true
+                Layout.fillWidth: true
+                objectName: "MultiTabEditor::Editor"
+            }
         }
-    }
 
-    // Interactions
+        // Interactions
 
-    Shortcut {
-        sequence: "Ctrl+Tab"
-        onActivated: {
-            editorTabBar.incrementCurrentIndex();
+        Shortcut {
+            sequence: "Ctrl+Tab"
+            onActivated: {
+                editorTabBar.incrementCurrentIndex();
+            }
         }
-    }
 
+    }
 }
+
+

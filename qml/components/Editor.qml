@@ -8,32 +8,34 @@ Flickable {
     flickableDirection: Flickable.VerticalFlick
     clip: true
     property alias text: textArea.text
+    objectName: "Editor::flickable"
 
     TextArea.flickable: TextArea {
         id: textArea
+        objectName: "Editor::textArea"
         Layout.fillHeight: true
         Layout.fillWidth: true
         leftPadding: 10
         rightPadding: 10
         topPadding: 10
         bottomPadding: 10
+        focus: true
+        onActiveFocusChanged: {
+            var focusReceivedOrLost = activeFocus ? "received" : "lost"
+            console.log(objectName + " active focus " + focusReceivedOrLost);
+        }
         background: Rectangle {
-            color: "lightblue"
+            color: textArea.activeFocus ? "lightblue" : "pink"
         }
         textFormat: Qt.MarkdownText
         wrapMode: TextArea.Wrap
         selectByMouse: true
         persistentSelection: true
         placeholderText: "Your Awesome Wiki Article"
-        activeFocusOnTab: true
-        onActiveFocusChanged: {
-            if (activeFocus)
-                console.log("Editor::" + objectName + "::onActiveFocusChanged -> received active focus");
-            else
-                console.log("Editor::" + objectName + "::onActiveFocusChanged -> lost active focus");
-        }
+
         MouseArea {
             id: mouseArea
+            objectName: "Editor::mouseArea"
             height: parent.height
             width: parent.width
             acceptedButtons: Qt.RightButton
@@ -60,6 +62,7 @@ Flickable {
 
     Menu {
         id: contextMenu
+        objectName: "Editor::contectMenu"
         MenuItem {
             text: "Open ..."
             onClicked: editorFileDialog.open()
@@ -74,6 +77,7 @@ Flickable {
 
     FileDialog {
         id: editorFileDialog
+        objectName: "Editor::editorFileDialog"
         title: "Please choose a file"
         folder: shortcuts.home
         signal fileChosen(string filePath)

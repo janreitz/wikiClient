@@ -42,6 +42,7 @@ Item {
             console.log("TilingLayout::container -> Horizontal split triggered")
             var newContentItem = editorTile.createObject(root) // parent will be set in horizontalSplit
             TilingBackend.horizontalSplit(getActiveTile(), newContentItem)
+
         }
     }
 
@@ -52,6 +53,25 @@ Item {
             TilingBackend.undoSplit(getActiveTile())
         }
     }
+
+    Shortcut {
+        sequence: "Alt+Right"
+        onActivated: {
+            console.log("TilingLayout::container -> Move focus to right")
+            var rightNeighbor = TilingBackend.getRightNeighbor(getActiveTile())
+            rightNeighbor.forceActiveFocus()
+        }
+    }
+
+    Shortcut {
+        sequence: "Alt+Left"
+        onActivated: {
+            console.log("TilingLayout::container -> Move focus to left")
+            var rightNeighbor = TilingBackend.getLeftNeighbor(getActiveTile())
+            rightNeighbor.forceActiveFocus()
+        }
+    }
+
 
     function getActiveTile() {
         var focusItem = root.Window.activeFocusItem;

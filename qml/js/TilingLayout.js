@@ -57,6 +57,7 @@ function verticalSplit(existingTile, newContentItem) {
         newTileTop.contentItem = existingTile.contentItem
         existingTile.contentItem = null
         newTileTop.contentItem.parent = newTileTop
+        newTileTop.focus = true
 
         // Assign graph relations
         existingTile.firstChild = newTileTop
@@ -68,6 +69,8 @@ function verticalSplit(existingTile, newContentItem) {
 
         // Assign MetaData
         existingTile.isSplitVertically = true;
+        newTileTop.isTop = true;
+        newTileBottom.isBottom = true;
 
         if (newContentItem) {
             newTileBottom.contentItem = newContentItem
@@ -118,7 +121,6 @@ function horizontalSplit(existingTile, newContentItem) {
         newTileLeft.anchors.right = divider.left;
         newTileLeft.anchors.left = existingTile.left;
         newTileLeft.anchors.bottom = existingTile.bottom;
-        existingTile.contentItem.parent = newTileLeft
 
         divider.anchors.top = existingTile.top;
         divider.anchors.bottom = existingTile.bottom
@@ -130,9 +132,10 @@ function horizontalSplit(existingTile, newContentItem) {
         newTileRight.anchors.bottom = existingTile.bottom;
 
         // Reassign item
-        newTileLeft.contentItem = existingTile.contentItem // JavaScript copies here
+        newTileLeft.contentItem = existingTile.contentItem
         existingTile.contentItem = null
         newTileLeft.contentItem.parent = newTileLeft
+        newTileLeft.focus = true
 
         // Assign graph relations
         existingTile.firstChild = newTileLeft
@@ -144,6 +147,8 @@ function horizontalSplit(existingTile, newContentItem) {
 
         // Assign MetaData
         existingTile.isSplitHorizontally = true;
+        newTileLeft.isLeft = true;
+        newTileRight.isRight = true;
 
         if (newContentItem) {
             newTileRight.contentItem = newContentItem
@@ -152,6 +157,7 @@ function horizontalSplit(existingTile, newContentItem) {
     }
 }
 
+// merges the sibling tiles and keeps the content item of existingTile
 function undoSplit(existingTile) {
     if (!existingTile.isTile) {return;}
     if (!existingTile.parent.isTile) {return;}
@@ -162,10 +168,31 @@ function undoSplit(existingTile) {
     if (_parent.isSplitVertically || _parent.isSplitHorizontally) {
         _contentItem.parent = _parent
         _parent.contentItem = _contentItem
+        _contentItem.forceActiveFocus()
         existingTile.sibling.destroy()
         existingTile.divider.destroy()
-
+        existingTile.destroy()
     }
+}
+
+// returns the right neighbor, or existingTile if there is none
+function getRightNeighbor(existingTile) {
+    if (!existingTile.isTile) {return;}
+    if (!existingTile.parent.isTile) {return;}
+
+    if (existingTile.isLeft) {return existingTile.sibling}
+
+    return existingTile;
+}
+
+// returns the right neighbor, or existingTile if there is none
+function getLeftNeighbor(existingTile) {
+    if (!existingTile.isTile) {return;}
+    if (!existingTile.parent.isTile) {return;}
+
+    if (existingTile.isRight) {return existingTile.sibling}
+
+    return existingTile;
 }
 
 function finishCreation(comp, parent, props = {}, onCreateCallback = 0) {
