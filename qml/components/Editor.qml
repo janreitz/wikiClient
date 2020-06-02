@@ -23,6 +23,7 @@ Flickable {
         bottomPadding: 10
         focus: true
         font: theme.fontTextBody
+        color: theme.colorTextDark
 
         onActiveFocusChanged: {
             var focusReceivedOrLost = activeFocus ? "received" : "lost"

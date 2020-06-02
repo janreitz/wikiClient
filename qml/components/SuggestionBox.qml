@@ -9,8 +9,6 @@ Rectangle {
     property alias focusedSuggestion: listView.currentItem
     property var suggestions: ["Suggestion1", "Suggestion2", "Suggestion3", "suggestion4"]
     property int suggestionHeight
-    property string highlightColor: "gray"
-    property string normalColor: "white"
     signal signalSuggestionAccepted(string suggestion)
     signal signalExitedAbove()
     property int maxHeight: 9999
@@ -29,11 +27,13 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             height: root.suggestionHeight
-            color: highlight ? root.highlightColor : root.normalColor
+            color: highlight ? theme.colorAreaHighlight : theme.colorAreaBackground
             Text {
                 anchors.fill: parent
                 text: modelData
                 leftPadding: 10
+                font: theme.fontSideBarNormal
+                color: parent.highlight ? theme.colorTextLightHighlight : theme.colorTextLight
                 verticalAlignment: Text.AlignVCenter
             }
             MouseArea {
@@ -102,19 +102,6 @@ Rectangle {
             }
         }
     ]
-    // Need to be revised, it appears ListViews cant smoothly drop down like this
-//    transitions: [
-//        Transition {
-//            from: "enabled"
-//            to: "disabled"
-//            PropertyAnimation { properties: "height"; easing.type: Easing.InOutQuad; duration: 1000  }
-//        },
-//        Transition {
-//            from: "disabled"
-//            to: "enabled"
-//            PropertyAnimation { properties: "height"; easing.type: Easing.InOutQuad; duration: 1000  }
-//        }
-//    ]
 }
 
 

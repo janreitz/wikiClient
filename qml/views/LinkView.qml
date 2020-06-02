@@ -1,10 +1,12 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.12
+import "../components"
 
 Item {
     id: root
+
     Column {
-        anchors.top: parent.top
+        anchors.top: searchBar.bottom
         anchors.topMargin: 30
         anchors.left: parent.left
         anchors.leftMargin: 10
@@ -14,36 +16,11 @@ Item {
         anchors.bottomMargin: 30
         spacing: 10
 
-        Item {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 30
-            TextField {
-                id: docChooser
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.right: docChooserButton.left
-            }
-            Button {
-                id: docChooserButton
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                width: 50
-                text: "Go!"
-                onPressed: {
-                    links.model = theLinkProvider.getLinks(docChooser.text)
-                    backLinks.model = theLinkProvider.getBackLinks(docChooser.text)
-                }
-            }
-        }
-
         Text {
             id: linksLabel
             text: "Links"
             font: theme.fontSideBarHeader
-            color: theme.colorSideBarText
+            color: theme.colorTextLight
         }
 
         ListView {
@@ -59,7 +36,7 @@ Item {
             id: backlinksLabel
             text: "Backlinks"
             font: theme.fontSideBarHeader
-            color: theme.colorSideBarText
+            color: theme.colorTextLight
         }
 
         ListView {
@@ -77,7 +54,7 @@ Item {
         Text {
             text: modelData
             font: theme.fontSideBarNormal
-            color: linkMouseArea.containsMouse ? theme.colorSideBarTextHighlight : theme.colorSideBarText
+            color: linkMouseArea.containsMouse ? theme.colorTextLightHighlight : theme.colorTextLight
             MouseArea {
                 id: linkMouseArea
                 anchors.fill: parent
@@ -85,4 +62,85 @@ Item {
             }
         }
     }
+
+    Item {
+        id: searchBar
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        height: 30
+        FocusScope {
+            id: focusScope
+            anchors.fill: parent
+
+            TextField {
+                id: searchInput
+                focus: true
+                objectName: "searchBarInput"
+                anchors.left: parent.left
+                anchors.leftMargin: 20
+                anchors.right: searchButton.left
+                anchors.rightMargin: 20
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                selectByMouse: true
+                width: root.width * 0.7
+                leftPadding: 10
+                font: theme.fontSideBarNormal
+                color: theme.colorTextLight
+                verticalAlignment: Text.AlignVCenter
+                background: Rectangle {
+                    radius: 10
+                    color: theme.colorAreaHighlight
+                }
+                Keys.onPressed: {
+                    switch (event.key)
+                    {
+                    case Qt.Key_Down:
+                        suggestionBox.focus = true
+                        break;
+                    case Qt.Key_Return:
+                        doSearch();
+                        break;
+                    }
+                }
+                onTextChanged: {
+                    // suggestion according to search mode
+                    suggestionBox.suggestions = theTitleSuggestionProvider.getSuggestion(text)
+                }
+            }
+
+            SuggestionBox {
+                id: suggestionBox
+                enabled: searchInput.activeFocus
+                anchors.top: searchInput.bottom
+                anchors.left: searchInput.left
+                anchors.right: searchInput.right
+                suggestionHeight: searchInput.height
+                maxHeight: 400
+                onSignalSuggestionAccepted: {
+                    searchInput.text = suggestion;
+                    searchInput.focus = true
+                }
+                onSignalExitedAbove: {
+                    searchInput.focus = true
+                }
+            }
+
+            Button {
+                id: searchButton
+                text: "Go"
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                width: 50
+                onPressed: {
+                    links.model = theLinkProvider.getLinks(searchInput.text)
+                    backLinks.model = theLinkProvider.getBackLinks(searchInput.text)
+                }
+            }
+        }
+    }
+
 }

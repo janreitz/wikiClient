@@ -33,7 +33,7 @@ Window {
 
     SearchBar {
         id: searchBar
-        height:30
+        height:35
         anchors.top: parent.top
         anchors.left: sideBar.right
         anchors.right: parent.right

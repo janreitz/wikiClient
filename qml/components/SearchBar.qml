@@ -1,26 +1,15 @@
-import QtQuick 2.12
+import QtQuick 2.15
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Styles 1.4
 
-Item {
+Rectangle {
     id: root
     visible: true
     property alias queryInput: searchBarInput
-
     signal signalSearch(string searchString)
-
-    Shortcut {
-        sequence: StandardKey.Open
-        onActivated: {
-            theFileManager.slotSetDirectory(searchBarInput.text);
-        }
-    }
-    Shortcut {
-        sequence: "Ctrl+R"
-        onActivated: theFileManager.slotScanDirectory();
-    }
+    color: theme.colorAreaBackground
 
     FocusScope {
         id: focusScope
@@ -39,8 +28,13 @@ Item {
             selectByMouse: true
             width: root.width * 0.7
             leftPadding: 10
-            font.pointSize: 12
+            font: theme.fontSideBarNormal
+            color: theme.colorTextLight
             verticalAlignment: Text.AlignVCenter
+            background: Rectangle {
+                radius: 10
+                color: theme.colorAreaHighlight
+            }
             Keys.onPressed: {
                 switch (event.key)
                 {
@@ -65,7 +59,7 @@ Item {
             anchors.left: searchBarInput.left
             anchors.right: searchBarInput.right
             suggestionHeight: searchBarInput.height
-            maxHeight: 150
+            maxHeight: 400
             onSignalSuggestionAccepted: {
                 queryInput.text = suggestion;
                 searchBarInput.focus = true
