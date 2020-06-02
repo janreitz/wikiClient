@@ -4,34 +4,48 @@
 
 #include <QFileInfo>
 #include <QDateTime>
+#include <QDir>
 
 DBManager::DBManager()
     :QObject(nullptr)
+    , mDB(QSqlDatabase::addDatabase("QSQLITE"))
 {
 }
 
 
-bool DBManager::slotRootPathChanged(const QString& directoryPath)
+bool DBManager::slotRootDirectoryChanged(const QString& directoryPath)
 {
-    QString filePath = directoryPath + QString("\\wikiClient.db");
-    // Prevent error on existing .db
-    while (QFile(filePath).exists())
-    {
-        auto fileInfo = QFileInfo(filePath);
-        filePath = fileInfo.canonicalPath()
-                + "/"
-                + fileInfo.baseName()
-                + "_new."
-                + fileInfo.completeSuffix();
+    QString filePath = QFileInfo(
+                directoryPath +
+                QDir::separator() +
+                QString( "wikiClient.db")
+                ).canonicalFilePath();
+
+    if (QFile(filePath).exists()) {
+        return connectToDatabase(filePath);
     }
-    return createNewDatabase(filePath);
+    else {
+        return createNewDatabase(filePath);
+    }
+
+//    // Prevent error on existing .db
+//    while (QFile(filePath).exists())
+//    {
+//        auto fileInfo = QFileInfo(filePath);
+//        filePath = fileInfo.canonicalPath()
+//                + "/"
+//                + fileInfo.baseName()
+//                + "_new."
+//                + fileInfo.completeSuffix();
+//    }
+//    return createNewDatabase(filePath);
 }
 
 bool DBManager::createNewDatabase(const QString& filePath)
 {
-    mDB = QSqlDatabase::addDatabase("QSQLITE");
+    //mDB = QSqlDatabase::addDatabase("QSQLITE");
 
-    if (!open(filePath))
+    if (!connectToDatabase(filePath))
         return false;
 
     QSqlQuery q(mDB);
@@ -56,8 +70,10 @@ bool DBManager::createNewDatabase(const QString& filePath)
     return true;
 }
 
-bool DBManager::open(const QString& filePath)
+bool DBManager::connectToDatabase(const QString& filePath)
 {
+    //mDB = QSqlDatabase::addDatabase("QSQLITE");
+
     if (mDB.isOpen()) {
         if (filePath == mDB.databaseName()) {
             return true;
@@ -71,7 +87,10 @@ bool DBManager::open(const QString& filePath)
 
     if(!mDB.open())
     {
-        qDebug() << "DBManager::open -> could not open " << filePath;
+        qDebug() << "DBManager::connectToDatabase -> could not open "
+                 << filePath
+                 << " QSqlError: "
+                 << mDB.lastError().text();
         return false;
     }
     emit signalDBOpened();

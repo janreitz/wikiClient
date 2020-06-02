@@ -14,7 +14,7 @@ class DBManager : public QObject
 public:
     DBManager();
 
-    bool open(const QString& filePath);
+    bool connectToDatabase(const QString& filePath);
     void writeToFile(const QString& filePath);
     void close();
     // return read-only query
@@ -22,7 +22,7 @@ public:
     //std::optional<QSqlQueryModel*> getQueryModel();
 
 public slots:
-    bool slotRootPathChanged(const QString& directoryPath);
+    bool slotRootDirectoryChanged(const QString& directoryPath);
     void slotNewFiles(const QStringList& filePaths);
     void slotFileRenamed(const QString &path, const QString &oldName, const QString &newName);
     void slotFileModified(const QString& filePath);

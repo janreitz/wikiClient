@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
     QObject::connect(&theFileManager, &FileManager::signalFileModified, &theDBManager, &DBManager::slotFileModified);
     QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, &theDBManager, &DBManager::slotFilesDeleted);
-    QObject::connect(&theFileManager, &FileManager::rootPathChanged, &theDBManager, &DBManager::slotRootPathChanged);
+    QObject::connect(&theFileManager, &FileManager::rootPathChanged, &theDBManager, &DBManager::slotRootDirectoryChanged);
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/qml/views/main.qml"));
