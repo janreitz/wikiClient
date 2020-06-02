@@ -13,7 +13,8 @@ QStringList LinkProvider::getLinks(const QString& docTitle)
     }
 
     QStringList links;
-    mQuery.exec("SELECT Target FROM Links WHERE Source = '" + docTitle + "';");
+
+    mQuery.exec("SELECT Target From Links Where Source = (Select name From Documents Where Title = '" + docTitle + "');");
     while (mQuery.next())
     {
         links << mQuery.value(0).toString();
@@ -29,7 +30,7 @@ QStringList LinkProvider::getBackLinks(const QString& docTitle)
     }
 
     QStringList links;
-    mQuery.exec("SELECT Source FROM Links WHERE Target = '" + docTitle + "';");
+    mQuery.exec("SELECT Source From Links Where Target = (Select name From Documents Where Title = '" + docTitle + "');");
     while (mQuery.next())
     {
         links << mQuery.value(0).toString();

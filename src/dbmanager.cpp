@@ -15,13 +15,11 @@ DBManager::DBManager()
 
 bool DBManager::slotRootDirectoryChanged(const QString& directoryPath)
 {
-    QString filePath = QFileInfo(
-                directoryPath +
-                QDir::separator() +
-                QString( "wikiClient.db")
-                ).canonicalFilePath();
+    auto initialFilePath = directoryPath + QDir::separator() + "wikiClient.db";
+    auto fileInfo = QFileInfo(initialFilePath);
+    auto filePath = fileInfo.absoluteFilePath();
 
-    if (QFile(filePath).exists()) {
+    if (fileInfo.exists()) {
         return connectToDatabase(filePath);
     }
     else {
@@ -55,14 +53,15 @@ bool DBManager::createNewDatabase(const QString& filePath)
                                     "Title          TEXT,"
                                     "LastModified	TEXT,"
                                     "Content        TEXT,"
-                                    "PRIMARY KEY(Title));";
+                                    "PRIMARY KEY(Name));";
 
     const QString createTableLinksQuery = "CREATE TABLE Links ("
                                           "ID INTEGER,"
                                           "Source TEXT,"
                                           "Target TEXT,"
                                           "Display    TEXT,"
-                                          "PRIMARY KEY(ID));";
+                                          "PRIMARY KEY(ID),"
+                                          "UNIQUE(Source, Target));";
 
     q.exec(createTableDocsQuery);
     q.exec(createTableLinksQuery);
@@ -153,11 +152,11 @@ void DBManager::addDocuments(const QStringList& filePaths)
     QSqlQuery insertDocumentsQuery(mDB);
     QSqlQuery insertLinksQuery(mDB);
 
-    insertDocumentsQuery.prepare("INSERT INTO Documents (Name, Title, LastModified, Content) "
+    insertDocumentsQuery.prepare("REPLACE INTO Documents (Name, Title, LastModified, Content) "
                                  "VALUES (:name, :title, :lastModified, :content)");
 
-    insertLinksQuery.prepare("INSERT INTO Links (Source, Target, Display) "
-                                 "VALUES (:source, :target, :display)");
+    insertLinksQuery.prepare("INSERT OR IGNORE INTO Links (Source, Target, Display) "
+                             "VALUES (:source, :target, :display)");
 
     for (auto filePath : filePaths)
     {

@@ -40,7 +40,11 @@ std::optional<Document> Document::fromString(const QString& docName, const QStri
     while (matchIter.hasNext())
     {
         QRegularExpressionMatch match = matchIter.next();
-        doc.links << Link(docName, match.captured("target"), match.captured("display"));
+        auto target = match.captured("target");
+        if (target.startsWith("/")) {
+            target.remove(0,1);
+        }
+        doc.links << Link(docName, target, match.captured("display"));
     }
 
     return doc;
