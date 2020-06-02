@@ -2,15 +2,17 @@
 #define EDITORBACKEND_H
 
 #include <QObject>
+#include <QTextDocument>
 
 class EditorBackend : public QObject
 {
     Q_OBJECT
+    Q_INVOKABLE QString readFile(const QString& filePath);
+    Q_PROPERTY(QString text)
+
 public:
 
     explicit EditorBackend(QObject *parent = nullptr);
-
-    Q_INVOKABLE QString readFile(const QString& filePath);
 
 public slots:
 

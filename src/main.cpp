@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
+    int i = qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
+
     FileManager theFileManager;
     DBManager theDBManager;
     EditorBackend theEditorBackend;
@@ -38,8 +40,9 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
+
     engine.rootContext()->setContextProperty("theFileManager", &theFileManager);
-    engine.rootContext()->setContextProperty("theEditorBackend", &theEditorBackend);
+    //engine.rootContext()->setContextProperty("theEditorBackend", &theEditorBackend);
     engine.rootContext()->setContextProperty("theTitleSuggestionProvider", &theTitleSuggestionProvider);
     engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
 

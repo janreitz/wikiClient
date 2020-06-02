@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.3
+import Backend 1.0
 
 Flickable {
     id: flickable
@@ -10,7 +11,10 @@ Flickable {
     property alias text: textArea.text
     objectName: "Editor::flickable"
 
-
+    EditorBackend {
+        id: cppBackend
+        text: textArea.text
+    }
 
     TextArea.flickable: TextArea {
         id: textArea
@@ -61,7 +65,7 @@ Flickable {
     Connections {
         target: editorFileDialog
         function onFileChosen(filePath) {
-            textArea.text = theEditorBackend.readFile(Qt.resolvedUrl(filePath))
+            textArea.text = cppBackend.readFile(Qt.resolvedUrl(filePath))
         }
     }
 
