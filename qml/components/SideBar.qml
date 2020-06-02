@@ -97,7 +97,7 @@ Item {
             anchors.bottom: permanentSidebar.bottom
             anchors.bottomMargin: 20
             source: "qrc:/resources/icons/gear_filled.svg"
-            onPressed: permanentSidebar.signalSettingsButtonPressed()
+            onPressed: root.signalSettingsButtonPressed()
         }
     }
 
