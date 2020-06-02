@@ -4,6 +4,7 @@ import "../components"
 
 Item {
     id: root
+    clip: true
 
     Column {
         anchors.top: searchBar.bottom
