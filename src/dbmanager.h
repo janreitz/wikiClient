@@ -34,6 +34,7 @@ signals:
 
 private:
 
+    bool createNewDatabase(const QString& filePath);
     bool updateDocumentEntry();
     void addDocuments(const QStringList& filePaths);
 

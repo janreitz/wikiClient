@@ -13,8 +13,6 @@ DBManager::DBManager()
 
 bool DBManager::slotRootPathChanged(const QString& directoryPath)
 {
-    mDB = QSqlDatabase::addDatabase("QSQLITE");
-
     QString filePath = directoryPath + QString("\\wikiClient.db");
     // Prevent error on existing .db
     while (QFile(filePath).exists())
@@ -26,6 +24,12 @@ bool DBManager::slotRootPathChanged(const QString& directoryPath)
                 + "_new."
                 + fileInfo.completeSuffix();
     }
+    return createNewDatabase(filePath);
+}
+
+bool DBManager::createNewDatabase(const QString& filePath)
+{
+    mDB = QSqlDatabase::addDatabase("QSQLITE");
 
     if (!open(filePath))
         return false;
