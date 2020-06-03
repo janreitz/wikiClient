@@ -36,7 +36,7 @@ Flickable {
         background: Rectangle {
             color: textArea.activeFocus ? "lightblue" : "pink"
         }
-        textFormat: Qt.MarkdownText
+        textFormat: TextEdit.MarkdownText
         wrapMode: TextArea.Wrap
         selectByMouse: true
         persistentSelection: true
