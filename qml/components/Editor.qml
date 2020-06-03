@@ -1,7 +1,8 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.13
+import QtQuick 2.15
+import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.3
+
 import Backend 1.0
 
 Flickable {
@@ -12,8 +13,24 @@ Flickable {
     objectName: "Editor::flickable"
 
     EditorBackend {
-        id: cppBackend
-        text: textArea.text
+        id: editorBackend
+        document: textArea.textDocument
+        cursorPosition: textArea.cursorPosition
+        selectionStart: textArea.selectionStart
+        selectionEnd: textArea.selectionEnd
+        textColor: theme.colorTextDark
+        Component.onCompleted: editorBackend.load("C:/Users/jan-r/projects/wikiClient/demo/a-conflict-free-replicated-json-data-type.md")
+        onLoaded: {
+            textArea.text = text
+        }
+        onError: {
+            errorDialog.text = message
+            errorDialog.visible = true
+        }
+    }
+
+    MessageDialog {
+        id: errorDialog
     }
 
     TextArea.flickable: TextArea {
@@ -55,18 +72,48 @@ Flickable {
         }
     }
 
+
     Shortcut {
         sequence: "Ctrl+M"
         onActivated: {
             textArea.textFormat = (textArea.textFormat == TextEdit.MarkdownText) ? TextEdit.NativeRendering : TextEdit.MarkdownText;
         }
     }
-
-    Connections {
-        target: editorFileDialog
-        function onFileChosen(filePath) {
-            textArea.text = cppBackend.readFile(Qt.resolvedUrl(filePath))
-        }
+    Shortcut {
+        sequence: StandardKey.Open
+        onActivated: openDialog.open()
+    }
+    Shortcut {
+        sequence: StandardKey.SaveAs
+        onActivated: saveDialog.open()
+    }
+    Shortcut {
+        sequence: StandardKey.Quit
+        onActivated: close()
+    }
+    Shortcut {
+        sequence: StandardKey.Copy
+        onActivated: textArea.copy()
+    }
+    Shortcut {
+        sequence: StandardKey.Cut
+        onActivated: textArea.cut()
+    }
+    Shortcut {
+        sequence: StandardKey.Paste
+        onActivated: textArea.paste()
+    }
+    Shortcut {
+        sequence: StandardKey.Bold
+        onActivated: editorBackend.bold = !editorBackend.bold
+    }
+    Shortcut {
+        sequence: StandardKey.Italic
+        onActivated: editorBackend.italic = !editorBackend.italic
+    }
+    Shortcut {
+        sequence: StandardKey.Underline
+        onActivated: editorBackend.underline = !editorBackend.underline
     }
 
     Menu {
@@ -74,7 +121,7 @@ Flickable {
         objectName: "Editor::contectMenu"
         MenuItem {
             text: "Open ..."
-            onClicked: editorFileDialog.open()
+            onClicked: openDialog.open()
         }
         MenuItem {
             text: "Toggle Rendering"
@@ -84,13 +131,17 @@ Flickable {
         }
     }
 
+
     FileDialog {
-        id: editorFileDialog
-        objectName: "Editor::editorFileDialog"
-        title: "Please choose a file"
-        folder: shortcuts.home
-        signal fileChosen(string filePath)
-        onAccepted: this.fileChosen(this.fileUrl)
+        id: openDialog
+        onAccepted: editorBackend.load(fileUrl)
+    }
+
+    FileDialog {
+        id: saveDialog
+        defaultSuffix: editorBackend.fileType
+        nameFilters: openDialog.nameFilters
+        onAccepted: editorBackend.saveAs(fileUrl)
     }
     // SneakPreview
 }
