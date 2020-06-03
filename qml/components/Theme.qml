@@ -7,7 +7,7 @@ Item {
         family: robotoRegular.name,
         weight: 75,
         italic: false,
-        pointSize: 14
+        pointSize: 10
         })
     property font fontSideBarNormal: Qt.font({
         family: robotoRegular.name,
@@ -27,4 +27,6 @@ Item {
     property string colorTextLightHighlight: "#ffcc66"
     property string colorAreaBackground: "#2d2d2d"
     property string colorAreaHighlight: "#323233"
+    property string colorAreaLightBackground: "#F2F2F2"
+    property string colorAreaLightHighlight: "#F5F5F5"
 }

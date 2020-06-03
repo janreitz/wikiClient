@@ -51,9 +51,9 @@ Flickable {
             console.log(objectName + " active focus " + focusReceivedOrLost);
         }
         background: Rectangle {
-            color: textArea.activeFocus ? "lightblue" : "pink"
+            color: textArea.activeFocus ? theme.colorAreaLightHighlight : theme.colorAreaLightBackground
         }
-        textFormat: TextEdit.MarkdownText
+        textFormat: TextEdit.PlainText
         wrapMode: TextArea.Wrap
         selectByMouse: true
         persistentSelection: true
@@ -72,11 +72,10 @@ Flickable {
         }
     }
 
-
     Shortcut {
         sequence: "Ctrl+M"
         onActivated: {
-            textArea.textFormat = (textArea.textFormat == TextEdit.MarkdownText) ? TextEdit.NativeRendering : TextEdit.MarkdownText;
+            textArea.textFormat = (textArea.textFormat == TextEdit.MarkdownText) ? TextEdit.PlainText : TextEdit.MarkdownText;
         }
     }
     Shortcut {

@@ -265,7 +265,7 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
 
     // set character formats for headlines
     format = QTextCharFormat();
-    format.setForeground(QColor(2, 69, 150));
+    format.setForeground(QColor("#3E9CD6"));
     format.setFontWeight(QFont::Bold);
     format.setFontPointSize(defaultFontSize * 1.6);
     _formats[H1] = format;
