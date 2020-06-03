@@ -169,6 +169,8 @@ function undoSplit(existingTile) {
     if (_parent.isSplitVertically || _parent.isSplitHorizontally) {
         _contentItem.parent = _parent
         _parent.contentItem = _contentItem
+        _parent.isSplitVertically = false;
+        _parent.isSplitHorizontally = false;
         _contentItem.forceActiveFocus()
         existingTile.sibling.destroy()
         existingTile.divider.destroy()
@@ -201,7 +203,7 @@ function getRightNeighbor(existingTile) {
 
 }
 
-// returns the right neighbor, or existingTile if there is none
+// returns the left neighbor, or existingTile if there is none
 function getLeftNeighbor(existingTile) {
     if (!existingTile.isTile) {return;}
     if (!existingTile.parent.isTile) {return;}
