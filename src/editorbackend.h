@@ -5,6 +5,8 @@
 #include <QQuickTextDocument>
 #include <QTextCharFormat>
 
+#include "markdownhighlighter.h"
+
 class EditorBackend : public QObject
 {
     Q_OBJECT
@@ -110,6 +112,7 @@ private:
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
 
     QQuickTextDocument *m_document;
+    MarkdownHighlighter mMarkdownHighlighter;
 
     int m_cursorPosition;
     int m_selectionStart;

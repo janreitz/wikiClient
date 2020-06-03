@@ -24,6 +24,8 @@ SOURCES += \
         src/fileparser.cpp \
         src/linkprovider.cpp \
         src/main.cpp \
+        src/markdownhighlighter.cpp \
+        src/qownlanguagedata.cpp \
         src/sqlqueryclient.cpp \
         src/suggestion.cpp \
         src/titlesuggestionprovider.cpp \
@@ -50,6 +52,8 @@ HEADERS += \
     src/filemanager.h \
     src/fileparser.h \
     src/linkprovider.h \
+    src/markdownhighlighter.h \
+    src/qownlanguagedata.h \
     src/sqlqueryclient.h \
     src/suggestion.h \
     src/titlesuggestionprovider.h \

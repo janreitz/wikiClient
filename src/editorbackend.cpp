@@ -34,8 +34,10 @@ void EditorBackend::setDocument(QQuickTextDocument *document)
     if (m_document)
         m_document->textDocument()->disconnect(this);
     m_document = document;
-    if (m_document)
+    if (m_document){
         connect(m_document->textDocument(), &QTextDocument::modificationChanged, this, &EditorBackend::modifiedChanged);
+        mMarkdownHighlighter.setDocument(document->textDocument());
+    }
     emit documentChanged();
 }
 
