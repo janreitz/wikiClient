@@ -6,19 +6,24 @@ Item {
     id: root
     clip: true
 
-    Column {
+    Item {
+        id: linksContainer
         anchors.top: searchBar.bottom
         anchors.topMargin: 30
         anchors.left: parent.left
         anchors.leftMargin: 10
         anchors.right: parent.right
         anchors.rightMargin: 10
+
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 30
-        spacing: 10
+        anchors.bottomMargin: 10
 
         Text {
             id: linksLabel
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+
             text: "Links"
             font: theme.fontSideBarHeader
             color: theme.colorTextLight
@@ -26,15 +31,23 @@ Item {
 
         ListView {
             id: links
+            anchors.top: linksLabel.bottom
+            anchors.topMargin: 10
             anchors.left: parent.left
             anchors.right: parent.right
-            height: childrenRect.height
+            anchors.bottom: parent.verticalCenter
+            anchors.bottomMargin: 20
+
             model: ["link1", "link2", "link3"]
             delegate: linkDelegate
         }
 
         Text {
-            id: backlinksLabel
+            id: backLinksLabel
+            anchors.top: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+
             text: "Backlinks"
             font: theme.fontSideBarHeader
             color: theme.colorTextLight
@@ -42,9 +55,13 @@ Item {
 
         ListView {
             id: backLinks
+            anchors.top: backLinksLabel.bottom
+            anchors.topMargin: 10
             anchors.left: parent.left
             anchors.right: parent.right
-            height: childrenRect.height
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
+
             model: ["backlink1", "backlink2", "backlink3"]
             delegate: linkDelegate
         }
