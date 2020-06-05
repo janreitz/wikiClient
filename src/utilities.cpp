@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QRegularExpression>
 
 namespace Utilities
 {
@@ -25,5 +26,19 @@ namespace Utilities
         in.setCodec("UTF-8");
         QString content = in.readAll();
         return content;
+    }
+
+    std::optional<QString> parseTitle(const QString& fileContent)
+    {
+        if (fileContent.at(0) == "#")
+        {
+            QRegularExpression headerRegEx("#\\s(?<title>.*)");
+            auto match = headerRegEx.match(fileContent);
+            if (match.hasMatch())
+            {
+                return match.captured("title");
+            }
+        }
+        return std::nullopt;
     }
 }

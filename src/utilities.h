@@ -7,6 +7,7 @@
 namespace Utilities
 {
     std::optional<QString> stringFromFile(const QString& filePath);
+    std::optional<QString> parseTitle(const QString& fileContent);
 }
 
 #endif // UTILITIES_H

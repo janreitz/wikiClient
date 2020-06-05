@@ -1,4 +1,5 @@
 #include "document.h"
+#include "utilities.h"
 
 #include <QRegularExpression>
 
@@ -16,21 +17,11 @@ std::optional<Document> Document::fromString(const QString& docName, const QStri
     doc.name = docName;
     doc.content = docString;
 
-    if (docString.at(0) == "#")
-    {
-        QRegularExpression headerRegEx("#\\s(?<title>.*)");
-        auto match = headerRegEx.match(docString);
-        if (match.hasMatch())
-        {
-            doc.title = match.captured("title");
-        }
-        else
-        {
-            doc.title = docName;
-        }
+    auto titleOpt = Utilities::parseTitle(docString);
+    if (titleOpt) {
+        doc.title = *titleOpt;
     }
-    else
-    {
+    else {
         doc.title = docName;
     }
 
