@@ -15,12 +15,34 @@ FocusScope {
         anchors.left: parent.left
         contentHeight: 30
         objectName: "MultiTabEditor::TabBar"
-        currentIndex: swipeView.currentIndex
+
         TabButton {
-            text: "untitled"
+            id: tabButton
+            width: contentItem.implicitWidth + 10
+            text: {
+                var name = swipeView.currentItem.fileName==="" ? "untitled" : swipeView.currentItem.fileName;
+                if (swipeView.currentItem.modified) {
+                    name += " \u2B24"
+                }
+                return name;
+            }
+            contentItem: Text {
+                text: tabButton.text
+                font: theme.fontTextBody
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
         }
         TabButton {
+            id: newTabButton
             text: "+"
+            contentItem: Text {
+                text: newTabButton.text
+                font: theme.fontTextBody
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            //onPressed: addNewTab()
         }
     }
 
@@ -63,6 +85,10 @@ FocusScope {
             }
         }
     }
+
+//    function addNewTab() {
+
+//    }
 }
 
 

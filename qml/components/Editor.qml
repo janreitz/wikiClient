@@ -11,6 +11,7 @@ Flickable {
     clip: true
     property alias text: textArea.text
     property alias modified: editorBackend.modified
+    property alias fileName: editorBackend.fileName
     objectName: "Editor::flickable"
 
     EditorBackend {

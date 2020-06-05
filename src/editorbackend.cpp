@@ -278,6 +278,8 @@ void EditorBackend::saveAs(const QUrl &fileUrl)
     file.write((isHtml ? doc->toHtml() : doc->toPlainText()).toUtf8());
     file.close();
 
+    setModified(false);
+
     if (fileUrl == m_fileUrl)
         return;
 
