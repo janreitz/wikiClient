@@ -29,7 +29,7 @@ signals:
     void signalNewFiles(const QStringList& filePaths);
     void signalFileModified(const QString& filePath);
     void signalFilesDeleted(const QStringList& filePaths);
-    void rootPathChanged(const QString& newPath);
+    void rootPathChanged();
 
 private:
     QFileSystemWatcher mFileWatcher;

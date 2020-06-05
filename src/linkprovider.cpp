@@ -5,6 +5,32 @@ LinkProvider::LinkProvider(DBManager* dBManager)
 {
 }
 
+QString LinkProvider::documentTitle()
+{
+    return m_documentTitle;
+}
+
+QStringList LinkProvider::links()
+{
+    return m_links;
+}
+
+QStringList LinkProvider::backLinks()
+{
+    return m_backLinks;
+}
+
+void LinkProvider::setDocumentTitle(const QString &docTitle)
+{
+    m_documentTitle = docTitle;
+    m_links = getLinks(m_documentTitle);
+    m_backLinks = getBackLinks(m_documentTitle);
+
+    emit documentTitleChanged();
+    emit linksChanged();
+    emit backLinksChanged();
+}
+
 QStringList LinkProvider::getLinks(const QString& docTitle)
 {
     if (!mDBOpen) {

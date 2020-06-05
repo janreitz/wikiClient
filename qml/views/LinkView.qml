@@ -38,7 +38,7 @@ Item {
             anchors.bottom: parent.verticalCenter
             anchors.bottomMargin: 20
 
-            model: ["link1", "link2", "link3"]
+            model: theLinkProvider.links// ["link1", "link2", "link3"]
             delegate: linkDelegate
         }
 
@@ -62,7 +62,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 20
 
-            model: ["backlink1", "backlink2", "backlink3"]
+            model: theLinkProvider.backLinks//["backlink1", "backlink2", "backlink3"]
             delegate: linkDelegate
         }
     }
@@ -154,8 +154,9 @@ Item {
                 anchors.right: parent.right
                 width: 50
                 onPressed: {
-                    links.model = theLinkProvider.getLinks(searchInput.text)
-                    backLinks.model = theLinkProvider.getBackLinks(searchInput.text)
+                    theLinkProvider.documentTitle = searchInput.text;
+                    //links.model = theLinkProvider.getLinks(searchInput.text)
+                    //backLinks.model = theLinkProvider.getBackLinks(searchInput.text)
                 }
             }
         }
