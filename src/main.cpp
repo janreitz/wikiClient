@@ -17,7 +17,10 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    int i = qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
+    app.setOrganizationName("Jan Reitz");
+    app.setOrganizationDomain("JFF");
+
+    qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
 
     FileManager theFileManager;
     DBManager theDBManager;
