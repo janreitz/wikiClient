@@ -85,7 +85,13 @@ Flickable {
     }
     Shortcut {
         sequence: StandardKey.Save
-        onActivated: {
+        onActivated: onSave()
+        onActivatedAmbiguously: {
+            console.log("save triggered ambigously")
+            if(textArea.activeFocus) { onSave() };
+        }
+
+        function onSave() {
             console.log("save triggered");
 
             if (editorBackend.currentFileUrlExists()) {

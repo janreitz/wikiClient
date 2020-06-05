@@ -18,37 +18,98 @@ FocusScope {
 
         TabButton {
             id: tabButton
-            width: contentItem.implicitWidth + 10
+            width: contentItem.width + 10
+            property int index
             text: {
-                var name = swipeView.currentItem.fileName==="" ? "untitled" : swipeView.currentItem.fileName;
-                if (swipeView.currentItem.modified) {
+                var name = swipeView.itemAt(index).fileName==="" ? "untitled" : swipeView.itemAt(index).fileName;
+                if (swipeView.itemAt(index).modified) {
                     name += " \u2B24"
                 }
                 return name;
             }
-            contentItem: Text {
-                text: tabButton.text
-                font: theme.fontTextBody
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+            contentItem: Item {
+                width: childrenRect.width
+                Text {
+                    id: tabTitle
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    text: tabButton.text
+                    font: theme.fontTextBody
+                    color: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                IconButton {
+                    id: closeButton
+                    anchors.verticalCenter: tabTitle.verticalCenter
+                    anchors.left: tabTitle.right
+                    anchors.leftMargin: 10
+                    height: tabTitle.height * 0.6
+                    width: tabTitle.height * 0.6
+                    normalColor: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
+                    hoveredColor: tabButton.checked ? theme.colorTextDarkHighlight : theme.colorTextLightHighlight
+                    source: "qrc:/resources/icons/close.svg"
+                    onPressed: closeTab(tabButton.index)
+                }
             }
         }
+
         TabButton {
             id: newTabButton
-            text: "+"
-            contentItem: Text {
-                text: newTabButton.text
-                font: theme.fontTextBody
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+            width: tabBar.contentHeight
+            contentItem: IconButton {
+                id: newTabIconButton
+                anchors.fill:parent
+                anchors.margins: tabBar.contentHeight * 0.3
+                normalColor: newTabButton.checked ? theme.colorTextDark : theme.colorTextLight
+                hoveredColor: newTabButton.checked ? theme.colorTextDarkHighlight : theme.colorTextLightHighlight
+                source: "qrc:/resources/icons/plus.svg"
+                onPressed: addNewTab()
             }
-            //onPressed: addNewTab()
+            onPressed: addNewTab()
         }
     }
 
     Component {
         id: tabButtonComp
         TabButton {
+            id: tabButton
+            width: contentItem.width + 10
+            property int index
+            text: {
+                var name = swipeView.itemAt(index).fileName==="" ? "untitled" : swipeView.itemAt(index).fileName;
+                if (swipeView.itemAt(index).modified) {
+                    name += " \u2B24"
+                }
+                return name;
+            }
+            contentItem: Item {
+                width: childrenRect.width
+                Text {
+                    id: tabTitle
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    text: tabButton.text
+                    font: theme.fontTextBody
+                    color: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                IconButton {
+                    id: closeButton
+                    anchors.verticalCenter: tabTitle.verticalCenter
+                    anchors.left: tabTitle.right
+                    anchors.leftMargin: 10
+                    height: tabTitle.height * 0.6
+                    width: tabTitle.height * 0.6
+                    normalColor: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
+                    hoveredColor: tabButton.checked ? theme.colorTextDarkHighlight : theme.colorTextLightHighlight
+                    source: "qrc:/resources/icons/close.svg"
+                    onPressed: closeTab(tabButton.index)
+                }
+            }
         }
     }
 
@@ -58,6 +119,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
+        clip: true
         objectName: "MultiTabEditor::StackLayout"
         currentIndex: tabBar.currentIndex
         onActiveFocusChanged: {
@@ -65,6 +127,17 @@ FocusScope {
             console.log(objectName + " active focus " + focusReceivedOrLost);
         }
 
+        Editor {
+            id: editor
+            focus: true
+            Layout.fillHeight:  true
+            Layout.fillWidth: true
+            objectName: "MultiTabEditor::Editor"
+        }
+    }
+
+    Component {
+        id: editorComp
         Editor {
             id: editor
             focus: true
@@ -86,9 +159,20 @@ FocusScope {
         }
     }
 
-//    function addNewTab() {
+    function addNewTab() {
+        console.log("adding New Tab")
+        var insertIndex = tabBar.count - 1
+        // new Editor
+        swipeView.insertItem(insertIndex, editorComp.createObject(swipeView))
+        // new Tab
+        tabBar.insertItem(insertIndex, tabButtonComp.createObject(tabBar, {index: insertIndex}))
+        tabBar.setCurrentIndex(insertIndex)
+    }
 
-//    }
+    function closeTab(index) {
+        swipeView.removeItem(swipeView.itemAt(index));
+        tabBar.removeItem(tabBar.itemAt(index));
+    }
 }
 
 

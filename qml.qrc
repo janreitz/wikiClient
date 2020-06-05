@@ -37,5 +37,7 @@
         <file>resources/fonts/Roboto-Thin.ttf</file>
         <file>resources/fonts/Roboto-ThinItalic.ttf</file>
         <file>qml/components/Theme.qml</file>
+        <file>resources/icons/close.svg</file>
+        <file>resources/icons/plus.svg</file>
     </qresource>
 </RCC>
