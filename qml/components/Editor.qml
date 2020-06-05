@@ -6,9 +6,10 @@ import QtQuick.Dialogs 1.3
 import Backend 1.0
 
 Flickable {
-    id: flickable
+    id: root
     flickableDirection: Flickable.VerticalFlick
     clip: true
+    property var workArea
     property alias text: textArea.text
     property alias modified: editorBackend.modified
     property alias fileName: editorBackend.fileName
@@ -50,6 +51,7 @@ Flickable {
         onActiveFocusChanged: {
             var focusReceivedOrLost = activeFocus ? "received" : "lost"
             console.log(objectName + " active focus " + focusReceivedOrLost);
+            if (activeFocus) {workArea.lastActiveEditor = this}
         }
         background: Rectangle {
             color: textArea.activeFocus ? theme.colorAreaLightHighlight : theme.colorAreaLightBackground

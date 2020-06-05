@@ -4,7 +4,10 @@ import QtQuick.Layouts 1.3
 
 
 FocusScope {
+    id: root
     objectName: "MultiTabEditor::FocusScope"
+    property var workArea
+
     onActiveFocusChanged: {
         var focusReceivedOrLost = activeFocus ? "received" : "lost"
         console.log(objectName + " active focus " + focusReceivedOrLost);
@@ -133,6 +136,7 @@ FocusScope {
             Layout.fillHeight:  true
             Layout.fillWidth: true
             objectName: "MultiTabEditor::Editor"
+            workArea: root.workArea
         }
     }
 
@@ -163,7 +167,7 @@ FocusScope {
         console.log("adding New Tab")
         var insertIndex = tabBar.count - 1
         // new Editor
-        swipeView.insertItem(insertIndex, editorComp.createObject(swipeView))
+        swipeView.insertItem(insertIndex, editorComp.createObject(swipeView, {workArea: root.workArea}))
         // new Tab
         tabBar.insertItem(insertIndex, tabButtonComp.createObject(tabBar, {index: insertIndex}))
         tabBar.setCurrentIndex(insertIndex)

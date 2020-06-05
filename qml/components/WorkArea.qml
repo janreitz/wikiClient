@@ -7,6 +7,10 @@ import QtQuick.Window 2.12
 Item {
     id: root
     objectName: "TilingLayout::Root"
+    property var lastActiveEditor
+
+    onLastActiveEditorChanged: console.log("last active Editor changed")
+
     Tile {
         id: rootTile
         objectName: "tile_root"
@@ -16,11 +20,12 @@ Item {
             parent: rootTile
             anchors.fill: parent
             anchors.margins: 5
+            workArea: root
         }
     }
 
     Component {
-        id: editorTile
+        id: multiTabEditor
         MultiTabEditor {
             anchors.fill: parent
             anchors.margins: 5
@@ -32,7 +37,7 @@ Item {
         sequence: "Alt+Shift+Down"
         onActivated: {
             console.log("TilingLayout::container -> Vertical split triggered")
-            var newContentItem = editorTile.createObject(root) // parent will be set in verticalSplit
+            var newContentItem = multiTabEditor.createObject(root, {workArea: root}) // parent will be set in verticalSplit
             TilingBackend.verticalSplit(getActiveTile(), newContentItem)
         }
     }
@@ -41,7 +46,7 @@ Item {
         sequence: "Alt+Shift+Right"
         onActivated: {
             console.log("TilingLayout::container -> Horizontal split triggered")
-            var newContentItem = editorTile.createObject(root) // parent will be set in horizontalSplit
+            var newContentItem = multiTabEditor.createObject(root, {workArea: root}) // parent will be set in horizontalSplit
             TilingBackend.horizontalSplit(getActiveTile(), newContentItem)
 
         }
