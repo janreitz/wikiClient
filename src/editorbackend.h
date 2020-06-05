@@ -35,6 +35,7 @@ public:
 
     Q_INVOKABLE void load(const QUrl &fileUrl);
     Q_INVOKABLE void saveAs(const QUrl &fileUrl);
+    Q_INVOKABLE bool currentFileUrlExists() const;
 
     explicit EditorBackend(QObject *parent = nullptr);
 

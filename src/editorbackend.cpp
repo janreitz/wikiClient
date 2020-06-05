@@ -285,6 +285,11 @@ void EditorBackend::saveAs(const QUrl &fileUrl)
     emit fileUrlChanged();
 }
 
+bool EditorBackend::currentFileUrlExists() const
+{
+    return QFile::exists(m_fileUrl.toLocalFile());
+}
+
 void EditorBackend::reset()
 {
     emit fontFamilyChanged();
@@ -335,7 +340,9 @@ bool EditorBackend::modified() const
 
 void EditorBackend::setModified(bool m)
 {
-    if (m_document)
+    if (m_document) {
         m_document->textDocument()->setModified(m);
+        emit modifiedChanged();
+    }
 }
 

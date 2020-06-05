@@ -10,6 +10,7 @@ Flickable {
     flickableDirection: Flickable.VerticalFlick
     clip: true
     property alias text: textArea.text
+    property alias modified: editorBackend.modified
     objectName: "Editor::flickable"
 
     EditorBackend {
@@ -19,7 +20,6 @@ Flickable {
         selectionStart: textArea.selectionStart
         selectionEnd: textArea.selectionEnd
         textColor: theme.colorTextDark
-        Component.onCompleted: editorBackend.load("C:/Users/jan-r/projects/wikiClient/demo/a-conflict-free-replicated-json-data-type.md")
         onLoaded: {
             textArea.text = text
         }
@@ -83,8 +83,23 @@ Flickable {
         onActivated: openDialog.open()
     }
     Shortcut {
-        sequence: StandardKey.SaveAs
-        onActivated: saveDialog.open()
+        sequence: StandardKey.Save
+        onActivated: {
+            console.log("save triggered");
+
+            if (editorBackend.currentFileUrlExists()) {
+                editorBackend.saveAs(editorBackend.fileUrl);
+            } else {
+                saveDialog.open()
+            }
+        }
+    }
+    Shortcut {
+        sequence: "Ctrl+Shift+S"
+        onActivated: {
+            console.log("saveas triggered");
+            saveDialog.open()
+        }
     }
     Shortcut {
         sequence: StandardKey.Quit
@@ -139,6 +154,7 @@ Flickable {
     FileDialog {
         id: saveDialog
         defaultSuffix: editorBackend.fileType
+        selectExisting: false
         nameFilters: openDialog.nameFilters
         onAccepted: editorBackend.saveAs(fileUrl)
     }
