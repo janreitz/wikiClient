@@ -28,8 +28,9 @@ class EditorBackend : public QObject
     Q_PROPERTY(QString fileName READ fileName NOTIFY fileUrlChanged)
     Q_PROPERTY(QString fileType READ fileType NOTIFY fileUrlChanged)
     Q_PROPERTY(QUrl fileUrl READ fileUrl NOTIFY fileUrlChanged)
+    Q_PROPERTY(QString documentTitle READ documentTitle NOTIFY documentTitleChanged)
 
-    Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modifiedChanged)
+    Q_PROPERTY(bool modified READ modified NOTIFY modifiedChanged)
 
 public:
 
@@ -76,6 +77,7 @@ public:
     QString fileName() const;
     QString fileType() const;
     QUrl fileUrl() const;
+    QString documentTitle() const;
 
     bool modified() const;
     void setModified(bool m);
@@ -100,6 +102,7 @@ signals:
 
     void textChanged();
     void fileUrlChanged();
+    void documentTitleChanged();
 
     void loaded(const QString &text);
     void error(const QString &message);
@@ -122,6 +125,7 @@ private:
 
     QFont m_font;
     QUrl m_fileUrl;
+    QString m_documentTitle;
 };
 
 #endif // EDITORBACKEND_H

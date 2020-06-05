@@ -1,4 +1,5 @@
 #include "editorbackend.h"
+#include "utilities.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -232,6 +233,11 @@ QUrl EditorBackend::fileUrl() const
     return m_fileUrl;
 }
 
+QString EditorBackend::documentTitle() const
+{
+    return m_documentTitle;
+}
+
 void EditorBackend::loadPath(const QString &filePath)
 {
     loadUrl(QUrl::fromLocalFile(filePath));
@@ -258,7 +264,18 @@ void EditorBackend::loadUrl(const QUrl &fileUrl)
             if (QTextDocument *doc = textDocument())
                 doc->setModified(false);
 
-            emit loaded(codec->toUnicode(data));
+            auto text = codec->toUnicode(data);
+
+            emit loaded(text);
+
+            auto titleOpt = Utilities::parseTitle(text);
+            if (titleOpt) {
+                m_documentTitle = *titleOpt;
+            }
+            else {
+                m_documentTitle = QFileInfo(file).baseName();
+            }
+            emit documentTitleChanged();
             reset();
         }
     }

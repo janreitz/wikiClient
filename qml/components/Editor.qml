@@ -10,6 +10,7 @@ Flickable {
     flickableDirection: Flickable.VerticalFlick
     clip: true
     property var workArea
+    property alias documentTitle: editorBackend.documentTitle
     property alias text: textArea.text
     property alias modified: editorBackend.modified
     property alias fileName: editorBackend.fileName
