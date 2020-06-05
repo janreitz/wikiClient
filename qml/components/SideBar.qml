@@ -8,6 +8,9 @@ Item {
 
     property alias settingsButton: settingsButton
     signal signalSettingsButtonPressed()
+    signal loadFile(string filePath)
+
+    onLoadFile: console.log("SideBar::root::loadFile " + filePath)
 
     Rectangle {
         id: permanentSidebar
@@ -118,6 +121,14 @@ Item {
         onLoaded: {
             console.log("fileViewLoader -> loaded")
             root.sideBarButtonPress(item)
+        }
+    }
+
+    Connections {
+        target: fileViewLoader.item
+        onLoadFile: {
+            console.log("Sidebar::Connection::loadFile" + filePath)
+            root.loadFile(filePath)
         }
     }
 

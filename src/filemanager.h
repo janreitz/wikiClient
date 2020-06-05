@@ -10,6 +10,8 @@
 class FileManager : public QFileSystemModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString rootPath READ rootPath WRITE setRootPath NOTIFY rootPathChanged)
+
 public:
     explicit FileManager();
 
@@ -27,6 +29,7 @@ signals:
     void signalNewFiles(const QStringList& filePaths);
     void signalFileModified(const QString& filePath);
     void signalFilesDeleted(const QStringList& filePaths);
+    void rootPathChanged(const QString& newPath);
 
 private:
     QFileSystemWatcher mFileWatcher;

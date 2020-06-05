@@ -232,7 +232,12 @@ QUrl EditorBackend::fileUrl() const
     return m_fileUrl;
 }
 
-void EditorBackend::load(const QUrl &fileUrl)
+void EditorBackend::loadPath(const QString &filePath)
+{
+    loadUrl(QUrl::fromLocalFile(filePath));
+}
+
+void EditorBackend::loadUrl(const QUrl &fileUrl)
 {
     if (fileUrl == m_fileUrl)
         return;
@@ -256,6 +261,9 @@ void EditorBackend::load(const QUrl &fileUrl)
             emit loaded(codec->toUnicode(data));
             reset();
         }
+    }
+    else {
+        qWarning() << "EditorBackend::loadUrl -> file " << fileUrl.toLocalFile() << "does not exist";
     }
 
     m_fileUrl = fileUrl;

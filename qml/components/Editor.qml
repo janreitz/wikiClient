@@ -14,6 +14,9 @@ Flickable {
     property alias modified: editorBackend.modified
     property alias fileName: editorBackend.fileName
     objectName: "Editor::flickable"
+    function loadFile(filePath) {
+        console.log("Editor::root::loadFile -> " + filePath)
+        editorBackend.loadPath(filePath)}
 
     EditorBackend {
         id: editorBackend
@@ -51,7 +54,7 @@ Flickable {
         onActiveFocusChanged: {
             var focusReceivedOrLost = activeFocus ? "received" : "lost"
             console.log(objectName + " active focus " + focusReceivedOrLost);
-            if (activeFocus) {workArea.lastActiveEditor = this}
+            if (activeFocus) {workArea.lastActiveEditor = root}
         }
         background: Rectangle {
             color: textArea.activeFocus ? theme.colorAreaLightHighlight : theme.colorAreaLightBackground
@@ -157,7 +160,7 @@ Flickable {
 
     FileDialog {
         id: openDialog
-        onAccepted: editorBackend.load(fileUrl)
+        onAccepted: editorBackend.loadUrl(fileUrl)
     }
 
     FileDialog {

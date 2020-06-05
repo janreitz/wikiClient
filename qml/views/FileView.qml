@@ -8,6 +8,8 @@ import "../components"
 Item {
     id: root
 
+    signal loadFile(string filePath)
+
     Item {
         anchors.top: parent.top
         anchors.topMargin: 30
@@ -56,6 +58,14 @@ Item {
             color: styleData.selected ? theme.colorTextLightHighlight : theme.colorTextLight
             font: theme.fontSideBarNormal
             verticalAlignment: Text.AlignVCenter
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    var filePath = theFileManager.rootPath + "/" + parent.text;
+                    console.log("FileView item clicked -> " + filePath)
+                    root.loadFile(filePath)
+                }
+            }
         }
     }
 

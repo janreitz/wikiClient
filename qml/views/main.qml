@@ -50,6 +50,10 @@ Window {
             console.log("Button pressed")
             settingsWindow.visible = true
         }
+        function onLoadFile(filePath) {
+            console.log("Main::Connections::onLoadFile -> " + filePath)
+            workArea.lastActiveEditor.loadFile(filePath)
+        }
     }
 }
 

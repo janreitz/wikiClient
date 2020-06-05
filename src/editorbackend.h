@@ -33,7 +33,8 @@ class EditorBackend : public QObject
 
 public:
 
-    Q_INVOKABLE void load(const QUrl &fileUrl);
+    Q_INVOKABLE void loadUrl(const QUrl &fileUrl);
+    Q_INVOKABLE void loadPath(const QString &filePath);
     Q_INVOKABLE void saveAs(const QUrl &fileUrl);
     Q_INVOKABLE bool currentFileUrlExists() const;
 
