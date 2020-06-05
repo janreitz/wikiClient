@@ -126,7 +126,7 @@ Item {
 
     Connections {
         target: fileViewLoader.item
-        onLoadFile: {
+        function onLoadFile(filePath) {
             console.log("Sidebar::Connection::loadFile" + filePath)
             root.loadFile(filePath)
         }
