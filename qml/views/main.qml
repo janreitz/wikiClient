@@ -10,7 +10,7 @@ Window {
     visible: true
     width: 1280
     height: 960
-    title: qsTr("WikiClient")
+    title: qsTr("Fukuro")
 
     Theme {
         id: theme

@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
     app.setOrganizationName("Jan Reitz");
     app.setOrganizationDomain("JFF");
+    app.setWindowIcon(QIcon(":/resources/icons/owl_scribbles_reduced.svg"));
 
     qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
 

@@ -38,5 +38,6 @@
         <file>qml/components/Theme.qml</file>
         <file>resources/icons/close.svg</file>
         <file>resources/icons/plus.svg</file>
+        <file>resources/icons/owl_scribbles_reduced.svg</file>
     </qresource>
 </RCC>
