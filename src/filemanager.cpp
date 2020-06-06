@@ -23,6 +23,7 @@ void FileManager::slotSetDirectory(QString dirPath)
         dirPath = QUrl(dirPath).toLocalFile();
     }
     setRootPath(dirPath);
+    emit rootPathChanged();
 }
 
 // This slot is called when the file at the specified path is modified,
