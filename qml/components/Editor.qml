@@ -15,9 +15,14 @@ Flickable {
     property alias modified: editorBackend.modified
     property alias fileName: editorBackend.fileName
     objectName: "Editor::flickable"
-    function loadFile(filePath) {
+    function loadPath(filePath) {
         console.log("Editor::root::loadFile -> " + filePath)
         editorBackend.loadPath(filePath)}
+
+    onActiveFocusChanged: {
+        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+        console.log(objectName + " active focus " + focusReceivedOrLost);
+    }
 
     EditorBackend {
         id: editorBackend
@@ -41,14 +46,14 @@ Flickable {
 
     TextArea.flickable: TextArea {
         id: textArea
-        objectName: "Editor::textArea"
+        objectName: root.objectName + "::textArea"
+        focus: true
         Layout.fillHeight: true
         Layout.fillWidth: true
         leftPadding: 10
         rightPadding: 10
         topPadding: 10
         bottomPadding: 10
-        focus: true
         font: theme.fontTextBody
         color: theme.colorTextDark
 
