@@ -29,6 +29,7 @@ Window {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
+        lastActiveEditor: workArea.lastActiveEditor
     }
 
     SearchBar {
@@ -49,10 +50,6 @@ Window {
         function onSignalSettingsButtonPressed() {
             console.log("Button pressed")
             settingsWindow.visible = true
-        }
-        function onLoadFile(filePath) {
-            console.log("Main::Connections::onLoadFile -> " + filePath)
-            workArea.lastActiveEditor.loadFile(filePath)
         }
     }
 }
