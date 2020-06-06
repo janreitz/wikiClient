@@ -18,10 +18,11 @@ FocusScope {
         anchors.left: parent.left
         contentHeight: 30
         objectName: "MultiTabEditor::TabBar"
+        onCurrentIndexChanged: console.log(objectName + " current index changed to " + currentIndex)
 
         TabButton {
             id: tabButton
-            width: contentItem.width + 10
+            width: contentItem.childrenRect.width + 10
             property int index
             text: {
                 var name = swipeView.itemAt(index).fileName==="" ? "untitled" : swipeView.itemAt(index).fileName;
@@ -31,12 +32,8 @@ FocusScope {
                 return name;
             }
             contentItem: Item {
-                width: childrenRect.width
                 Text {
                     id: tabTitle
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
                     text: tabButton.text
                     font: theme.fontTextBody
                     color: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
@@ -78,7 +75,7 @@ FocusScope {
         id: tabButtonComp
         TabButton {
             id: tabButton
-            width: contentItem.width + 10
+            width: contentItem.childrenRect.width + 10
             property int index
             text: {
                 var name = swipeView.itemAt(index).fileName==="" ? "untitled" : swipeView.itemAt(index).fileName;
@@ -88,12 +85,8 @@ FocusScope {
                 return name;
             }
             contentItem: Item {
-                width: childrenRect.width
                 Text {
                     id: tabTitle
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
                     text: tabButton.text
                     font: theme.fontTextBody
                     color: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
@@ -123,19 +116,25 @@ FocusScope {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         clip: true
-        objectName: "MultiTabEditor::StackLayout"
+        objectName: "MultiTabEditor::SwipeView"
         currentIndex: tabBar.currentIndex
+        interactive: false
         onActiveFocusChanged: {
             var focusReceivedOrLost = activeFocus ? "received" : "lost"
             console.log(objectName + " active focus " + focusReceivedOrLost);
         }
 
+        onCurrentIndexChanged: {
+            console.log(objectName + " current Index changed to " + currentIndex)
+            //swipeView.currentItem.forceActiveFocus();
+        }
+
         Editor {
             id: editor
-            focus: true
+            focus: SwipeView.isCurrentItem
             Layout.fillHeight:  true
             Layout.fillWidth: true
-            objectName: "MultiTabEditor::Editor"
+            objectName: "MultiTabEditor::Editor_" + SwipeView.index
             workArea: root.workArea
         }
     }
@@ -144,10 +143,10 @@ FocusScope {
         id: editorComp
         Editor {
             id: editor
-            focus: true
+            focus: SwipeView.isCurrentItem
             Layout.fillHeight:  true
             Layout.fillWidth: true
-            objectName: "MultiTabEditor::Editor"
+            objectName: "MultiTabEditor::Editor_" + SwipeView.index
         }
     }
 
@@ -171,6 +170,7 @@ FocusScope {
         // new Tab
         tabBar.insertItem(insertIndex, tabButtonComp.createObject(tabBar, {index: insertIndex}))
         tabBar.setCurrentIndex(insertIndex)
+        //swipeView.currentItem.forceActiveFocus();
     }
 
     function closeTab(index) {
