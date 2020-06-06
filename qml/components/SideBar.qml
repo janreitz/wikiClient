@@ -6,11 +6,10 @@ Item {
     id: root
     width: childrenRect.width
 
+    property var lastActiveEditor
+
     property alias settingsButton: settingsButton
     signal signalSettingsButtonPressed()
-    signal loadFile(string filePath)
-
-    onLoadFile: console.log("SideBar::root::loadFile " + filePath)
 
     Rectangle {
         id: permanentSidebar
@@ -124,14 +123,6 @@ Item {
         }
     }
 
-    Connections {
-        target: fileViewLoader.item
-        function onLoadFile(filePath) {
-            console.log("Sidebar::Connection::loadFile" + filePath)
-            root.loadFile(filePath)
-        }
-    }
-
     Component {
         id: fileViewComp
         FileView {
@@ -139,6 +130,7 @@ Item {
             anchors.fill: parent
             anchors.margins: 20
             objectName: "fileView"
+            lastActiveEditor: root.lastActiveEditor
         }
     }
 
@@ -157,6 +149,7 @@ Item {
             anchors.fill: parent
             anchors.margins: 20
             objectName: "linkView"
+            lastActiveEditor: root.lastActiveEditor
         }
     }
 

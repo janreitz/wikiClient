@@ -6,6 +6,20 @@ Item {
     id: root
     clip: true
 
+    property var lastActiveEditor
+
+    function onLastActiveEditorChanged(){
+        console.log("LinkView::onLastActiveEditorChanged -> " + lastActiveEditor.documentTitle)
+        theLinkProvider.documentTitle = lastActiveEditor.documentTitle
+    }
+
+    Connections {
+        target: lastActiveEditor
+        function onDocumentTitleChanged(){
+            console.log("LinkView::Connections::onDocumentTitleChanged -> " + lastActiveEditor.documentTitle)
+            theLinkProvider.documentTitle = lastActiveEditor.documentTitle }
+    }
+
     Item {
         id: linksContainer
         anchors.top: searchBar.bottom

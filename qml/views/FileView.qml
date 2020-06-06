@@ -8,7 +8,7 @@ import "../components"
 Item {
     id: root
 
-    signal loadFile(string filePath)
+    property var lastActiveEditor
 
     Item {
         anchors.top: parent.top
@@ -63,7 +63,7 @@ Item {
                 onClicked: {
                     var filePath = theFileManager.rootPath + "/" + parent.text;
                     console.log("FileView item clicked -> " + filePath)
-                    root.loadFile(filePath)
+                    root.lastActiveEditor.loadPath(filePath)
                 }
             }
         }
