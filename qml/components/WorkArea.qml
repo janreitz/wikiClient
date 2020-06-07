@@ -17,6 +17,7 @@ Item {
         color: "#2d2d2d"
         anchors.fill: parent
         contentItem: MultiTabEditor {
+            id: initialMultiTabEditor
             parent: rootTile
             anchors.fill: parent
             anchors.margins: 5
