@@ -40,11 +40,11 @@ Item {
         id: headerDelegate
         Rectangle {
             height: 50
-            color: theme.colorAreaBackground
+            color: theSettings.colorAreaBackground
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: styleData.value
-            color: theme.colorTextLight
+            color: theSettings.colorTextLight
             font: theme.fontSideBarHeader
         }
         }
@@ -55,7 +55,7 @@ Item {
         Text {
             anchors.fill: parent
             text: styleData.value
-            color: styleData.selected ? theme.colorTextLightHighlight : theme.colorTextLight
+            color: styleData.selected ? theSettings.colorTextLightHighlight : theSettings.colorTextLight
             font: theme.fontSideBarNormal
             verticalAlignment: Text.AlignVCenter
             MouseArea {
@@ -72,7 +72,7 @@ Item {
     Component {
         id: rowDelegate
         Rectangle {
-            color: styleData.selected ? theme.colorAreaHighlight : theme.colorAreaBackground
+            color: styleData.selected ? theSettings.colorAreaHighlight : theSettings.colorAreaBackground
             height: 30//treeView.itemDelegate.height * 1.2
         }
     }

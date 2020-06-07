@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
 
     Settings* settings = Settings::getInstance();
-    settings->readSettingsFile("MySettingPath");
+    settings->readSettingsFile(":/resources/settings/default.json");
 
     FileManager theFileManager;
     DBManager theDBManager;
@@ -46,13 +46,15 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
-    engine.load(url);
 
     engine.rootContext()->setContextProperty("theSettings", settings);
     engine.rootContext()->setContextProperty("theFileManager", &theFileManager);
-    //engine.rootContext()->setContextProperty("theEditorBackend", &theEditorBackend);
     engine.rootContext()->setContextProperty("theTitleSuggestionProvider", &theTitleSuggestionProvider);
     engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
+
+    engine.load(url);
+
+
 
     return app.exec();
 }

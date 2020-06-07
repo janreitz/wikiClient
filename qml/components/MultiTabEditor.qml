@@ -36,7 +36,7 @@ FocusScope {
                     id: tabTitle
                     text: tabButton.text
                     font: theme.fontTextBody
-                    color: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
+                    color: tabButton.checked ? theSettings.colorTextDark : theSettings.colorTextLight
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -47,8 +47,8 @@ FocusScope {
                     anchors.leftMargin: 10
                     height: tabTitle.height * 0.6
                     width: tabTitle.height * 0.6
-                    normalColor: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
-                    hoveredColor: tabButton.checked ? theme.colorTextDarkHighlight : theme.colorTextLightHighlight
+                    normalColor: tabButton.checked ? theSettings.colorTextDark : theSettings.colorTextLight
+                    hoveredColor: tabButton.checked ? theSettings.colorTextDarkHighlight : theSettings.colorTextLightHighlight
                     source: "qrc:/resources/icons/close.svg"
                     onPressed: closeTab(tabButton.index)
                 }
@@ -62,8 +62,8 @@ FocusScope {
                 id: newTabIconButton
                 anchors.fill:parent
                 anchors.margins: tabBar.contentHeight * 0.3
-                normalColor: newTabButton.checked ? theme.colorTextDark : theme.colorTextLight
-                hoveredColor: newTabButton.checked ? theme.colorTextDarkHighlight : theme.colorTextLightHighlight
+                normalColor: newTabButton.checked ? theSettings.colorTextDark : theSettings.colorTextLight
+                hoveredColor: newTabButton.checked ? theSettings.colorTextDarkHighlight : theSettings.colorTextLightHighlight
                 source: "qrc:/resources/icons/plus.svg"
                 onPressed: addNewTab()
             }
@@ -89,7 +89,7 @@ FocusScope {
                     id: tabTitle
                     text: tabButton.text
                     font: theme.fontTextBody
-                    color: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
+                    color: tabButton.checked ? theSettings.colorTextDark : theSettings.colorTextLight
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -100,8 +100,8 @@ FocusScope {
                     anchors.leftMargin: 10
                     height: tabTitle.height * 0.6
                     width: tabTitle.height * 0.6
-                    normalColor: tabButton.checked ? theme.colorTextDark : theme.colorTextLight
-                    hoveredColor: tabButton.checked ? theme.colorTextDarkHighlight : theme.colorTextLightHighlight
+                    normalColor: tabButton.checked ? theSettings.colorTextDark : theSettings.colorTextLight
+                    hoveredColor: tabButton.checked ? theSettings.colorTextDarkHighlight : theSettings.colorTextLightHighlight
                     source: "qrc:/resources/icons/close.svg"
                     onPressed: closeTab(tabButton.index)
                 }

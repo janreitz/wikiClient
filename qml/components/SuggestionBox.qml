@@ -27,13 +27,13 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             height: root.suggestionHeight
-            color: highlight ? theme.colorAreaHighlight : theme.colorAreaBackground
+            color: highlight ? theSettings.colorAreaHighlight : theSettings.colorAreaBackground
             Text {
                 anchors.fill: parent
                 text: modelData
                 leftPadding: 10
                 font: theme.fontSideBarNormal
-                color: parent.highlight ? theme.colorTextLightHighlight : theme.colorTextLight
+                color: parent.highlight ? theSettings.colorTextLightHighlight : theSettings.colorTextLight
                 verticalAlignment: Text.AlignVCenter
             }
             MouseArea {
