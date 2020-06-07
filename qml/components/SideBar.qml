@@ -185,15 +185,11 @@ Item {
 
     Component {
         id: sqlViewComp
-        TestRect {
+        SqlView {
             id: sqlView
             anchors.fill: parent
             anchors.margins: 20
-            color: "blueviolet"
             objectName: "sqlView"
-            Text {
-                text: "Coming Soon"
-            }
         }
     }
 

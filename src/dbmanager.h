@@ -21,9 +21,10 @@ public:
     bool connectToDatabase(const QString& filePath);
     void writeToFile(const QString& filePath);
     void close();
+    bool isOpen();
     // return read-only query
     std::optional<QSqlQuery> getQuery();
-    // std::shared_ptr<QSqlTableModel> tableModel();
+    std::optional<std::shared_ptr<QSqlTableModel>> tableModel();
 
 public slots:
     bool slotRootDirectoryChanged(const QString& directoryPath);
@@ -42,11 +43,11 @@ private:
     bool createNewDatabase(const QString& filePath);
     bool updateDocumentEntry();
     void addDocuments(const QStringList& filePaths);
-    // void initializeTableModel();
+    void initializeTableModel();
 
     QSqlDatabase m_db;
     bool tableModelIsInitialized;
-    // std::shared_ptr<QSqlTableModel> m_tableModel;
+    std::shared_ptr<QSqlTableModel> m_tableModel;
 };
 
 #endif // DBHANDLER_H

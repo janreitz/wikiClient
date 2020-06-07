@@ -12,7 +12,6 @@ DBManager::DBManager()
 {
 }
 
-
 bool DBManager::slotRootDirectoryChanged(const QString& directoryPath)
 {
     close();
@@ -95,7 +94,7 @@ bool DBManager::connectToDatabase(const QString& filePath)
         return false;
     }
 
-    //initializeTableModel();
+    initializeTableModel();
 
     emit signalDBOpened();
     return true;
@@ -107,6 +106,11 @@ void DBManager::close()
     emit signalDBClosed();
 }
 
+bool DBManager::isOpen()
+{
+    return m_db.isOpen();
+}
+
 std::optional<QSqlQuery> DBManager::getQuery()
 {
     if (!m_db.isOpen())
@@ -114,13 +118,13 @@ std::optional<QSqlQuery> DBManager::getQuery()
     return QSqlQuery(m_db);
 }
 
-//std::shared_ptr<QSqlTableModel> DBManager::tableModel()
-//{
-//    if (!m_db.isOpen())
-//        return nullptr;
+std::optional<std::shared_ptr<QSqlTableModel>> DBManager::tableModel()
+{
+    if (!m_db.isOpen())
+        return std::nullopt;
 
-//    return m_tableModel;
-//}
+    return m_tableModel;
+}
 
 void DBManager::slotNewFiles(const QStringList& filePaths)
 {
@@ -200,7 +204,7 @@ void DBManager::addDocuments(const QStringList& filePaths)
     m_db.commit();
 }
 
-//void DBManager::initializeTableModel()
-//{
-//    m_tableModel = std::make_shared<QSqlTableModel>(this, m_db);
-//}
+void DBManager::initializeTableModel()
+{
+    m_tableModel.reset(new QSqlTableModel(this, m_db));
+}

@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.12
+import Qt.labs.qmlmodels 1.0
 
 Item {
     id: root
@@ -16,6 +17,21 @@ Item {
 
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
+
+        clip: true
+
+        model: theTableModelProvider.model
+
+        delegate: Rectangle {
+                implicitWidth: 100
+                implicitHeight: 50
+                border.width: 1
+
+                Text {
+                    text: display
+                    anchors.centerIn: parent
+                }
+            }
     }
 
     Item {

@@ -1,5 +1,6 @@
-#include "linkprovider.h"
+    #include "linkprovider.h"
 #include "titlesuggestionprovider.h"
+#include "sqltablemodelprovider.h"
 #include "filemanager.h"
 #include "dbmanager.h"
 #include "editorbackend.h"
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
     EditorBackend theEditorBackend;
     TitleSuggestionProvider theTitleSuggestionProvider(&theDBManager);
     LinkProvider theLinkProvider(&theDBManager);
+    SqlTableModelProvider theTableModelProvider(&theDBManager);
 
     QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
     QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
@@ -40,8 +42,10 @@ int main(int argc, char *argv[])
     QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, &theDBManager, &DBManager::slotFilesDeleted);
     QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, &theDBManager, &DBManager::slotRootDirectoryChanged);
     QObject::connect(&theDBManager, &DBManager::signalDBOpened, &theFileManager, &FileManager::slotScanDirectory);
+    QObject::connect(&theDBManager, &DBManager::signalDBOpened, &theTableModelProvider, &SqlTableModelProvider::slotDBOpened);
 
     theFileManager.setRootPath(settings->rootDirectory());
+    
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/qml/views/main.qml"));
@@ -55,6 +59,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("theFileManager", &theFileManager);
     engine.rootContext()->setContextProperty("theTitleSuggestionProvider", &theTitleSuggestionProvider);
     engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
+    engine.rootContext()->setContextProperty("theTableModelProvider", &theTableModelProvider);
 
     engine.load(url);
 
