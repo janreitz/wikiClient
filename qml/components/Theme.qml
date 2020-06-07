@@ -7,7 +7,7 @@ Item {
         family: robotoRegular.name,
         weight: 75,
         italic: false,
-        pointSize: 10
+        pointSize: 12
         })
     property font fontSideBarNormal: Qt.font({
         family: robotoRegular.name,
