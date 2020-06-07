@@ -6,13 +6,15 @@
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
-#include <QtSql/QSqlQueryModel>
+#include <QtSql/QSqlTableModel>
 
 #include <optional>
 
 class DBManager : public QObject
 {
     Q_OBJECT
+    //Q_PROPERTY(QSqlTableModel* tableModel READ tableModel NOTIFY tableModelChanged)
+
 public:
     DBManager();
 
@@ -21,7 +23,7 @@ public:
     void close();
     // return read-only query
     std::optional<QSqlQuery> getQuery();
-    //std::optional<QSqlQueryModel*> getQueryModel();
+    // std::shared_ptr<QSqlTableModel> tableModel();
 
 public slots:
     bool slotRootDirectoryChanged(const QString& directoryPath);
@@ -33,14 +35,18 @@ public slots:
 signals:
     void signalDBOpened();
     void signalDBClosed();
+    void tableModelChanged();
 
 private:
 
     bool createNewDatabase(const QString& filePath);
     bool updateDocumentEntry();
     void addDocuments(const QStringList& filePaths);
+    // void initializeTableModel();
 
-    QSqlDatabase mDB;
+    QSqlDatabase m_db;
+    bool tableModelIsInitialized;
+    // std::shared_ptr<QSqlTableModel> m_tableModel;
 };
 
 #endif // DBHANDLER_H

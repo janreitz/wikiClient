@@ -40,5 +40,6 @@
         <file>resources/icons/owl_scribbles_reduced.svg</file>
         <file>resources/settings/default.json</file>
         <file>resources/icons/brain.svg</file>
+        <file>qml/views/SqlView.qml</file>
     </qresource>
 </RCC>

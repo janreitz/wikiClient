@@ -27,7 +27,7 @@ SOURCES += \
         src/markdownhighlighter.cpp \
         src/qownlanguagedata.cpp \
         src/settings.cpp \
-        src/sqlqueryclient.cpp \
+        src/sqltablemodelprovider.cpp \
         src/suggestion.cpp \
         src/titlesuggestionprovider.cpp \
         src/utilities.cpp
@@ -56,7 +56,7 @@ HEADERS += \
     src/markdownhighlighter.h \
     src/qownlanguagedata.h \
     src/settings.h \
-    src/sqlqueryclient.h \
+    src/sqltablemodelprovider.h \
     src/suggestion.h \
     src/titlesuggestionprovider.h \
     src/utilities.h
