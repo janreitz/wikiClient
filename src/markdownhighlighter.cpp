@@ -303,14 +303,14 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
 
     // set character format for links
     format = QTextCharFormat();
-    format.setForeground(QColor(0, 128, 255));
-    format.setFontUnderline(true);
+    format.setForeground(QColor("#68217A"));
+    //format.setFontUnderline(true);
     _formats[Link] = std::move(format);
 
     // set character format for images
     format = QTextCharFormat();
-    format.setForeground(QColor(0, 191, 0));
-    format.setBackground(QColor(228, 255, 228));
+    format.setForeground(QColor("#68217A"));
+    //format.setBackground(QColor(228, 255, 228));
     _formats[Image] = std::move(format);
 
     // set character format for code blocks
