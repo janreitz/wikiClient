@@ -8,7 +8,7 @@
 
 DBManager::DBManager()
     :QObject(nullptr)
-    , mDB(QSqlDatabase::addDatabase("QSQLITE"))
+    , m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
 }
 
@@ -46,7 +46,7 @@ bool DBManager::createNewDatabase(const QString& filePath)
     if (!connectToDatabase(filePath))
         return false;
 
-    QSqlQuery q(mDB);
+    QSqlQuery q(m_db);
 
     const QString createTableDocsQuery = "CREATE TABLE Documents ("
                                     "Name           TEXT,"
@@ -73,8 +73,8 @@ bool DBManager::connectToDatabase(const QString& filePath)
 {
     //mDB = QSqlDatabase::addDatabase("QSQLITE");
 
-    if (mDB.isOpen()) {
-        if (filePath == mDB.databaseName()) {
+    if (m_db.isOpen()) {
+        if (filePath == m_db.databaseName()) {
             return true;
         }
         else {
@@ -82,32 +82,43 @@ bool DBManager::connectToDatabase(const QString& filePath)
         }
     }
 
-    mDB.setDatabaseName(filePath);
+    m_db.setDatabaseName(filePath);
 
-    if(!mDB.open())
+    if(!m_db.open())
     {
         qDebug() << "DBManager::connectToDatabase -> could not open "
                  << filePath
                  << " QSqlError: "
-                 << mDB.lastError().text();
+                 << m_db.lastError().text();
         return false;
     }
+
+    //initializeTableModel();
+
     emit signalDBOpened();
     return true;
 }
 
 void DBManager::close()
 {
-    mDB.close();
+    m_db.close();
     emit signalDBClosed();
 }
 
 std::optional<QSqlQuery> DBManager::getQuery()
 {
-    if (!mDB.isOpen())
+    if (!m_db.isOpen())
         return std::nullopt;
-    return QSqlQuery(mDB);
+    return QSqlQuery(m_db);
 }
+
+//std::shared_ptr<QSqlTableModel> DBManager::tableModel()
+//{
+//    if (!m_db.isOpen())
+//        return nullptr;
+
+//    return m_tableModel;
+//}
 
 void DBManager::slotNewFiles(const QStringList& filePaths)
 {
@@ -147,10 +158,10 @@ void DBManager::slotFilesDeleted(const QStringList& filePaths)
 }
 void DBManager::addDocuments(const QStringList& filePaths)
 {
-    mDB.transaction();
+    m_db.transaction();
     // SQL Query to add Document
-    QSqlQuery insertDocumentsQuery(mDB);
-    QSqlQuery insertLinksQuery(mDB);
+    QSqlQuery insertDocumentsQuery(m_db);
+    QSqlQuery insertLinksQuery(m_db);
 
     insertDocumentsQuery.prepare("REPLACE INTO Documents (Name, Title, LastModified, Content) "
                                  "VALUES (:name, :title, :lastModified, :content)");
@@ -184,5 +195,10 @@ void DBManager::addDocuments(const QStringList& filePaths)
         }
     }
 
-    mDB.commit();
+    m_db.commit();
 }
+
+//void DBManager::initializeTableModel()
+//{
+//    m_tableModel = std::make_shared<QSqlTableModel>(this, m_db);
+//}

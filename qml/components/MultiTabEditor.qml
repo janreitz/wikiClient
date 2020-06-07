@@ -138,6 +138,7 @@ FocusScope {
             width: parent.width
             objectName: "MultiTabEditor::Editor_" + SwipeView.index
             workArea: root.workArea
+            Component.onCompleted: workArea.lastActiveEditor = this
         }
     }
 
