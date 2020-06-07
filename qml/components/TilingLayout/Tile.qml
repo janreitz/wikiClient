@@ -18,10 +18,10 @@ FocusScope {
 
     property alias color: background.color
 
-    onActiveFocusChanged: {
-        var focusReceivedOrLost = activeFocus ? "received" : "lost"
-        console.log(objectName + " activeFocus " + focusReceivedOrLost);
-    }
+//    onActiveFocusChanged: {
+//        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+//        console.log(objectName + " activeFocus " + focusReceivedOrLost);
+//    }
 
     Rectangle {
         id: background

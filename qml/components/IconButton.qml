@@ -20,7 +20,7 @@ Item {
         anchors.fill: root
         onClicked: root.pressed()
         hoverEnabled: true
-        onEntered: console.log("MouseArea entered")
+//        onEntered: console.log("MouseArea entered")
     }
 
     ColorOverlay {

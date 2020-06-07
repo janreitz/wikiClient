@@ -5,9 +5,8 @@ import QtQuick.Dialogs 1.3
 
 import Backend 1.0
 
-Flickable {
+ScrollView {
     id: root
-    flickableDirection: Flickable.VerticalFlick
     clip: true
     property var workArea
     property alias documentTitle: editorBackend.documentTitle
@@ -19,10 +18,10 @@ Flickable {
         console.log("Editor::root::loadFile -> " + filePath)
         editorBackend.loadPath(filePath)}
 
-    onActiveFocusChanged: {
-        var focusReceivedOrLost = activeFocus ? "received" : "lost"
-        console.log(objectName + " active focus " + focusReceivedOrLost);
-    }
+//    onActiveFocusChanged: {
+//        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+//        console.log(objectName + " active focus " + focusReceivedOrLost);
+//    }
 
     EditorBackend {
         id: editorBackend
@@ -44,16 +43,10 @@ Flickable {
         id: errorDialog
     }
 
-    TextArea.flickable: TextArea {
+    TextArea {
         id: textArea
         objectName: root.objectName + "::textArea"
         focus: true
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        leftPadding: 10
-        rightPadding: 10
-        topPadding: 10
-        bottomPadding: 10
         font: theme.fontTextBody
         color: theme.colorTextDark
 
@@ -78,6 +71,7 @@ Flickable {
             width: parent.width
             acceptedButtons: Qt.RightButton
             onClicked: {
+                console.log(parent.objectName + "::mouseArea clicked")
                 if (mouse.button === Qt.RightButton)
                     contextMenu.popup()
             }
@@ -160,6 +154,10 @@ Flickable {
             onClicked: {
                 textArea.textFormat = (textArea.textFormat == TextEdit.MarkdownText) ? TextEdit.NativeRendering : TextEdit.MarkdownText;
             }
+        }
+        MenuItem {
+            text: "forceActiveFocus"
+            onClicked: textArea.forceActiveFocus();
         }
     }
 

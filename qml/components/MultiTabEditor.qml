@@ -8,17 +8,19 @@ FocusScope {
     objectName: "MultiTabEditor::FocusScope"
     property var workArea
 
-    onActiveFocusChanged: {
-        var focusReceivedOrLost = activeFocus ? "received" : "lost"
-        console.log(objectName + " active focus " + focusReceivedOrLost);
-    }
+//    onActiveFocusChanged: {
+//        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+//        console.log(objectName + " active focus " + focusReceivedOrLost);
+//    }
     TabBar {
         id: tabBar
         anchors.top: parent.top
         anchors.left: parent.left
+//        anchors.right: parent.right
+        clip: true
         contentHeight: 30
         objectName: "MultiTabEditor::TabBar"
-        onCurrentIndexChanged: console.log(objectName + " current index changed to " + currentIndex)
+//        onCurrentIndexChanged: console.log(objectName + " current index changed to " + currentIndex)
 
         TabButton {
             id: tabButton
@@ -119,21 +121,21 @@ FocusScope {
         objectName: "MultiTabEditor::SwipeView"
         currentIndex: tabBar.currentIndex
         interactive: false
-        onActiveFocusChanged: {
-            var focusReceivedOrLost = activeFocus ? "received" : "lost"
-            console.log(objectName + " active focus " + focusReceivedOrLost);
-        }
+//        onActiveFocusChanged: {
+//            var focusReceivedOrLost = activeFocus ? "received" : "lost"
+//            console.log(objectName + " active focus " + focusReceivedOrLost);
+//        }
 
-        onCurrentIndexChanged: {
-            console.log(objectName + " current Index changed to " + currentIndex)
-            //swipeView.currentItem.forceActiveFocus();
-        }
+//        onCurrentIndexChanged: {
+//            console.log(objectName + " current Index changed to " + currentIndex)
+//            //swipeView.currentItem.forceActiveFocus();
+//        }
 
         Editor {
             id: editor
             focus: SwipeView.isCurrentItem
-            Layout.fillHeight:  true
-            Layout.fillWidth: true
+            height: parent.height
+            width: parent.width
             objectName: "MultiTabEditor::Editor_" + SwipeView.index
             workArea: root.workArea
         }
@@ -163,7 +165,7 @@ FocusScope {
     }
 
     function addNewTab() {
-        console.log("adding New Tab")
+//        console.log("adding New Tab")
         var insertIndex = tabBar.count - 1
         // new Editor
         swipeView.insertItem(insertIndex, editorComp.createObject(swipeView, {workArea: root.workArea}))
