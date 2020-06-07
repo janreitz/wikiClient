@@ -23,7 +23,7 @@ Rectangle {
         id: suggestionDelegate
         Rectangle {
             id: delegateRect
-            property bool highlight: mouseArea.containsMouse || (listView.activeFocus && ListView.isCurrentItem)
+            property bool highlight: mouseArea.containsMouse || ListView.isCurrentItem
             anchors.left: parent.left
             anchors.right: parent.right
             height: root.suggestionHeight
@@ -47,12 +47,12 @@ Rectangle {
                         root.signalSuggestionAccepted(modelData)
                     }
                 }
-                onEntered: listView.currentIndex = index
+                onEntered: ListView.currentIndex = index
             }
             Keys.onReturnPressed: {
                 //console.log("SuggestionBox::suggestionDelegate::onEnterPressed -> Suggestion Accepted: " + modelData);
                 root.signalSuggestionAccepted(modelData)
-                listView.currentIndex = 0
+                ListView.currentIndex = 0
             }
         }
     }
