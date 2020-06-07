@@ -14,16 +14,19 @@ class SqlTableModelProvider : public QObject
 public:
     SqlTableModelProvider(DBManager* dbManager, QObject* parent = nullptr);
 
-    bool acquireModel();
     QSqlTableModel* model();
-    bool setTable(const QString& tableName);
+    void setTable(const QString& tableName);
+
+public slots:
+
+    void slotDBOpened();
 
 signals:
     void modelChanged();
 
 private:
-
-    QSqlTableModel* m_tableModel;
+    void getTableModel();
+    std::optional<std::shared_ptr<QSqlTableModel>> m_tableModel;
     DBManager* m_dbManager;
 };
 

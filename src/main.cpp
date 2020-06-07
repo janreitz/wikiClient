@@ -1,5 +1,6 @@
 #include "linkprovider.h"
 #include "titlesuggestionprovider.h"
+#include "sqltablemodelprovider.h"
 #include "filemanager.h"
 #include "dbmanager.h"
 #include "editorbackend.h"
@@ -28,12 +29,14 @@ int main(int argc, char *argv[])
     EditorBackend theEditorBackend;
     TitleSuggestionProvider theTitleSuggestionProvider(&theDBManager);
     LinkProvider theLinkProvider(&theDBManager);
+    SqlTableModelProvider theTableModelProvider(&theDBManager);
 
     QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
     QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
     QObject::connect(&theFileManager, &FileManager::signalFileModified, &theDBManager, &DBManager::slotFileModified);
     QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, &theDBManager, &DBManager::slotFilesDeleted);
     QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, &theDBManager, &DBManager::slotRootDirectoryChanged);
+    QObject::connect(&theDBManager, &DBManager::signalDBOpened, &theTableModelProvider, &SqlTableModelProvider::slotDBOpened);
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/qml/views/main.qml"));
@@ -49,6 +52,7 @@ int main(int argc, char *argv[])
     //engine.rootContext()->setContextProperty("theEditorBackend", &theEditorBackend);
     engine.rootContext()->setContextProperty("theTitleSuggestionProvider", &theTitleSuggestionProvider);
     engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
+    engine.rootContext()->setContextProperty("theTableModelProvider", &theTableModelProvider);
 
     return app.exec();
 }

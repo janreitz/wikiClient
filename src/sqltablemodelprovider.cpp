@@ -2,19 +2,40 @@
 
 SqlTableModelProvider::SqlTableModelProvider(DBManager* dbManager, QObject* parent)
     : QObject(parent)
-    , m_tableModel(nullptr)
     , m_dbManager(dbManager)
 {
-}
 
-bool SqlTableModelProvider::acquireModel()
-{
-    //m_tableModel = m_dbManager->getTableModel();
-    return false;
 }
 
 QSqlTableModel* SqlTableModelProvider::model() {
-    return m_tableModel;
+    if (!m_tableModel)
+        return nullptr;
+    return (*m_tableModel).get();
+}
+
+void SqlTableModelProvider::setTable(const QString &tableName)
+{
+    if (!m_tableModel)
+        return;
+
+    (*m_tableModel)->setTable(tableName);
+    (*m_tableModel)->select();
+}
+
+void SqlTableModelProvider::slotDBOpened()
+{
+    getTableModel();
+    setTable("Documents");
+}
+
+void SqlTableModelProvider::getTableModel()
+{
+    auto tableModelOpt = m_dbManager->tableModel();
+
+    if (tableModelOpt) {
+        m_tableModel = *tableModelOpt;
+        emit modelChanged();
+    }
 }
 
 
