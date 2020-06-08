@@ -7,6 +7,10 @@
 
 FileManager::FileManager()
 {
+    // I think this ugly thing is necessary, because I get errors when only the signal with a Parameter is present.
+    connect(this, &QFileSystemModel::rootPathChanged, this, [this]() {
+        emit rootPathChanged();
+    });
     connect(&mFileWatcher, &QFileSystemWatcher::fileChanged, this, &FileManager::slotFileChanged);
     connect(&mFileWatcher, &QFileSystemWatcher::directoryChanged, this,&FileManager::slotFileChanged);
 }
@@ -14,16 +18,6 @@ FileManager::FileManager()
 QModelIndex FileManager::getCurrentPathIndex()
 {
     return index(rootPath());
-}
-
-void FileManager::slotSetDirectory(QString dirPath)
-{
-    if (dirPath.startsWith("file:"))
-    {
-        dirPath = QUrl(dirPath).toLocalFile();
-    }
-    setRootPath(dirPath);
-    emit rootPathChanged();
 }
 
 // This slot is called when the file at the specified path is modified,

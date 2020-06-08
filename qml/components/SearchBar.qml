@@ -103,8 +103,8 @@ Rectangle {
     }
 
     function loadDemoDir () {
-        theFileManager.slotSetDirectory("C:/Users/jan-r/projects/wikiClient/demo");
-        theFileManager.slotScanDirectory();
+        theFileManager.rootPath = "C:/Users/jan-r/projects/wikiClient/demo"
+        // theFileManager.slotScanDirectory();
     }
 
     function doSearch()

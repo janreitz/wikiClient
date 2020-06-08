@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
 
+
     Settings* settings = Settings::getInstance();
     settings->readSettingsFile(":/resources/settings/default.json");
 
@@ -38,6 +39,9 @@ int main(int argc, char *argv[])
     QObject::connect(&theFileManager, &FileManager::signalFileModified, &theDBManager, &DBManager::slotFileModified);
     QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, &theDBManager, &DBManager::slotFilesDeleted);
     QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, &theDBManager, &DBManager::slotRootDirectoryChanged);
+    QObject::connect(&theDBManager, &DBManager::signalDBOpened, &theFileManager, &FileManager::slotScanDirectory);
+
+
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/qml/views/main.qml"));

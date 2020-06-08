@@ -18,7 +18,6 @@ public:
     Q_INVOKABLE QModelIndex getCurrentPathIndex();
 
 public slots:
-    void slotSetDirectory(QString dirPath);
     // Recursively iterate through dirPath updating the internal representation,
     // and watching all files
     void slotScanDirectory();
