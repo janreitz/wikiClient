@@ -12,14 +12,14 @@ class Settings : public QObject
     Q_PROPERTY(QString rootDirectory READ rootDirectory WRITE setRootDirectory NOTIFY rootDirectoryChanged);
 
     // Theme
-    Q_PROPERTY(QColor colorTextDark READ colorTextDark NOTIFY colorTextDarkChanged)
-    Q_PROPERTY(QColor colorTextDarkHighlight READ colorTextDarkHighlight NOTIFY colorTextDarkHighlightChanged)
-    Q_PROPERTY(QColor colorTextLight READ colorTextLight NOTIFY colorTextLightChanged)
-    Q_PROPERTY(QColor colorTextLightHighlight READ colorTextLightHighlight NOTIFY colorTextLightHighlightChanged)
-    Q_PROPERTY(QColor colorAreaBackground READ colorAreaBackground NOTIFY colorAreaBackgroundChanged)
-    Q_PROPERTY(QColor colorAreaHighlight READ colorAreaHighlight NOTIFY colorAreaHighlightChanged)
-    Q_PROPERTY(QColor colorAreaLightBackground READ colorAreaLightBackground NOTIFY colorAreaLightBackgroundChanged)
-    Q_PROPERTY(QColor colorAreaLightHighlight READ colorAreaLightHighlight NOTIFY colorAreaLightHighlightChanged)
+    Q_PROPERTY(QColor colorTextDark READ colorTextDark WRITE setColorTextDark NOTIFY colorTextDarkChanged)
+    Q_PROPERTY(QColor colorTextDarkHighlight READ colorTextDarkHighlight WRITE setColorTextDarkHighlight NOTIFY colorTextDarkHighlightChanged)
+    Q_PROPERTY(QColor colorTextLight READ colorTextLight WRITE setColorTextLight NOTIFY colorTextLightChanged)
+    Q_PROPERTY(QColor colorTextLightHighlight READ colorTextLightHighlight WRITE setColorTextLightHighlight NOTIFY colorTextLightHighlightChanged)
+    Q_PROPERTY(QColor colorAreaBackground READ colorAreaBackground WRITE setColorAreaBackground NOTIFY colorAreaBackgroundChanged)
+    Q_PROPERTY(QColor colorAreaHighlight READ colorAreaHighlight WRITE setColorAreaHighlight NOTIFY colorAreaHighlightChanged)
+    Q_PROPERTY(QColor colorAreaLightBackground READ colorAreaLightBackground WRITE setColorAreaLightBackground NOTIFY colorAreaLightBackgroundChanged)
+    Q_PROPERTY(QColor colorAreaLightHighlight READ colorAreaLightHighlight WRITE setColorAreaLightHighlight NOTIFY colorAreaLightHighlightChanged)
 
 public:
     // Overwrite existing settings
@@ -30,14 +30,28 @@ public:
 
     // Theme
     QColor colorTextDark() const;
-    QColor colorTextDarkHighlight() const;
-    QColor colorTextLight() const;
-    QColor colorTextLightHighlight() const;
-    QColor colorAreaBackground() const;
-    QColor colorAreaHighlight() const;
-    QColor colorAreaLightBackground() const;
-    QColor colorAreaLightHighlight() const;
+    void setColorTextDark(const QColor& color);
 
+    QColor colorTextDarkHighlight() const;
+    void setColorTextDarkHighlight(const QColor& color);
+
+    QColor colorTextLight() const;
+    void setColorTextLight(const QColor& color);
+
+    QColor colorTextLightHighlight() const;
+    void setColorTextLightHighlight(const QColor& color);
+
+    QColor colorAreaBackground() const;
+    void setColorAreaBackground(const QColor& color);
+
+    QColor colorAreaHighlight() const;
+    void setColorAreaHighlight(const QColor& color);
+
+    QColor colorAreaLightBackground() const;
+    void setColorAreaLightBackground(const QColor& color);
+
+    QColor colorAreaLightHighlight() const;
+    void setColorAreaLightHighlight(const QColor& color);
 
 signals:
     void rootDirectoryChanged();
@@ -53,15 +67,7 @@ signals:
 
 private:
 
-    // Theme
-    void setColorTextDark(const QColor& color);
-    void setColorTextDarkHighlight(const QColor& color);
-    void setColorTextLight(const QColor& color);
-    void setColorTextLightHighlight(const QColor& color);
-    void setColorAreaBackground(const QColor& color);
-    void setColorAreaHighlight(const QColor& color);
-    void setColorAreaLightBackground(const QColor& color);
-    void setColorAreaLightHighlight(const QColor& color);
+
 
     QString m_rootDirectory;
 

@@ -1,0 +1,11 @@
+{
+    "rootDirectory" : "C:\\Users\\jan-r\\projects\\wikiClient\\demo",
+    "colorTextDark" : "#1E1E1E",
+    "colorTextDarkHighlight" : "#68217A",
+    "colorTextLight" : "#cccccc",
+    "colorTextLightHighlight" : "#ffcc66",
+    "colorAreaBackground" : "#2d2d2d",
+    "colorAreaHighlight" : "#323233",
+    "colorAreaLightBackground" : "#F2F2F2",
+    "colorAreaLightHighlight" : "#F5F5F5"
+}

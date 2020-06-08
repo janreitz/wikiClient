@@ -54,38 +54,70 @@ bool Settings::readSettingsFile(const QString &filePath)
 }
 
 
-void Settings::setRootDirectory(const QString& rootDirectory) {
-    m_rootDirectory = rootDirectory;
-}
-
 QString Settings::rootDirectory() const{
     return m_rootDirectory;
 }
-
+void Settings::setRootDirectory(const QString& rootDirectory) {
+    m_rootDirectory = rootDirectory;
+    emit rootDirectoryChanged();
+}
 QColor Settings::colorTextDark() const{
     return m_colorTextDark;
+}
+void Settings::setColorTextDark(const QColor& color) {
+    m_colorTextDark = color;
+    emit colorTextDarkChanged();
 }
 QColor Settings::colorTextDarkHighlight() const{
     return m_colorTextDarkHighlight;
 }
+void Settings::setColorTextDarkHighlight(const QColor& color) {
+    m_colorTextDarkHighlight = color;
+    emit colorTextDarkHighlightChanged();
+}
 QColor Settings::colorTextLight() const{
     return m_colorTextLight;
+}
+void Settings::setColorTextLight(const QColor& color) {
+    m_colorTextLight = color;
+    emit colorTextLightChanged();
 }
 QColor Settings::colorTextLightHighlight() const{
     return m_colorTextLightHighlight;
 }
+void Settings::setColorTextLightHighlight(const QColor& color) {
+    m_colorTextLightHighlight = color;
+    emit colorTextLightHighlightChanged();
+}
 QColor Settings::colorAreaBackground() const{
     return m_colorAreaBackground;
+}
+void Settings::setColorAreaBackground(const QColor& color) {
+    m_colorAreaBackground = color;
+    emit colorAreaBackgroundChanged();
 }
 QColor Settings::colorAreaHighlight() const{
     return m_colorAreaHighlight;
 }
+void Settings::setColorAreaHighlight(const QColor& color) {
+    m_colorAreaHighlight = color;
+    emit colorAreaHighlightChanged();
+}
 QColor Settings::colorAreaLightBackground() const{
     return m_colorAreaLightBackground;
+}
+void Settings::setColorAreaLightBackground(const QColor& color) {
+    m_colorAreaLightBackground = color;
+    emit colorAreaLightBackgroundChanged();
 }
 QColor Settings::colorAreaLightHighlight() const{
     return m_colorAreaLightHighlight;
 }
+void Settings::setColorAreaLightHighlight(const QColor& color) {
+    m_colorAreaLightHighlight = color;
+    emit colorAreaLightHighlightChanged();
+}
+
 
 Settings *Settings::getInstance()
 {
