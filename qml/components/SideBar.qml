@@ -9,9 +9,6 @@ Item {
     property var lastActiveEditor
     property var lastActiveMultiTabEditor
 
-    property alias settingsButton: settingsButton
-    signal signalSettingsButtonPressed()
-
     Rectangle {
         id: permanentSidebar
         color: "#1E1E1E"

@@ -40,19 +40,6 @@ Window {
         anchors.left: sideBar.right
         anchors.right: parent.right
     }
-
-    SettingsWindow {
-        id: settingsWindow
-        visible: false
-    }
-
-    Connections {
-        target: sideBar
-        function onSignalSettingsButtonPressed() {
-            console.log("Button pressed")
-            settingsWindow.visible = true
-        }
-    }
 }
 
 /*##^##

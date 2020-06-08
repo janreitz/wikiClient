@@ -8,7 +8,6 @@
         <file>qml/views/main.qml</file>
         <file>qml/components/SideBar.qml</file>
         <file>resources/icons/gear.svg</file>
-        <file>qml/views/SettingsWindow.qml</file>
         <file>qml/js/TilingLayout.js</file>
         <file>qml/components/TilingLayout/TileDivider.qml</file>
         <file>qml/components/TilingLayout/Tile.qml</file>
