@@ -9,7 +9,7 @@ Rectangle {
     visible: true
     property alias queryInput: searchBarInput
     signal signalSearch(string searchString)
-    color: theme.colorAreaBackground
+    color: theSettings.colorAreaBackground
 
     FocusScope {
         id: focusScope
@@ -29,11 +29,11 @@ Rectangle {
             width: root.width * 0.7
             leftPadding: 10
             font: theme.fontSideBarNormal
-            color: theme.colorTextLight
+            color: theSettings.colorTextLight
             verticalAlignment: Text.AlignVCenter
             background: Rectangle {
                 radius: 10
-                color: theme.colorAreaHighlight
+                color: theSettings.colorAreaHighlight
             }
             Keys.onPressed: {
                 switch (event.key)

@@ -29,7 +29,7 @@ ScrollView {
         cursorPosition: textArea.cursorPosition
         selectionStart: textArea.selectionStart
         selectionEnd: textArea.selectionEnd
-        textColor: theme.colorTextDark
+        textColor: theSettings.colorTextDark
         onLoaded: {
             textArea.text = text
         }
@@ -48,7 +48,7 @@ ScrollView {
         objectName: root.objectName + "::textArea"
         focus: true
         font: theme.fontTextBody
-        color: theme.colorTextDark
+        color: theSettings.colorTextDark
 
         onActiveFocusChanged: {
             var focusReceivedOrLost = activeFocus ? "received" : "lost"
@@ -56,7 +56,7 @@ ScrollView {
             if (activeFocus) {workArea.lastActiveEditor = root}
         }
         background: Rectangle {
-            color: textArea.activeFocus ? theme.colorAreaLightHighlight : theme.colorAreaLightBackground
+            color: textArea.activeFocus ? theSettings.colorAreaLightHighlight : theSettings.colorAreaLightBackground
         }
         textFormat: TextEdit.PlainText
         wrapMode: TextArea.Wrap

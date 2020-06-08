@@ -21,12 +21,12 @@ Item {
         italic: false,
         pointSize: 24,
         })
-    property string colorTextDark: "#1E1E1E"
-    property string colorTextDarkHighlight: "#68217A"
-    property string colorTextLight: "#cccccc"
-    property string colorTextLightHighlight: "#ffcc66"
-    property string colorAreaBackground: "#2d2d2d"
-    property string colorAreaHighlight: "#323233"
-    property string colorAreaLightBackground: "#F2F2F2"
-    property string colorAreaLightHighlight: "#F5F5F5"
+//    property string colorTextDark: "#1E1E1E"
+//    property string colorTextDarkHighlight: "#68217A"
+//    property string colorTextLight: "#cccccc"
+//    property string colorTextLightHighlight: "#ffcc66"
+//    property string colorAreaBackground: "#2d2d2d"
+//    property string colorAreaHighlight: "#323233"
+//    property string colorAreaLightBackground: "#F2F2F2"
+//    property string colorAreaLightHighlight: "#F5F5F5"
 }

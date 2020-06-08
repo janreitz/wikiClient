@@ -40,7 +40,7 @@ Item {
 
             text: "Links"
             font: theme.fontSideBarHeader
-            color: theme.colorTextLight
+            color: theSettings.colorTextLight
         }
 
         ListView {
@@ -64,7 +64,7 @@ Item {
 
             text: "Backlinks"
             font: theme.fontSideBarHeader
-            color: theme.colorTextLight
+            color: theSettings.colorTextLight
         }
 
         ListView {
@@ -86,7 +86,7 @@ Item {
         Text {
             text: modelData
             font: theme.fontSideBarNormal
-            color: linkMouseArea.containsMouse ? theme.colorTextLightHighlight : theme.colorTextLight
+            color: linkMouseArea.containsMouse ? theSettings.colorTextLightHighlight : theSettings.colorTextLight
             MouseArea {
                 id: linkMouseArea
                 anchors.fill: parent
@@ -120,11 +120,11 @@ Item {
                 width: root.width * 0.7
                 leftPadding: 10
                 font: theme.fontSideBarNormal
-                color: theme.colorTextLight
+                color: theSettings.colorTextLight
                 verticalAlignment: Text.AlignVCenter
                 background: Rectangle {
                     radius: 10
-                    color: theme.colorAreaHighlight
+                    color: theSettings.colorAreaHighlight
                 }
                 Keys.onPressed: {
                     switch (event.key)
