@@ -8,20 +8,19 @@ FocusScope {
     objectName: "MultiTabEditor::FocusScope"
     property var workArea
 
-//    onActiveFocusChanged: {
-//        var focusReceivedOrLost = activeFocus ? "received" : "lost"
-//        console.log(objectName + " active focus " + focusReceivedOrLost);
-//    }
+    onActiveFocusChanged: {
+        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+    //    console.log(objectName + " active focus " + focusReceivedOrLost);
+        if (activeFocus) {workArea.lastActiveMultiTabEditor = root}
+    }
+
     TabBar {
         id: tabBar
         anchors.top: parent.top
         anchors.left: parent.left
-//        anchors.right: parent.right
         clip: true
         contentHeight: 30
         objectName: "MultiTabEditor::TabBar"
-//        onCurrentIndexChanged: console.log(objectName + " current index changed to " + currentIndex)
-
         TabButton {
             id: tabButton
             width: contentItem.childrenRect.width + 10
@@ -164,11 +163,15 @@ FocusScope {
 //        console.log("adding New Tab")
         var insertIndex = tabBar.count - 1
         // new Editor
-        swipeView.insertItem(insertIndex, editorComp.createObject(swipeView, {workArea: root.workArea}))
+        swipeView.insertItem(insertIndex, editorComp.createObject(swipeView, {workArea: root.workArea}));
         // new Tab
-        tabBar.insertItem(insertIndex, tabButtonComp.createObject(tabBar, {index: insertIndex}))
-        tabBar.setCurrentIndex(insertIndex)
-        //swipeView.currentItem.forceActiveFocus();
+        tabBar.insertItem(insertIndex, tabButtonComp.createObject(tabBar, {index: insertIndex}));
+        tabBar.setCurrentIndex(insertIndex);
+    }
+
+    function openFileInNewTab(filePath) {
+        addNewTab();
+        swipeView.currentItem.loadPath(filePath);
     }
 
     function closeTab(index) {

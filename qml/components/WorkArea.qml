@@ -8,6 +8,7 @@ Item {
     id: root
     objectName: "TilingLayout::Root"
     property var lastActiveEditor
+    property var lastActiveMultiTabEditor
 
     onLastActiveEditorChanged: console.log("last active Editor changed")
 

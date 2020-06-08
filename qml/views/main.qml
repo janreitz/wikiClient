@@ -30,6 +30,7 @@ Window {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         lastActiveEditor: workArea.lastActiveEditor
+        lastActiveMultiTabEditor: workArea.lastActiveMultiTabEditor
     }
 
     SearchBar {

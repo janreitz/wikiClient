@@ -16,7 +16,8 @@ ScrollView {
     objectName: "Editor::flickable"
     function loadPath(filePath) {
         console.log("Editor::root::loadFile -> " + filePath)
-        editorBackend.loadPath(filePath)}
+        editorBackend.loadPath(filePath)
+    }
 
 //    onActiveFocusChanged: {
 //        var focusReceivedOrLost = activeFocus ? "received" : "lost"
