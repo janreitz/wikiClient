@@ -67,8 +67,6 @@ ScrollView {
         MouseArea {
             id: mouseArea
             objectName: "Editor::mouseArea"
-            height: parent.height
-            width: parent.width
             acceptedButtons: Qt.RightButton
             onClicked: {
                 console.log(parent.objectName + "::mouseArea clicked")

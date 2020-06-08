@@ -134,8 +134,6 @@ FocusScope {
         Editor {
             id: editor
             focus: SwipeView.isCurrentItem
-            height: parent.height
-            width: parent.width
             objectName: "MultiTabEditor::Editor_" + SwipeView.index
             workArea: root.workArea
         }
@@ -146,8 +144,6 @@ FocusScope {
         Editor {
             id: editor
             focus: SwipeView.isCurrentItem
-            Layout.fillHeight:  true
-            Layout.fillWidth: true
             objectName: "MultiTabEditor::Editor_" + SwipeView.index
         }
     }
