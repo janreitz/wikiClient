@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 1.4
 import QtQuick.Controls 2.12
 import QtQuick.Controls.Styles 1.4
+import QtQuick.Dialogs 1.2
 
 import "../components"
 
@@ -11,6 +12,7 @@ Item {
     property var lastActiveEditor
 
     Item {
+        id: buttonContainer
         anchors.top: parent.top
         anchors.topMargin: 30
         anchors.left: parent.left
@@ -19,11 +21,28 @@ Item {
         anchors.rightMargin: 10
         height: 30
 
+        Button {
+            text: "Choose Working Directory"
+            onPressed: chooseDirDialog.open()
+        }
+    }
+
+    FileDialog {
+        id: chooseDirDialog
+        selectFolder: true
+        onAccepted: {
+            theFileManager.workingDirectory = fileUrl;
+            treeView.rootIndex = theFileManager.getCurrentPathIndex();
+        }
+        folder: shortcuts.home
     }
 
     TreeView {
         id: treeView
-        anchors.fill: parent
+        anchors.top: buttonContainer.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         TableViewColumn {
             title: "Name"
             role: "fileName"
@@ -61,7 +80,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    var filePath = theFileManager.rootPath + "/" + parent.text;
+                    var filePath = theFileManager.workingDirectory + "/" + parent.text;
                     console.log("FileView item clicked -> " + filePath)
                     root.lastActiveEditor.loadPath(filePath)
                 }

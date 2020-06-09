@@ -1,5 +1,6 @@
 #include "filemanager.h"
 #include "settings.h"
+#include "utilities.h"
 
 #include <QDirIterator>
 #include <QDebug>
@@ -10,10 +11,24 @@ FileManager::FileManager()
 {
     // I think this ugly thing is necessary, because I get errors when only the signal with a Parameter is present.
     connect(this, &QFileSystemModel::rootPathChanged, this, [this]() {
-        emit rootPathChanged();
+        emit workingDirectoryChanged();
     });
     connect(&mFileWatcher, &QFileSystemWatcher::fileChanged, this, &FileManager::slotFileChanged);
     connect(&mFileWatcher, &QFileSystemWatcher::directoryChanged, this,&FileManager::slotFileChanged);
+}
+
+QString FileManager::workingDirectory() const
+{
+    return rootPath();
+}
+
+void FileManager::setWorkingDirectory(const QString & newWorkingDir)
+{
+    if (auto workingDir = Utilities::ensureLocalPathAndExists(newWorkingDir))
+    {
+        setRootPath(*workingDir);
+    }
+    auto rp = rootPath();
 }
 
 QModelIndex FileManager::getCurrentPathIndex()

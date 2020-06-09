@@ -10,12 +10,15 @@
 class FileManager : public QFileSystemModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString rootPath READ rootPath WRITE setRootPath NOTIFY rootPathChanged)
+    Q_PROPERTY(QString workingDirectory READ workingDirectory WRITE setWorkingDirectory NOTIFY workingDirectoryChanged)
 
 public:
     explicit FileManager();
 
     Q_INVOKABLE QModelIndex getCurrentPathIndex();
+
+    QString workingDirectory() const;
+    void setWorkingDirectory(const QString&);
 
 public slots:
     // Recursively iterate through dirPath updating the internal representation,
@@ -28,7 +31,7 @@ signals:
     void signalNewFiles(const QStringList& filePaths);
     void signalFileModified(const QString& filePath);
     void signalFilesDeleted(const QStringList& filePaths);
-    void rootPathChanged();
+    void workingDirectoryChanged();
 
 private:
     QFileSystemWatcher mFileWatcher;

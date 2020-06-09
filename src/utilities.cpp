@@ -1,6 +1,8 @@
 #include "utilities.h"
 
 #include <QFile>
+#include <QDir>
+#include <QUrl>
 #include <QTextStream>
 #include <QDebug>
 #include <QRegularExpression>
@@ -11,9 +13,9 @@ namespace Utilities
     {
         auto filePath = originalFilePath;
 
-        if (filePath.contains("file:///"))
+        if (filePath.startsWith("file:"))
         {
-            filePath.remove(0,8);
+            filePath = QUrl(filePath).toLocalFile();
         }
 
         auto file = QFile(filePath);
@@ -41,4 +43,27 @@ namespace Utilities
         }
         return std::nullopt;
     }
+
+    std::optional<QString> ensureLocalPathAndExists(const QString &filePathOrUrl)
+    {
+        QString localPath;
+
+        if (filePathOrUrl.startsWith("file:"))
+        {
+            localPath = QUrl(filePathOrUrl).toLocalFile();
+        }
+        else
+        {
+            localPath = filePathOrUrl;
+        }
+        if (QFile::exists(localPath) || QDir(localPath).exists())
+        {
+            return localPath;
+        }
+        else
+        {
+            return std::nullopt;
+        }
+    }
+
 }
