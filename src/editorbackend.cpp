@@ -219,7 +219,7 @@ QString EditorBackend::fileName() const
     const QString filePath = QQmlFile::urlToLocalFileOrQrc(m_fileUrl);
     const QString fileName = QFileInfo(filePath).fileName();
     if (fileName.isEmpty())
-        return QStringLiteral("untitled.txt");
+        return QStringLiteral("untitled.md");
     return fileName;
 }
 
@@ -235,7 +235,11 @@ QUrl EditorBackend::fileUrl() const
 
 QString EditorBackend::documentTitle() const
 {
-    return m_documentTitle;
+    if (!m_documentTitle.isEmpty())
+    {
+        return m_documentTitle;
+    }
+    return QString("Untitled");
 }
 
 void EditorBackend::loadPath(const QString &filePath)

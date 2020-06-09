@@ -26,7 +26,7 @@ FocusScope {
             width: contentItem.childrenRect.width + 10
             property int index
             text: {
-                var name = swipeView.itemAt(index).fileName==="" ? "untitled" : swipeView.itemAt(index).fileName;
+                var name = swipeView.itemAt(index).documentTitle;
                 if (swipeView.itemAt(index).modified) {
                     name += " \u2B24"
                 }
@@ -51,7 +51,9 @@ FocusScope {
                     normalColor: tabButton.checked ? theSettings.colorTextDark : theSettings.colorTextLight
                     hoveredColor: tabButton.checked ? theSettings.colorTextDarkHighlight : theSettings.colorTextLightHighlight
                     source: "qrc:/resources/icons/close.svg"
-                    onPressed: closeTab(tabButton.index)
+                    onPressed: {
+                        closeTab(tabButton.index)
+                    }
                 }
             }
         }
@@ -79,7 +81,7 @@ FocusScope {
             width: contentItem.childrenRect.width + 10
             property int index
             text: {
-                var name = swipeView.itemAt(index).fileName==="" ? "untitled" : swipeView.itemAt(index).fileName;
+                var name = swipeView.itemAt(index).documentTitle;
                 if (swipeView.itemAt(index).modified) {
                     name += " \u2B24"
                 }
@@ -104,7 +106,9 @@ FocusScope {
                     normalColor: tabButton.checked ? theSettings.colorTextDark : theSettings.colorTextLight
                     hoveredColor: tabButton.checked ? theSettings.colorTextDarkHighlight : theSettings.colorTextLightHighlight
                     source: "qrc:/resources/icons/close.svg"
-                    onPressed: closeTab(tabButton.index)
+                    onPressed: {
+                        closeTab(tabButton.index)
+                    }
                 }
             }
         }
