@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, &theDBManager, &DBManager::slotRootDirectoryChanged);
     QObject::connect(&theDBManager, &DBManager::signalDBOpened, &theFileManager, &FileManager::slotScanDirectory);
 
-
+    theFileManager.setRootPath(settings->rootDirectory());
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/qml/views/main.qml"));

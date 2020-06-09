@@ -1,4 +1,5 @@
 #include "filemanager.h"
+#include "settings.h"
 
 #include <QDirIterator>
 #include <QDebug>

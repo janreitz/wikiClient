@@ -81,30 +81,13 @@ Rectangle {
         Button {
             id: searchButton
             text: "Go"
-            anchors.right: loadDemoDirButton.left
+            anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 50
             onClicked: doSearch()
             Keys.onReturnPressed: doSearch()
         }
-
-        Button {
-            id: loadDemoDirButton
-            text: "LoadDemoDir"
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            width: 125
-            onClicked: loadDemoDir()
-            Keys.onReturnPressed: loadDemoDir()
-        }
-
-    }
-
-    function loadDemoDir () {
-        theFileManager.rootPath = "C:/Users/jan-r/projects/wikiClient/demo"
-        // theFileManager.slotScanDirectory();
     }
 
     function doSearch()
