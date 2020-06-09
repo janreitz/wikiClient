@@ -161,12 +161,15 @@ FocusScope {
 
     Shortcut {
         sequence: "Ctrl+T"
-        onActivated: addNewTab()
+        onActivated: {
+            addNewTab()
+            swipeView.forceActiveFocus()
+        }
     }
 
     Shortcut {
         sequence: "Ctrl+W"
-        onActivated: closeTab()
+        onActivated: closeTab(tabBar.currentIndex)
     }
 
     function addNewTab() {
