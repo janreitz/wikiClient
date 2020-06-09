@@ -32,7 +32,6 @@ Item {
         selectFolder: true
         onAccepted: {
             theFileManager.workingDirectory = fileUrl;
-            treeView.rootIndex = theFileManager.getCurrentPathIndex();
         }
         folder: shortcuts.home
     }

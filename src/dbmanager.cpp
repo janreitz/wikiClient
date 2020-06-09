@@ -15,6 +15,8 @@ DBManager::DBManager()
 
 bool DBManager::slotRootDirectoryChanged(const QString& directoryPath)
 {
+    close();
+
     auto initialFilePath = directoryPath + QDir::separator() + "wikiClient.db";
     auto fileInfo = QFileInfo(initialFilePath);
     auto filePath = fileInfo.absoluteFilePath();
