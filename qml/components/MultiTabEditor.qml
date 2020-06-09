@@ -159,6 +159,16 @@ FocusScope {
         }
     }
 
+    Shortcut {
+        sequence: "Ctrl+T"
+        onActivated: addNewTab()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+W"
+        onActivated: closeTab()
+    }
+
     function addNewTab() {
 //        console.log("adding New Tab")
         var insertIndex = tabBar.count - 1

@@ -113,10 +113,6 @@ ScrollView {
         }
     }
     Shortcut {
-        sequence: StandardKey.Quit
-        onActivated: close()
-    }
-    Shortcut {
         sequence: StandardKey.Copy
         onActivated: textArea.copy()
     }
