@@ -9,8 +9,8 @@ FocusScope {
     property var workArea
 
     onActiveFocusChanged: {
-        var focusReceivedOrLost = activeFocus ? "received" : "lost"
-    //    console.log(objectName + " active focus " + focusReceivedOrLost);
+//        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+//        console.log(objectName + " active focus " + focusReceivedOrLost);
         if (activeFocus) {workArea.lastActiveMultiTabEditor = root}
     }
 
@@ -120,23 +120,14 @@ FocusScope {
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
+        focus: true
         clip: true
         objectName: "MultiTabEditor::SwipeView"
         currentIndex: tabBar.currentIndex
         interactive: false
-//        onActiveFocusChanged: {
-//            var focusReceivedOrLost = activeFocus ? "received" : "lost"
-//            console.log(objectName + " active focus " + focusReceivedOrLost);
-//        }
-
-//        onCurrentIndexChanged: {
-//            console.log(objectName + " current Index changed to " + currentIndex)
-//            //swipeView.currentItem.forceActiveFocus();
-//        }
 
         Editor {
             id: editor
-            focus: SwipeView.isCurrentItem
             objectName: "MultiTabEditor::Editor_" + SwipeView.index
             workArea: root.workArea
         }
@@ -146,7 +137,6 @@ FocusScope {
         id: editorComp
         Editor {
             id: editor
-            focus: SwipeView.isCurrentItem
             objectName: "MultiTabEditor::Editor_" + SwipeView.index
         }
     }
@@ -167,7 +157,6 @@ FocusScope {
         sequence: "Ctrl+T"
         onActivated: {
             addNewTab()
-            swipeView.forceActiveFocus()
         }
     }
 

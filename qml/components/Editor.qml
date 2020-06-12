@@ -14,20 +14,25 @@ FocusScope {
     property alias modified: editorBackend.modified
     property alias fileName: editorBackend.fileName
     function loadPath(filePath) {
-        console.log("Editor::scrollView::loadFile -> " + filePath)
+        console.log(objectName + "::scrollView::loadFile -> " + filePath)
         editorBackend.loadPath(filePath)
     }
+
+//    onActiveFocusChanged: {
+//        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+//        console.log(objectName + " active focus " + focusReceivedOrLost);
+//    }
 
     ScrollView {
         id: scrollView
         clip: true
         anchors.fill: parent
         objectName: "Editor::scrollView"
-
-    //    onActiveFocusChanged: {
-    //        var focusReceivedOrLost = activeFocus ? "received" : "lost"
-    //        console.log(objectName + " active focus " + focusReceivedOrLost);
-    //    }
+        focus: true
+//        onActiveFocusChanged: {
+//            var focusReceivedOrLost = activeFocus ? "received" : "lost"
+//            console.log(objectName + " active focus " + focusReceivedOrLost);
+//        }
 
 
         TextArea {
@@ -38,9 +43,9 @@ FocusScope {
             color: theSettings.colorTextDark
 
             onActiveFocusChanged: {
-                var focusReceivedOrLost = activeFocus ? "received" : "lost"
-                console.log(objectName + " active focus " + focusReceivedOrLost);
-                if (activeFocus) {workArea.lastActiveEditor = scrollView}
+//                var focusReceivedOrLost = activeFocus ? "received" : "lost"
+//                console.log(objectName + " active focus " + focusReceivedOrLost);
+                if (activeFocus) {root.workArea.lastActiveEditor = root}
             }
             background: Rectangle {
                 color: textArea.activeFocus ? theSettings.colorAreaLightHighlight : theSettings.colorAreaLightBackground
