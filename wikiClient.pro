@@ -26,6 +26,8 @@ SOURCES += \
         src/main.cpp \
         src/markdownhighlighter.cpp \
         src/qownlanguagedata.cpp \
+        src/searchbackend.cpp \
+        src/searchresult.cpp \
         src/settings.cpp \
         src/sqltablemodelprovider.cpp \
         src/suggestion.cpp \
@@ -55,6 +57,8 @@ HEADERS += \
     src/linkprovider.h \
     src/markdownhighlighter.h \
     src/qownlanguagedata.h \
+    src/searchbackend.h \
+    src/searchresult.h \
     src/settings.h \
     src/sqltablemodelprovider.h \
     src/suggestion.h \
