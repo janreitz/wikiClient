@@ -8,6 +8,8 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlQueryModel>
 
+#include <optional>
+
 class DBManager : public QObject
 {
     Q_OBJECT
