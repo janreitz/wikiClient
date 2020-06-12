@@ -10,7 +10,7 @@ Window {
     visible: true
     width: 1280
     height: 960
-    title: qsTr("Fukuro")
+    title: qsTr("Fukuro") //Zoku?
 
     Theme {
         id: theme

@@ -39,5 +39,6 @@
         <file>resources/icons/plus.svg</file>
         <file>resources/icons/owl_scribbles_reduced.svg</file>
         <file>resources/settings/default.json</file>
+        <file>resources/icons/brain.svg</file>
     </qresource>
 </RCC>
