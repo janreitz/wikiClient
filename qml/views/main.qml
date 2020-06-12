@@ -18,7 +18,7 @@ Window {
 
     WorkArea {
         id: workArea
-        anchors.top: searchBar.bottom
+        anchors.top: parent.top
         anchors.left: sideBar.right
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -31,14 +31,6 @@ Window {
         anchors.bottom: parent.bottom
         lastActiveEditor: workArea.lastActiveEditor
         lastActiveMultiTabEditor: workArea.lastActiveMultiTabEditor
-    }
-
-    SearchBar {
-        id: searchBar
-        height:35
-        anchors.top: parent.top
-        anchors.left: sideBar.right
-        anchors.right: parent.right
     }
 }
 
