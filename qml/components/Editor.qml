@@ -5,24 +5,65 @@ import QtQuick.Dialogs 1.3
 
 import Backend 1.0
 
-ScrollView {
+FocusScope {
     id: root
-    clip: true
+
     property var workArea
     property alias documentTitle: editorBackend.documentTitle
     property alias text: textArea.text
     property alias modified: editorBackend.modified
     property alias fileName: editorBackend.fileName
-    objectName: "Editor::flickable"
     function loadPath(filePath) {
-        console.log("Editor::root::loadFile -> " + filePath)
+        console.log("Editor::scrollView::loadFile -> " + filePath)
         editorBackend.loadPath(filePath)
     }
 
-//    onActiveFocusChanged: {
-//        var focusReceivedOrLost = activeFocus ? "received" : "lost"
-//        console.log(objectName + " active focus " + focusReceivedOrLost);
-//    }
+    ScrollView {
+        id: scrollView
+        clip: true
+        anchors.fill: parent
+        objectName: "Editor::scrollView"
+
+    //    onActiveFocusChanged: {
+    //        var focusReceivedOrLost = activeFocus ? "received" : "lost"
+    //        console.log(objectName + " active focus " + focusReceivedOrLost);
+    //    }
+
+
+        TextArea {
+            id: textArea
+            objectName: scrollView.objectName + "::textArea"
+            focus: true
+            font: theme.fontTextBody
+            color: theSettings.colorTextDark
+
+            onActiveFocusChanged: {
+                var focusReceivedOrLost = activeFocus ? "received" : "lost"
+                console.log(objectName + " active focus " + focusReceivedOrLost);
+                if (activeFocus) {workArea.lastActiveEditor = scrollView}
+            }
+            background: Rectangle {
+                color: textArea.activeFocus ? theSettings.colorAreaLightHighlight : theSettings.colorAreaLightBackground
+            }
+            textFormat: TextEdit.PlainText
+            wrapMode: TextArea.Wrap
+            selectByMouse: true
+            persistentSelection: true
+            placeholderText: "Your Awesome Wiki Article"
+
+            MouseArea {
+                id: mouseArea
+                objectName: "Editor::mouseArea"
+                acceptedButtons: Qt.RightButton
+                onClicked: {
+                    console.log(parent.objectName + "::mouseArea clicked")
+                    if (mouse.button === Qt.RightButton)
+                        contextMenu.popup()
+                }
+            }
+        }
+    }
+
 
     EditorBackend {
         id: editorBackend
@@ -42,39 +83,6 @@ ScrollView {
 
     MessageDialog {
         id: errorDialog
-    }
-
-    TextArea {
-        id: textArea
-        objectName: root.objectName + "::textArea"
-        focus: true
-        font: theme.fontTextBody
-        color: theSettings.colorTextDark
-
-        onActiveFocusChanged: {
-            var focusReceivedOrLost = activeFocus ? "received" : "lost"
-            console.log(objectName + " active focus " + focusReceivedOrLost);
-            if (activeFocus) {workArea.lastActiveEditor = root}
-        }
-        background: Rectangle {
-            color: textArea.activeFocus ? theSettings.colorAreaLightHighlight : theSettings.colorAreaLightBackground
-        }
-        textFormat: TextEdit.PlainText
-        wrapMode: TextArea.Wrap
-        selectByMouse: true
-        persistentSelection: true
-        placeholderText: "Your Awesome Wiki Article"
-
-        MouseArea {
-            id: mouseArea
-            objectName: "Editor::mouseArea"
-            acceptedButtons: Qt.RightButton
-            onClicked: {
-                console.log(parent.objectName + "::mouseArea clicked")
-                if (mouse.button === Qt.RightButton)
-                    contextMenu.popup()
-            }
-        }
     }
 
     Shortcut {
@@ -170,7 +178,10 @@ ScrollView {
         onAccepted: editorBackend.saveAs(fileUrl)
     }
     // SneakPreview
+
+
 }
+
 
 /*##^##
 Designer {
