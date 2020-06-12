@@ -59,11 +59,11 @@ Item {
                 width: root.width * 0.7
                 leftPadding: 10
                 font: theme.fontSideBarNormal
-                color: theme.colorTextLight
+                color: theSettings.colorTextLight
                 verticalAlignment: Text.AlignVCenter
                 background: Rectangle {
                     radius: 10
-                    color: theme.colorAreaHighlight
+                    color: theSettings.colorAreaHighlight
                 }
             }
 

@@ -56,6 +56,22 @@ Item {
                 }
             }
             IconButton {
+                id: searchButton
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: permanentSidebar.width * 0.7
+                height: width
+                source: "qrc:/resources/icons/search.svg"
+                onPressed: {
+                    // Is my item already loaded?
+                    if (searchViewLoader.status !== Loader.Ready) {
+                        // the loader will "press the button" after loading
+                        searchViewLoader.sourceComponent = searchViewComp;
+                    } else {
+                        root.sideBarButtonPress(searchViewLoader.item)
+                    }
+                }
+            }
+            IconButton {
                 id: networkButton
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: permanentSidebar.width * 0.7
@@ -150,6 +166,24 @@ Item {
             anchors.margins: 20
             objectName: "linkView"
             lastActiveEditor: root.lastActiveEditor
+        }
+    }
+
+    Loader {
+        id: searchViewLoader
+        onLoaded: {
+            console.log("searchViewLoader -> loaded")
+            root.sideBarButtonPress(item)
+        }
+    }
+
+    Component {
+        id: searchViewComp
+        SearchView {
+            id: searchView
+            anchors.fill: parent
+            anchors.margins: 20
+            objectName: "searchView"
         }
     }
 

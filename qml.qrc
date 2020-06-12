@@ -41,5 +41,7 @@
         <file>resources/settings/default.json</file>
         <file>resources/icons/brain.svg</file>
         <file>qml/views/SqlView.qml</file>
+        <file>resources/icons/search.svg</file>
+        <file>qml/views/SearchView.qml</file>
     </qresource>
 </RCC>
