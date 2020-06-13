@@ -13,6 +13,10 @@ class SearchResult : public QObject
 public:
     explicit SearchResult(const QString& title = QString(),
                           const QString& matchContext = QString());
+    SearchResult(const SearchResult& other);
+
+    QString title() const;
+    QString matchContext() const;
 
 signals:
 

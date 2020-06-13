@@ -12,6 +12,8 @@ class SearchBackend : public QAbstractListModel
 
 public:
 
+    Q_INVOKABLE void fullTextSearch(const QString& searchText);
+
     SearchBackend(DBManager* dbManager);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -23,6 +25,8 @@ public:
 private:
 
     DBManager* m_dbManager;
+    QSqlQuery mQuery;
+    bool mDBOpen;
     QList<SearchResult> m_searchResults;
 };
 

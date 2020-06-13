@@ -79,21 +79,80 @@ Item {
 
     ListView {
         id: listView
-        ItemDelegate:searchResultDelegate
+        anchors.top: focusScope.bottom
+        anchors.topMargin: 30
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        model: ["SearchResult", "SearchResult", "SearchResult"]
+        delegate: searchResultDelegate
     }
 
 
     Component {
         id: searchResultDelegate
-        Text {
-            text: modelData
-            font: theme.fontSideBarNormal
-            color: linkMouseArea.containsMouse ? theSettings.colorTextLightHighlight : theSettings.colorTextLight
-            MouseArea {
-                id: linkMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
+        ItemDelegate {
+            id: delegateRoot
+            width: ListView.view.width
+            height: childrenRect.height
+            property bool isSelected: false
+            Text {
+                id: titleDisplay
+                text: modelData
+                font: theme.fontSideBarNormal
+                color: titleMouseArea.containsMouse ? theSettings.colorTextLightHighlight : theSettings.colorTextLight
+                MouseArea {
+                    id: titleMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        if (mouse.Button === Qt.LeftButton) {
+                            delegateRoot.isSelected = true
+                        }
+                    }
+                }
             }
+            TextArea {
+                id: matchContextDisplay
+                anchors.top: titleDisplay.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 0
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: theSettings.colorAreaHighlight
+                }
+                clip: true
+                wrapMode: Text.WordWrap
+                textFormat: "RichText"
+                text: "Lorem ipsum <b>dolor sit amet</b>, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+                font: theme.fontSideBarNormal
+                color: theSettings.colorTextLight
+            }
+
+            states: [
+                State {
+                    name: "slideOut"
+                    when: titleMouseArea.containsMouse || delegateRoot.isSelected
+                    PropertyChanges {
+                        target: matchContextDisplay
+                        height: matchContextDisplay.implicitHeight
+                    }
+                }
+            ]
+
+            transitions: [
+                Transition {
+                    from: ""
+                    to: "slideOut"
+                    PropertyAnimation { properties: "height"; easing.type: Easing.InOutQuad; duration: 200  }
+                },
+                Transition {
+                    from: "slideOut"
+                    to: ""
+                    PropertyAnimation { properties: "height"; easing.type: Easing.InOutQuad; duration: 200  }
+                }
+            ]
         }
     }
 
