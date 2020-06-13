@@ -50,8 +50,8 @@ void SearchBackend::fullTextSearch(const QString& searchText)
     }
 
 
-//    if (!mQuery.exec("SELECT Title, Content From Documents Where Content Like '" + docTitle + "');")
-//        return;)
+    if (!mQuery.exec("SELECT Title, highlight(fts_Documents, 1, '<b>', '</b>') FROM fts_2 WHERE Content MATCH '" + searchText + "';"))
+        return;
 
     m_searchResults.clear();
 
@@ -61,7 +61,7 @@ void SearchBackend::fullTextSearch(const QString& searchText)
         QString title;
         QString matchContext;
 
-        m_searchResults << SearchResult();
+        m_searchResults << SearchResult(mQuery.value(0).toString(), mQuery.value(1).toString());
     }
 
     emit dataChanged(index(0), index(rowCount()));

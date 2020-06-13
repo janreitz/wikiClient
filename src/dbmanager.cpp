@@ -63,9 +63,36 @@ bool DBManager::createNewDatabase(const QString& filePath)
                                           "Display    TEXT,"
                                           "PRIMARY KEY(ID),"
                                           "UNIQUE(Source, Target));";
+    const QString createTableFTSQuery = "CREATE VIRTUAL TABLE fts_Documents USING fts5(Title, Content);";
+    const QString createTriggerInsertFTSQuery = ""
+          "CREATE TRIGGER Documents_ai AFTER INSERT ON Documents BEGIN "
+            "INSERT INTO fts_Documents(Title, Content) VALUES (new.Title, new.Content); "
+          "END; ";
+    const QString createTriggerDeleteFTSQuery = ""
+          "CREATE TRIGGER Documents_ad AFTER DELETE ON Documents BEGIN "
+            "INSERT INTO fts_Documents(fts_Documents, Title, Content) VALUES('delete', old.Title, old.Content); "
+          "END; ";
+    const QString createTriggerUpdateFTSQuery = ""
+          "CREATE TRIGGER Documents_au AFTER UPDATE ON Documents BEGIN "
+            "INSERT INTO fts_Documents(fts_Documents, Title, Content) VALUES('delete', old.Title, old.Content); "
+            "INSERT INTO fts_Documents(Title, Content) VALUES (new.Title, new.Content); "
+          "END;";
 
-    q.exec(createTableDocsQuery);
-    q.exec(createTableLinksQuery);
+    if (!q.exec(createTableDocsQuery))
+        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTableDocsQuery;
+    if (!q.exec(createTableLinksQuery))
+        qDebug() << "DBManager::createNewDB -> Query failed: " << createTableLinksQuery;
+    if (!q.exec(createTableFTSQuery))
+        qDebug() << "DBManager::createNewDB -> Query failed: " << createTableFTSQuery;
+    if (!q.exec(createTriggerInsertFTSQuery))
+        qDebug() << "DBManager::createNewDB -> Query failed: " << createTriggerInsertFTSQuery
+                 << " with Error: " << q.lastError();
+    if (!q.exec(createTriggerDeleteFTSQuery))
+        qDebug() << "DBManager::createNewDB -> Query failed: " << createTriggerDeleteFTSQuery
+                 << " with Error: " << q.lastError();
+    if (!q.exec(createTriggerUpdateFTSQuery))
+        qDebug() << "DBManager::createNewDB -> Query failed: " << createTriggerUpdateFTSQuery
+                 << " with Error: " << q.lastError();
 
     return true;
 }
@@ -190,14 +217,18 @@ void DBManager::addDocuments(const QStringList& filePaths)
         insertDocumentsQuery.bindValue(":title", doc->title);
         insertDocumentsQuery.bindValue(":lastModified", lastModified.toString());
         insertDocumentsQuery.bindValue(":content", doc->content);
-        insertDocumentsQuery.exec();
+        if (!insertDocumentsQuery.exec())
+            qDebug() << "DBManager::addDocuments -> Query failed" << insertDocumentsQuery.lastQuery()
+                     << "with Error" << insertDocumentsQuery.lastError();
 
         for (auto link: doc->links)
         {
             insertLinksQuery.bindValue(":source", link.source);
             insertLinksQuery.bindValue(":target", link.target);
             insertLinksQuery.bindValue(":display", link.display);
-            insertLinksQuery.exec();
+            if (!insertLinksQuery.exec())
+                qDebug() << "DBManager::addDocuments -> Query failed" << insertLinksQuery.lastQuery()
+                         << "with Error" << insertLinksQuery.lastError();
         }
     }
 
