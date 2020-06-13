@@ -43,6 +43,5 @@
         <file>qml/views/SqlView.qml</file>
         <file>resources/icons/search.svg</file>
         <file>qml/views/SearchView.qml</file>
-        <file>qml/components/SearchResultDelegate.qml</file>
     </qresource>
 </RCC>

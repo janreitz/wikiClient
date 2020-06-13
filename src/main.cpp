@@ -1,10 +1,11 @@
-    #include "linkprovider.h"
+#include "linkprovider.h"
 #include "titlesuggestionprovider.h"
 #include "sqltablemodelprovider.h"
 #include "filemanager.h"
 #include "dbmanager.h"
 #include "editorbackend.h"
 #include "settings.h"
+#include "searchbackend.h"
 
 #include <QObject>
 #include <QQuickItem>
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
     TitleSuggestionProvider theTitleSuggestionProvider(&theDBManager);
     LinkProvider theLinkProvider(&theDBManager);
     SqlTableModelProvider theTableModelProvider(&theDBManager);
+    SearchBackend theSearchBackend(&theDBManager);
 
     QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
     QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
@@ -60,6 +62,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("theTitleSuggestionProvider", &theTitleSuggestionProvider);
     engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
     engine.rootContext()->setContextProperty("theTableModelProvider", &theTableModelProvider);
+    engine.rootContext()->setContextProperty("theSearchBackend", &theSearchBackend);
 
     engine.load(url);
 

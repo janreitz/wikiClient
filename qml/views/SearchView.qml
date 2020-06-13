@@ -84,7 +84,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        model: ["SearchResult", "SearchResult", "SearchResult"]
+        model: theSearchBackend//["SearchResult", "SearchResult", "SearchResult"]
         delegate: searchResultDelegate
     }
 
@@ -96,9 +96,13 @@ Item {
             width: ListView.view.width
             height: matchContextDisplay.y + matchContextDisplay.height // childrenRect.height did work on expansion, but did not update on rectraction
             objectName: "SearchResultDelegate::delegateRoot_" + index
+            Component.onCompleted: {
+                console.log("something")
+            }
+
             Text {
                 id: titleDisplay
-                text: modelData
+                text: model.title
                 font: theme.fontSideBarNormal
                 color: titleMouseArea.containsMouse ? theSettings.colorTextLightHighlight : theSettings.colorTextLight
                 MouseArea {
@@ -121,7 +125,7 @@ Item {
                 clip: true
                 wrapMode: Text.WordWrap
                 textFormat: "RichText"
-                text: "Lorem ipsum <b>dolor sit amet</b>, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+                text: model.matchContext
                 font: theme.fontSideBarNormal
                 color: theSettings.colorTextLight
             }

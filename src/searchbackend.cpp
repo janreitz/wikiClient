@@ -12,6 +12,10 @@ SearchBackend::SearchBackend(DBManager* dbManager)
         mDBOpen = false;
         mQuery.clear();
     });
+
+    m_searchResults << SearchResult("Title 1", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...")
+                    << SearchResult("Title 2", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...")
+                    << SearchResult("Title 3", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...");
 }
 
 int SearchBackend::rowCount(const QModelIndex &) const
@@ -21,25 +25,21 @@ int SearchBackend::rowCount(const QModelIndex &) const
 
 QVariant SearchBackend::data(const QModelIndex &index, int role) const
 {
-//    if (index.row() < rowCount())
-//        switch (role) {
-//        case FullNameRole: return m_contacts.at(index.row()).fullName;
-//        case AddressRole: return m_contacts.at(index.row()).address;
-//        case CityRole: return m_contacts.at(index.row()).city;
-//        case NumberRole: return m_contacts.at(index.row()).number;
-//        default: return QVariant();
-//    }
+    if (index.row() < rowCount())
+        switch (role) {
+        case TitleRole: return m_searchResults.at(index.row()).title();
+        case MatchContextRole: return m_searchResults.at(index.row()).matchContext();
+        default: return QVariant();
+    }
     return QVariant();
 }
 
-QVariant SearchBackend::headerData(int section, Qt::Orientation orientation, int role) const
+QHash<int, QByteArray> SearchBackend::roleNames() const
 {
-    return QVariant();
-}
-
-Qt::ItemFlags SearchBackend::flags(const QModelIndex &index) const
-{
-    return Qt::ItemFlag::ItemIsSelectable;
+    QHash<int, QByteArray> roles;
+    roles[TitleRole] = "title";
+    roles[MatchContextRole] = "matchContext";
+    return roles;
 }
 
 void SearchBackend::fullTextSearch(const QString& searchText)
@@ -63,4 +63,6 @@ void SearchBackend::fullTextSearch(const QString& searchText)
 
         m_searchResults << SearchResult();
     }
+
+    emit dataChanged(index(0), index(rowCount()));
 }
