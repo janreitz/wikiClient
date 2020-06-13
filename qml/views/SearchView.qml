@@ -94,8 +94,8 @@ Item {
         ItemDelegate {
             id: delegateRoot
             width: ListView.view.width
-            height: childrenRect.height
-            property bool isSelected: false
+            height: matchContextDisplay.y + matchContextDisplay.height // childrenRect.height did work on expansion, but did not update on rectraction
+            objectName: "SearchResultDelegate::delegateRoot_" + index
             Text {
                 id: titleDisplay
                 text: modelData
@@ -105,15 +105,11 @@ Item {
                     id: titleMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
-                    onClicked: {
-                        if (mouse.Button === Qt.LeftButton) {
-                            delegateRoot.isSelected = true
-                        }
-                    }
                 }
             }
             TextArea {
                 id: matchContextDisplay
+                objectName: "SearchResultDelegate::matchContextDisplay"
                 anchors.top: titleDisplay.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -133,7 +129,7 @@ Item {
             states: [
                 State {
                     name: "slideOut"
-                    when: titleMouseArea.containsMouse || delegateRoot.isSelected
+                    when: titleMouseArea.containsMouse
                     PropertyChanges {
                         target: matchContextDisplay
                         height: matchContextDisplay.implicitHeight
