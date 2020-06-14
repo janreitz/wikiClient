@@ -4,6 +4,7 @@ import "../components"
 
 Item {
     id:root
+    property var lastActiveEditor
 
     FocusScope {
         id: focusScope
@@ -105,10 +106,15 @@ Item {
                 text: model.title
                 font: theme.fontSideBarNormal
                 color: titleMouseArea.containsMouse ? theSettings.colorTextLightHighlight : theSettings.colorTextLight
+                clip: true
                 MouseArea {
                     id: titleMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
+//                    onClicked: {
+//                        var filePath = theFileManager.workingDirectory + "/" + model.name;
+//                        root.lastActiveEditor.loadPath(filePath)
+//                    }
                 }
             }
             TextArea {
@@ -126,7 +132,7 @@ Item {
                 wrapMode: Text.WordWrap
                 textFormat: "RichText"
                 text: model.matchContext
-                font: theme.fontSideBarNormal
+                font: theme.fontTextBody
                 color: theSettings.colorTextLight
             }
 
@@ -162,6 +168,7 @@ Item {
         {
             // Do full text search
             console.log("Full text search: ", searchBarInput.text);
+            theSearchBackend.fullTextSearch(searchBarInput.text);
         }
         else if (searchTypeComboBox.currentText == "SQL")
         {

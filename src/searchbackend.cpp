@@ -42,6 +42,12 @@ QHash<int, QByteArray> SearchBackend::roleNames() const
     return roles;
 }
 
+Qt::ItemFlags SearchBackend::flags(const QModelIndex &index) const
+{
+    Q_UNUSED(index)
+    return Qt::ItemIsSelectable;
+}
+
 void SearchBackend::fullTextSearch(const QString& searchText)
 {
     if (!mDBOpen) {
@@ -49,20 +55,31 @@ void SearchBackend::fullTextSearch(const QString& searchText)
         return;
     }
 
+    QString searchQuery("SELECT Title, highlight(fts_Documents, 1, '<b>', '</b>') FROM fts_Documents WHERE Content MATCH '" + searchText + "';");
 
-    if (!mQuery.exec("SELECT Title, highlight(fts_Documents, 1, '<b>', '</b>') FROM fts_2 WHERE Content MATCH '" + searchText + "';"))
+    if (!mQuery.exec(searchQuery))
+    {
+        qDebug() << "DBManager::createNewDB -> Query failed: " << searchQuery
+                 << " with Error: " << mQuery.lastError();
         return;
+    }
+
+    beginRemoveRows(QModelIndex(), 0, m_searchResults.count() - 1);
 
     m_searchResults.clear();
 
+    endRemoveRows();
 
+    QList<SearchResult> intermediateSearchresults;
     while (mQuery.next())
     {
         QString title;
         QString matchContext;
 
-        m_searchResults << SearchResult(mQuery.value(0).toString(), mQuery.value(1).toString());
+        intermediateSearchresults << SearchResult(mQuery.value(0).toString(), mQuery.value(1).toString());
     }
+    beginInsertRows(QModelIndex(), 0, intermediateSearchresults.count());
+    m_searchResults = intermediateSearchresults;
 
-    emit dataChanged(index(0), index(rowCount()));
+    endInsertRows();
 }

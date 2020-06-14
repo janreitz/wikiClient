@@ -132,9 +132,6 @@ Item {
                     case Qt.Key_Down:
                         suggestionBox.focus = true
                         break;
-                    case Qt.Key_Return:
-                        doSearch();
-                        break;
                     }
                 }
                 onTextChanged: {
