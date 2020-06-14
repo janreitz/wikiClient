@@ -12,7 +12,7 @@ DBManager::DBManager()
 {
 }
 
-bool DBManager::slotRootDirectoryChanged(const QString& directoryPath)
+void DBManager::slotWorkingDirectoryChanged(const QString& directoryPath)
 {
     close();
 
@@ -21,10 +21,17 @@ bool DBManager::slotRootDirectoryChanged(const QString& directoryPath)
     auto filePath = fileInfo.absoluteFilePath();
 
     if (fileInfo.exists()) {
-        return connectToDatabase(filePath);
+        if (connectToDatabase(filePath))
+        {
+            emit signalDBAvailable();
+        }
     }
-    else {
-        return createNewDatabase(filePath);
+    else
+    {
+        if (createNewDatabase(filePath))
+        {
+            emit signalDBAvailable();
+        }
     }
 
 //    // Prevent error on existing .db
@@ -122,15 +129,16 @@ bool DBManager::connectToDatabase(const QString& filePath)
     }
 
     initializeTableModel();
-
-    emit signalDBOpened();
     return true;
 }
 
 void DBManager::close()
 {
-    m_db.close();
-    emit signalDBClosed();
+    if (m_db.isOpen())
+    {
+        m_db.close();
+        emit signalDBClosed();
+    }
 }
 
 bool DBManager::isOpen()

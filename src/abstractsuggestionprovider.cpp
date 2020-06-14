@@ -4,7 +4,7 @@ AbstractSuggestionProvider::AbstractSuggestionProvider(DBManager* dbManager)
     : QObject(nullptr)
     , mDBManager(dbManager)
 {
-    QObject::connect(mDBManager, &DBManager::signalDBOpened, this, [this]{
+    QObject::connect(mDBManager, &DBManager::signalDBAvailable, this, [this]{
         mDBOpen = true;
         if (auto q = mDBManager->getQuery(); q)
             mQuery = *q;

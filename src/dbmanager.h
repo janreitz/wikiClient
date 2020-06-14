@@ -27,14 +27,14 @@ public:
     std::optional<std::shared_ptr<QSqlTableModel>> tableModel();
 
 public slots:
-    bool slotRootDirectoryChanged(const QString& directoryPath);
+    void slotWorkingDirectoryChanged(const QString& directoryPath);
     void slotNewFiles(const QStringList& filePaths);
     void slotFileRenamed(const QString &path, const QString &oldName, const QString &newName);
     void slotFileModified(const QString& filePath);
     void slotFilesDeleted(const QStringList& filePaths);
 
 signals:
-    void signalDBOpened();
+    void signalDBAvailable();
     void signalDBClosed();
     void tableModelChanged();
 

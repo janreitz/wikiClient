@@ -3,7 +3,7 @@
 SearchBackend::SearchBackend(DBManager* dbManager)
     : m_dbManager(dbManager)
 {
-    QObject::connect(m_dbManager, &DBManager::signalDBOpened, this, [this]{
+    QObject::connect(m_dbManager, &DBManager::signalDBAvailable, this, [this]{
         mDBOpen = true;
         if (auto q = m_dbManager->getQuery(); q)
             mQuery = *q;
