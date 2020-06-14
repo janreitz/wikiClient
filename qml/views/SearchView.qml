@@ -5,6 +5,7 @@ import "../components"
 Item {
     id:root
     property var lastActiveEditor
+    property var lastActiveMultiTabEditor
 
     FocusScope {
         id: focusScope
@@ -97,9 +98,6 @@ Item {
             width: ListView.view.width
             height: matchContextDisplay.y + matchContextDisplay.height // childrenRect.height did work on expansion, but did not update on rectraction
             objectName: "SearchResultDelegate::delegateRoot_" + index
-            Component.onCompleted: {
-                console.log("something")
-            }
 
             Text {
                 id: titleDisplay
@@ -111,10 +109,10 @@ Item {
                     id: titleMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
-//                    onClicked: {
-//                        var filePath = theFileManager.workingDirectory + "/" + model.name;
-//                        root.lastActiveEditor.loadPath(filePath)
-//                    }
+                    onClicked: {
+                        var filePath = theFileManager.workingDirectory + "/" + model.name + ".md";
+                        root.lastActiveEditor.loadPath(filePath)
+                    }
                 }
             }
             TextArea {

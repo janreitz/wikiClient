@@ -70,19 +70,19 @@ bool DBManager::createNewDatabase(const QString& filePath)
                                           "Display    TEXT,"
                                           "PRIMARY KEY(ID),"
                                           "UNIQUE(Source, Target));";
-    const QString createTableFTSQuery = "CREATE VIRTUAL TABLE fts_Documents USING fts5(Title, Content);";
+    const QString createTableFTSQuery = "CREATE VIRTUAL TABLE fts_Documents USING fts5(Name, Title, Content);";
     const QString createTriggerInsertFTSQuery = ""
           "CREATE TRIGGER Documents_ai AFTER INSERT ON Documents BEGIN "
-            "INSERT INTO fts_Documents(Title, Content) VALUES (new.Title, new.Content); "
+            "INSERT INTO fts_Documents(Name, Title, Content) VALUES (new.Name, new.Title, new.Content); "
           "END; ";
     const QString createTriggerDeleteFTSQuery = ""
           "CREATE TRIGGER Documents_ad AFTER DELETE ON Documents BEGIN "
-            "INSERT INTO fts_Documents(fts_Documents, Title, Content) VALUES('delete', old.Title, old.Content); "
+            "INSERT INTO fts_Documents(fts_Documents, Name, Title, Content) VALUES('delete', old.Name, old.Title, old.Content); "
           "END; ";
     const QString createTriggerUpdateFTSQuery = ""
           "CREATE TRIGGER Documents_au AFTER UPDATE ON Documents BEGIN "
-            "INSERT INTO fts_Documents(fts_Documents, Title, Content) VALUES('delete', old.Title, old.Content); "
-            "INSERT INTO fts_Documents(Title, Content) VALUES (new.Title, new.Content); "
+            "INSERT INTO fts_Documents(fts_Documents, Name, Title, Content) VALUES('delete', old.Name, old.Title, old.Content); "
+            "INSERT INTO fts_Documents(Name, Title, Content) VALUES (new.Name, new.Title, new.Content); "
           "END;";
 
     if (!q.exec(createTableDocsQuery))

@@ -13,9 +13,9 @@ SearchBackend::SearchBackend(DBManager* dbManager)
         mQuery.clear();
     });
 
-    m_searchResults << SearchResult("Title 1", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...")
-                    << SearchResult("Title 2", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...")
-                    << SearchResult("Title 3", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...");
+//    m_searchResults << SearchResult("Title 1", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...")
+//                    << SearchResult("Title 2", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...")
+//                    << SearchResult("Title 3", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...");
 }
 
 int SearchBackend::rowCount(const QModelIndex &) const
@@ -29,6 +29,7 @@ QVariant SearchBackend::data(const QModelIndex &index, int role) const
         switch (role) {
         case TitleRole: return m_searchResults.at(index.row()).title();
         case MatchContextRole: return m_searchResults.at(index.row()).matchContext();
+        case NameRole: return m_searchResults.at(index.row()).name();
         default: return QVariant();
     }
     return QVariant();
@@ -39,6 +40,7 @@ QHash<int, QByteArray> SearchBackend::roleNames() const
     QHash<int, QByteArray> roles;
     roles[TitleRole] = "title";
     roles[MatchContextRole] = "matchContext";
+    roles[NameRole] = "name";
     return roles;
 }
 
@@ -55,7 +57,7 @@ void SearchBackend::fullTextSearch(const QString& searchText)
         return;
     }
 
-    QString searchQuery("SELECT Title, highlight(fts_Documents, 1, '<b>', '</b>') FROM fts_Documents WHERE Content MATCH '" + searchText + "';");
+    QString searchQuery("SELECT Name, Title, highlight(fts_Documents, 2, '<b>', '</b>') FROM fts_Documents WHERE Content MATCH '" + searchText + "';");
 
     if (!mQuery.exec(searchQuery))
     {
@@ -64,21 +66,21 @@ void SearchBackend::fullTextSearch(const QString& searchText)
         return;
     }
 
-    beginRemoveRows(QModelIndex(), 0, m_searchResults.count() - 1);
-
-    m_searchResults.clear();
-
-    endRemoveRows();
+    if (!m_searchResults.isEmpty())
+    {
+        beginRemoveRows(QModelIndex(), 0, m_searchResults.count() - 1);
+        m_searchResults.clear();
+        endRemoveRows();
+    }
 
     QList<SearchResult> intermediateSearchresults;
     while (mQuery.next())
     {
-        QString title;
-        QString matchContext;
-
-        intermediateSearchresults << SearchResult(mQuery.value(0).toString(), mQuery.value(1).toString());
+        intermediateSearchresults << SearchResult(mQuery.value(0).toString(), // name
+                                                  mQuery.value(1).toString(), // title
+                                                  mQuery.value(2).toString());// matchContent
     }
-    beginInsertRows(QModelIndex(), 0, intermediateSearchresults.count());
+    beginInsertRows(QModelIndex(), 0, intermediateSearchresults.count() - 1);
     m_searchResults = intermediateSearchresults;
 
     endInsertRows();

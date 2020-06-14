@@ -14,7 +14,8 @@ public:
 
     enum SearchResultRoles {
         TitleRole = Qt::UserRole + 1,
-        MatchContextRole
+        MatchContextRole,
+        NameRole
     };
 
     Q_INVOKABLE void fullTextSearch(const QString& searchText);

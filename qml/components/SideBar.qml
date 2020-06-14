@@ -184,6 +184,8 @@ Item {
             anchors.fill: parent
             anchors.margins: 20
             objectName: "searchView"
+            lastActiveEditor: root.lastActiveEditor
+            lastActiveMultiTabEditor: root.lastActiveMultiTabEditor
         }
     }
 
