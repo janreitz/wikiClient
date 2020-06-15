@@ -91,6 +91,10 @@ Item {
                 id: linkMouseArea
                 anchors.fill: parent
                 hoverEnabled: true
+                onClicked: {
+                    var filePath = theFileManager.workingDirectory + "/" + modelData + ".md";
+                    root.lastActiveEditor.loadPath(filePath)
+                }
             }
         }
     }

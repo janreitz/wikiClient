@@ -5,7 +5,6 @@ Item {
 
     property font fontTextBody: Qt.font({
         family: robotoRegular.name,
-        //weight: 25,
         italic: false,
         pointSize: 12
         })
