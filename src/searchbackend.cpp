@@ -57,7 +57,7 @@ void SearchBackend::fullTextSearch(const QString& searchText)
         return;
     }
 
-    QString searchQuery("SELECT Name, Title, highlight(fts_Documents, 2, '<b>', '</b>') FROM fts_Documents WHERE Content MATCH '" + searchText + "';");
+    QString searchQuery("SELECT Name, Title, snippet(fts_Documents, 2, '<b>', '</b>', '...', 64) FROM fts_Documents WHERE Content MATCH '" + searchText + "';");
 
     if (!mQuery.exec(searchQuery))
     {
