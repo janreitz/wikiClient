@@ -8,9 +8,11 @@ AbstractDBClient::AbstractDBClient(DBManager* dbManager)
         m_dbOpen = true;
         if (auto q = m_dbManager->getQuery(); q)
             m_query = *q;
+        emit queryAvailable();
     });
     QObject::connect(m_dbManager, &DBManager::signalDBClosed, this, [this]{
         m_dbOpen = false;
         m_query.clear();
+        emit queryUnavailable();
     });
 }

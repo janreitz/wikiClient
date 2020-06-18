@@ -14,6 +14,8 @@ public:
     explicit AbstractDBClient(DBManager* dbManager);
 
 signals:
+    void queryAvailable();
+    void queryUnavailable();
 
 protected:
     DBManager* m_dbManager;

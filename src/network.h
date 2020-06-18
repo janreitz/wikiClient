@@ -28,12 +28,15 @@ public:
 
 public slots:
     void tick();
+    void initializeNetwork();
 
 signals:
     void nodesChanged() const;
     void edgesChanged() const;
 
 private:
+
+    void clear();
 
     static int nodeCount(QQmlListProperty<Node>*);
     static Node* nodeAt(QQmlListProperty<Node>*, int index);
@@ -42,6 +45,7 @@ private:
     static Edge* edgeAt(QQmlListProperty<Edge>*, int index);
 
     QList<Node*> m_nodes;
+    QHash<QString, Node*> m_nodesByName;
     QList<Edge*> m_edges;
     QTimer m_timer;
     double m_stepSize = 50;

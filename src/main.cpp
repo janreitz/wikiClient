@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
     QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, &theDBManager, &DBManager::slotWorkingDirectoryChanged);
     QObject::connect(&theDBManager, &DBManager::signalDBAvailable, &theFileManager, &FileManager::slotScanDirectory);
     QObject::connect(&theDBManager, &DBManager::signalDBAvailable, &theTableModelProvider, &SqlTableModelProvider::slotDBOpened);
+    QObject::connect(&theDBManager, &DBManager::signalDBInitialized, &theNetwork, &Network::initializeNetwork);
 
     theFileManager.setRootPath(settings->rootDirectory());
     

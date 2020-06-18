@@ -101,13 +101,12 @@ bool DBManager::createNewDatabase(const QString& filePath)
         qDebug() << "DBManager::createNewDB -> Query failed: " << createTriggerUpdateFTSQuery
                  << " with Error: " << q.lastError();
 
+    m_dbEmpty = true;
     return true;
 }
 
 bool DBManager::connectToDatabase(const QString& filePath)
 {
-    //mDB = QSqlDatabase::addDatabase("QSQLITE");
-
     if (m_db.isOpen()) {
         if (filePath == m_db.databaseName()) {
             return true;
@@ -241,6 +240,11 @@ void DBManager::addDocuments(const QStringList& filePaths)
     }
 
     m_db.commit();
+    if (m_dbEmpty)
+    {
+        emit signalDBInitialized();
+        m_dbEmpty = false;
+    }
 }
 
 void DBManager::initializeTableModel()

@@ -34,7 +34,10 @@ public slots:
     void slotFilesDeleted(const QStringList& filePaths);
 
 signals:
+    // A database has been opened/created
     void signalDBAvailable();
+    // The first time documents have been added after signalDBAvailable
+    void signalDBInitialized();
     void signalDBClosed();
     void tableModelChanged();
 
@@ -46,7 +49,8 @@ private:
     void initializeTableModel();
 
     QSqlDatabase m_db;
-    bool tableModelIsInitialized;
+    bool m_dbEmpty = true;
+    bool m_tableModelIsInitialized;
     std::shared_ptr<QSqlTableModel> m_tableModel;
 };
 
