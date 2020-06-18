@@ -6,6 +6,7 @@
 #include "editorbackend.h"
 #include "settings.h"
 #include "searchbackend.h"
+#include "network.h"
 
 #include <QObject>
 #include <QQuickItem>
@@ -25,7 +26,8 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/resources/icons/owl_scribbles_reduced.svg"));
 
     qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
-
+    qmlRegisterType<Node>("Backend", 1, 0, "Node");
+    qmlRegisterType<Edge>("Backend", 1, 0, "Edge");
 
     Settings* settings = Settings::getInstance();
     settings->readSettingsFile(":/resources/settings/default.json");
@@ -37,6 +39,7 @@ int main(int argc, char *argv[])
     LinkProvider theLinkProvider(&theDBManager);
     SqlTableModelProvider theTableModelProvider(&theDBManager);
     SearchBackend theSearchBackend(&theDBManager);
+    Network theNetwork;
 
     QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
     QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
@@ -63,6 +66,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
     engine.rootContext()->setContextProperty("theTableModelProvider", &theTableModelProvider);
     engine.rootContext()->setContextProperty("theSearchBackend", &theSearchBackend);
+    engine.rootContext()->setContextProperty("theNetwork", &theNetwork);
 
     engine.load(url);
 

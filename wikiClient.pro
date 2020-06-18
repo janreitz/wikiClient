@@ -19,12 +19,15 @@ SOURCES += \
         src/abstractsuggestionprovider.cpp \
         src/dbmanager.cpp \
         src/document.cpp \
+        src/edge.cpp \
         src/editorbackend.cpp \
         src/filemanager.cpp \
         src/fileparser.cpp \
         src/linkprovider.cpp \
         src/main.cpp \
         src/markdownhighlighter.cpp \
+        src/network.cpp \
+        src/node.cpp \
         src/qownlanguagedata.cpp \
         src/searchbackend.cpp \
         src/searchresult.cpp \
@@ -51,11 +54,14 @@ HEADERS += \
     src/abstractsuggestionprovider.h \
     src/dbmanager.h \
     src/document.h \
+    src/edge.h \
     src/editorbackend.h \
     src/filemanager.h \
     src/fileparser.h \
     src/linkprovider.h \
     src/markdownhighlighter.h \
+    src/network.h \
+    src/node.h \
     src/qownlanguagedata.h \
     src/searchbackend.h \
     src/searchresult.h \
@@ -69,5 +75,6 @@ DISTFILES += \
     qml/components/MyColumnLayout.qml \
     qml/components/MyRowLayout.qml \
     qml/components/SideBar.qml \
-    qml/js/TilingManager.js
+    qml/js/TilingManager.js \
+    qml/views/NetworkView.qml
 

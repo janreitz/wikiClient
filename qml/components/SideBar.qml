@@ -199,15 +199,11 @@ Item {
 
     Component {
         id: networkViewComp
-        TestRect {
+        NetworkView {
             id: networkView
             anchors.fill: parent
             anchors.margins: 20
-            color: "steelblue"
             objectName: "networkView"
-            Text {
-                text: "Coming Soon"
-            }
         }
     }
 
