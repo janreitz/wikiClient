@@ -5,9 +5,9 @@ Network::Network(DBManager* dbManager)
     , m_timer(this)
 {
 
-//    Node* node_1 = new Node(QPointF(100,100), "first", this);
-//    Node* node_2 = new Node(QPointF(150,150), "second", this);
-//    Node* node_3 = new Node(QPointF(200,100), "third", this);
+//    Node* node_1 = new Node(QPointF(200,400), "first", this);
+//    Node* node_2 = new Node(QPointF(150,450), "second", this);
+//    Node* node_3 = new Node(QPointF(200,500), "third", this);
 
 //    Edge* edge_1 = new Edge(node_1, node_2, this);
 //    Edge* edge_2 = new Edge(node_2, node_3, this);
@@ -39,7 +39,8 @@ void Network::initializeNetwork()
     while (m_query.next())
     {
         auto name = m_query.value(0).toString();
-        auto node = new Node(QPointF(500,500), name, this);
+        Q_ASSERT(!name.isEmpty());
+        auto node = new Node(QPointF(100,100), name, this);
         m_nodes << node;
         m_nodesByName[name] = node;
     }

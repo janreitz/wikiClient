@@ -1,11 +1,14 @@
 #include "edge.h"
 #include <QDebug>
+#include <QRandomGenerator>
 
 Edge::Edge(Node* source, Node* target, QObject* parent)
     : QObject(parent)
     , m_source(source)
     , m_target(target)
 {
+    Q_ASSERT(m_source);
+    Q_ASSERT(m_target);
     m_source->addEdge(this);
     m_target->addEdge(this);
 
@@ -57,20 +60,47 @@ void Edge::slotTargetPositionChanged()
 double Edge::calcLength() const
 {
     QPointF delta = m_target->position() - m_source->position();
-    return sqrt(pow(delta.x(), 2) + pow(delta.y(), 2));
+    const double length = vectorLength(delta);
+    Q_ASSERT(!isnan(length));
+    return length;
+}
+
+double Edge::vectorLength(const QPointF & vec)
+{
+    return sqrt(pow(vec.x(), 2) + pow(vec.y(), 2));
+}
+
+std::optional<QPointF> Edge::normalizeVector(const QPointF & vec)
+{
+    const double length = vectorLength(vec);
+    if (length == 0)
+        return std::nullopt;
+    return vec/vectorLength(vec);
 }
 
 double Edge::force() const
 {
-    double springForce = (m_length - m_neutralLength) * m_springConstant;
+    const double springForce = (m_length - m_neutralLength) * m_springConstant;
     // This is a problem, since the sampling rate is unkown
-    double dampingForce = (m_length - m_oldLength) / (m_stepSize / 1000) * m_dampingConstant;
-    return springForce + dampingForce;
+    const double dampingForce = (m_length - m_oldLength) / (m_stepSize / 1000) * m_dampingConstant;
+    const double resultingForce = springForce + dampingForce;
+    Q_ASSERT(!isnan(resultingForce));
+    return resultingForce;
 }
 
 QPointF Edge::normalizedVector() const
 {
-    return (m_target->position() - m_source->position()) / m_length;
+    const auto normVector = normalizeVector(m_target->position() - m_source->position());
+    if (normVector)
+        return *normVector;
+    // In case source and target have the same position, generate a random vector
+    int randX = QRandomGenerator::global()->bounded(100);
+    const int randY = QRandomGenerator::global()->bounded(100);
+    if (randX == 0 && randY == 0)
+    {
+        randX = 1;
+    }
+    return *normalizeVector(QPointF(randX, randY));
 }
 
 void Edge::updatePositions()

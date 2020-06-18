@@ -2,6 +2,7 @@
 #define EDGE_H
 
 #include <QObject>
+#include <optional>
 
 #include "node.h"
 
@@ -36,6 +37,8 @@ signals:
 
 private:
     double calcLength() const;
+    static double vectorLength(const QPointF&);
+    static std::optional<QPointF> normalizeVector(const QPointF&);
 
     double m_length, m_oldLength;
     double m_d_length_dt;

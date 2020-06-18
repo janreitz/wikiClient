@@ -6,11 +6,6 @@ import Backend 1.0
 
 Item {
     id: root
-    property int diameter: 20
-    property var springConstant: 0.1
-    property var dampingConstant: 0.01
-    property int stepSize: 20
-    property int neutralLength: 100
 
     ListView {
         id: edgeList
