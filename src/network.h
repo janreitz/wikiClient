@@ -6,8 +6,9 @@
 #include <QQmlListProperty>
 #include "node.h"
 #include "edge.h"
+#include "abstractdbclient.h"
 
-class Network : public QObject
+class Network : public AbstractDBClient
 {
     Q_OBJECT
     Q_PROPERTY(QQmlListProperty<Node> nodes READ nodes NOTIFY nodesChanged())
@@ -23,7 +24,7 @@ public:
     int edgeCount() const;
     Edge* edgeAt(int index) const;
 
-    explicit Network(QObject *parent = nullptr);
+    explicit Network(DBManager* dbManager);
 
 public slots:
     void tick();
@@ -39,7 +40,6 @@ private:
 
     static int edgeCount(QQmlListProperty<Edge>*);
     static Edge* edgeAt(QQmlListProperty<Edge>*, int index);
-
 
     QList<Node*> m_nodes;
     QList<Edge*> m_edges;

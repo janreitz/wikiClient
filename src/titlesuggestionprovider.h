@@ -1,9 +1,9 @@
 #ifndef TITLESUGGESTIONPROVIDER_H
 #define TITLESUGGESTIONPROVIDER_H
-#include "abstractsuggestionprovider.h"
+#include "abstractdbclient.h"
 #include <QtSql/QSqlQueryModel>
 
-class TitleSuggestionProvider: public AbstractSuggestionProvider
+class TitleSuggestionProvider: public AbstractDBClient
 {
     Q_OBJECT
 

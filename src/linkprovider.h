@@ -3,9 +3,9 @@
 
 #include <QStringList>
 
-#include "abstractsuggestionprovider.h"
+#include "abstractdbclient.h"
 
-class LinkProvider: public AbstractSuggestionProvider
+class LinkProvider: public AbstractDBClient
 {
     Q_OBJECT
     Q_PROPERTY(QString documentTitle READ documentTitle WRITE setDocumentTitle NOTIFY documentTitleChanged)

@@ -1,7 +1,7 @@
 #include "network.h"
 
-Network::Network(QObject *parent)
-    : QObject(parent)
+Network::Network(DBManager* dbManager)
+    : AbstractDBClient(dbManager)
     , m_timer(this)
 {
     connect(&m_timer, &QTimer::timeout, this, &Network::tick);

@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     LinkProvider theLinkProvider(&theDBManager);
     SqlTableModelProvider theTableModelProvider(&theDBManager);
     SearchBackend theSearchBackend(&theDBManager);
-    Network theNetwork;
+    Network theNetwork(&theDBManager);
 
     QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
     QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
