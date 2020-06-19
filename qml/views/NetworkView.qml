@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Shapes 1.15
 import QtQuick.Controls 2.12
-
+import "../components"
 import Backend 1.0
 
 Item {
@@ -23,8 +23,8 @@ Item {
                 id: shapePath
                 startX: edge.ListView.view.originX + modelData.start.x
                 startY: edge.ListView.view.originY + modelData.start.y
-                strokeColor: "black"
-                strokeWidth: 5
+                strokeColor: "#ccc"
+                strokeWidth: 2
                 PathLine {
                     id: edgeLine
                     x: modelData.end.x
@@ -51,10 +51,19 @@ Item {
             objectName: "node"
             x: ListView.view.originX + modelData.position.x - diameter/2
             y: ListView.view.originY + modelData.position.y - diameter/2
-            color: "red"
+            color: mouseArea.containsMouse ? "#ffcc66" : "#99cc99"
             width: diameter
             height: diameter
             radius: diameter / 2
+
+            Text {
+                id: nameDisplay
+                x: 30
+                font: theme.fontTextBody
+                color: theSettings.colorTextLight
+                text: modelData.name
+                visible: mouseArea.containsMouse
+            }
 
             Timer {
                 id: timer
@@ -68,6 +77,7 @@ Item {
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
+                hoverEnabled: true
                 onPressed: {
                     modelData.dragStarted()
                     timer.start()
