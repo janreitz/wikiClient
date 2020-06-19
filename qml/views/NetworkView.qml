@@ -21,8 +21,8 @@ Item {
             id: edge
             ShapePath{
                 id: shapePath
-                startX: modelData.start.x
-                startY: modelData.start.y
+                startX: edge.ListView.view.originX + modelData.start.x
+                startY: edge.ListView.view.originY + modelData.start.y
                 strokeColor: "black"
                 strokeWidth: 5
                 PathLine {
@@ -49,8 +49,8 @@ Item {
             property var diameter: 20
             id: node
             objectName: "node"
-            x: modelData.position.x - diameter/2
-            y: modelData.position.y - diameter/2
+            x: ListView.view.originX + modelData.position.x - diameter/2
+            y: ListView.view.originY + modelData.position.y - diameter/2
             color: "red"
             width: diameter
             height: diameter
@@ -77,8 +77,8 @@ Item {
                     timer.stop()
                 }
                 function setNodePositionToMouseCoordinates() {
-                    modelData.position.x = node.ListView.view.x + node.x + mouseX
-                    modelData.position.y = node.ListView.view.y + node.y + mouseY
+                    modelData.position.x = modelData.position.x - node.diameter/2 + mouseX
+                    modelData.position.y = modelData.position.y - node.diameter/2 + mouseY
                 }
 
             }
