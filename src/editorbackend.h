@@ -35,7 +35,9 @@ class EditorBackend : public QObject
 public:
 
     Q_INVOKABLE void loadUrl(const QUrl &fileUrl);
-    Q_INVOKABLE void loadPath(const QString &filePath);
+    Q_INVOKABLE void loadAbsolutePath(const QString &filePath);
+    // Relative to current Working Directory
+    Q_INVOKABLE void loadRelativePath(const QString &filePath);
     Q_INVOKABLE void saveAs(const QUrl &fileUrl);
     Q_INVOKABLE bool currentFileUrlExists() const;
 

@@ -204,6 +204,8 @@ Item {
             anchors.fill: parent
             anchors.margins: 20
             objectName: "networkView"
+            lastActiveEditor: root.lastActiveEditor
+            lastActiveMultiTabEditor: root.lastActiveMultiTabEditor
         }
     }
 

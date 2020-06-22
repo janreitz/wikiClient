@@ -13,9 +13,13 @@ FocusScope {
     property alias text: textArea.text
     property alias modified: editorBackend.modified
     property alias fileName: editorBackend.fileName
-    function loadPath(filePath) {
-        console.log(objectName + "::scrollView::loadFile -> " + filePath)
-        editorBackend.loadPath(filePath)
+    function loadFileAbsolute(absolutePath) {
+        console.log(objectName + "::scrollView::loadFile -> " + absolutePath)
+        editorBackend.loadAbsolutePath(absolutePath)
+    }
+    function loadFileRelative(relativePath) {
+        console.log(objectName + "::scrollView::loadFile -> " + relativePath)
+        editorBackend.loadRelativePath(relativePath)
     }
 
 //    onActiveFocusChanged: {

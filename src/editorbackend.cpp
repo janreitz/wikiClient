@@ -1,7 +1,9 @@
 #include "editorbackend.h"
 #include "utilities.h"
+#include "settings.h"
 
 #include <QFile>
+#include <QDir>
 #include <QFileInfo>
 #include <QFileSelector>
 #include <QQmlFile>
@@ -242,9 +244,14 @@ QString EditorBackend::documentTitle() const
     return QString("Untitled");
 }
 
-void EditorBackend::loadPath(const QString &filePath)
+void EditorBackend::loadAbsolutePath(const QString &absolutePath)
 {
-    loadUrl(QUrl::fromLocalFile(filePath));
+    loadUrl(QUrl::fromLocalFile(absolutePath));
+}
+
+void EditorBackend::loadRelativePath(const QString &relativePath)
+{
+    loadUrl(QUrl::fromLocalFile(Settings::getInstance()->rootDirectory() + QDir::separator() + relativePath));
 }
 
 void EditorBackend::loadUrl(const QUrl &fileUrl)
@@ -252,14 +259,9 @@ void EditorBackend::loadUrl(const QUrl &fileUrl)
     if (fileUrl == m_fileUrl)
         return;
 
-    QQmlEngine *engine = qmlEngine(this);
-    if (!engine) {
-        qWarning() << "load() called before EditorBackend has QQmlEngine";
-        return;
-    }
+    Q_ASSERT(fileUrl.isLocalFile());
+    const auto fileName = fileUrl.toLocalFile();
 
-    const QUrl path = QQmlFileSelector::get(engine)->selector()->select(fileUrl);
-    const QString fileName = QQmlFile::urlToLocalFileOrQrc(path);
     if (QFile::exists(fileName)) {
         QFile file(fileName);
         if (file.open(QFile::ReadOnly)) {

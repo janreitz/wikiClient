@@ -174,9 +174,10 @@ FocusScope {
         // new Tab
         tabBar.insertItem(insertIndex, tabButtonComp.createObject(tabBar, {index: insertIndex}));
         tabBar.setCurrentIndex(insertIndex);
+        return swipeView.currentItem
     }
 
-    function openFileInNewTab(filePath) {
+    function openInNewTab(filePath) {
         addNewTab();
         swipeView.currentItem.loadPath(filePath);
     }

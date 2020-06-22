@@ -6,6 +6,8 @@ import Backend 1.0
 
 Item {
     id: root
+    property var lastActiveEditor
+    property var lastActiveMultiTabEditor
 
     ListView {
         id: edgeList
@@ -78,20 +80,47 @@ Item {
                 id: mouseArea
                 anchors.fill: parent
                 hoverEnabled: true
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onPressed: {
-                    modelData.dragStarted()
-                    timer.start()
+                    if (mouse.button === Qt.LeftButton) {
+                        modelData.dragStarted()
+                        timer.start()
+                    }
                 }
                 onReleased: {
+                    if (mouse.button === Qt.RightButton){
+                        contextMenu.popup()
+                    } else {
                     modelData.dragFinished()
                     timer.stop()
+                    }
                 }
+
                 function setNodePositionToMouseCoordinates() {
                     modelData.position.x = modelData.position.x - node.diameter/2 + mouseX
                     modelData.position.y = modelData.position.y - node.diameter/2 + mouseY
                 }
 
+                Menu {
+                    id: contextMenu
+                    Action {
+                        text: "Open in current tab"
+                        onTriggered: {
+                            root.lastActiveEditor.loadFileRelative(modelData.name + ".md")
+                        }
+                    }
+                    Action {
+                        text: "Open in new tab"
+                        onTriggered: {
+                            var newEditor = root.lastActiveMultiTabEditor.addNewTab();
+                            newEditor.loadFileRelative(modelData.name + ".md")
+                        }
+                    }
+                }
+
             }
+
+
         }
     }
 }
