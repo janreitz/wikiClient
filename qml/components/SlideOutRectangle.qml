@@ -2,7 +2,7 @@ import QtQuick 2.15
 
 Item {
     id: root
-    width: childrenRect.width
+    width: dragHandle.x + dragHandle.width
     property alias backgroundColor: contentArea.color
     property int slideoutWidth: 300
     property Item contentItem: defaultContent
@@ -16,6 +16,7 @@ Item {
             contentItem.width = 0
         }
         contentItem = newContentItem
+        newContentItem.parent = root
     }
 
     function toggleSlideout() {

@@ -41,7 +41,7 @@ void Network::initializeNetwork()
     {
         auto name = m_query.value(0).toString();
         Q_ASSERT(!name.isEmpty());
-        auto node = new Node(QPointF(100,100), name, this);
+        auto node = new Node(QPointF(0,0), name, this);
         m_nodes << node;
         m_nodesByName[name] = node;
     }
