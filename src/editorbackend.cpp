@@ -22,6 +22,7 @@ EditorBackend::EditorBackend(QObject *parent)
     , m_selectionStart(0)
     , m_selectionEnd(0)
 {
+    qDebug() << "EditorBackend -> Contructor called";
 }
 
 QQuickTextDocument *EditorBackend::document() const

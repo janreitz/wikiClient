@@ -11,7 +11,7 @@ class AbstractDBClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractDBClient(DBManager* dbManager);
+    explicit AbstractDBClient();
 
 signals:
     void queryAvailable();

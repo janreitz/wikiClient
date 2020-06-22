@@ -1,7 +1,6 @@
 #include "linkprovider.h"
 
-LinkProvider::LinkProvider(DBManager* dBManager)
-    : AbstractDBClient(dBManager)
+LinkProvider::LinkProvider()
 {
 }
 

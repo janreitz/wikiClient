@@ -1,7 +1,7 @@
 #include "searchbackend.h"
 
-SearchBackend::SearchBackend(DBManager* dbManager)
-    : m_dbManager(dbManager)
+SearchBackend::SearchBackend()
+    : m_dbManager(DBManager::getInstance())
 {
     QObject::connect(m_dbManager, &DBManager::signalDBAvailable, this, [this]{
         mDBOpen = true;

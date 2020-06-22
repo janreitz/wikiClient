@@ -13,7 +13,7 @@ class LinkProvider: public AbstractDBClient
     Q_PROPERTY(QStringList backLinks READ backLinks NOTIFY backLinksChanged)
 
 public:
-    explicit LinkProvider(DBManager* dBManager);
+    explicit LinkProvider();
 
     Q_INVOKABLE QStringList getLinks(const QString& docTitle);
     Q_INVOKABLE QStringList getBackLinks(const QString& docTitle);

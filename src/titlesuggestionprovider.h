@@ -8,7 +8,7 @@ class TitleSuggestionProvider: public AbstractDBClient
     Q_OBJECT
 
 public:
-    explicit TitleSuggestionProvider(DBManager* dBManager);
+    explicit TitleSuggestionProvider();
 
     Q_INVOKABLE QStringList getSuggestion(const QString& searchString);
 

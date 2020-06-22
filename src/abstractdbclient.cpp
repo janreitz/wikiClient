@@ -1,8 +1,8 @@
 #include "abstractdbclient.h"
 
-AbstractDBClient::AbstractDBClient(DBManager* dbManager)
+AbstractDBClient::AbstractDBClient()
     : QObject(nullptr)
-    , m_dbManager(dbManager)
+    , m_dbManager(DBManager::getInstance())
 {
     QObject::connect(m_dbManager, &DBManager::signalDBAvailable, this, [this]{
         m_dbOpen = true;

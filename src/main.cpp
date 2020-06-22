@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/resources/icons/owl_scribbles_reduced.svg"));
 
     qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
+    qmlRegisterType<Network>("Backend", 1, 0, "Network");
     qmlRegisterType<Node>("Backend", 1, 0, "Node");
     qmlRegisterType<Edge>("Backend", 1, 0, "Edge");
 
@@ -33,22 +34,20 @@ int main(int argc, char *argv[])
     settings->readSettingsFile(":/resources/settings/default.json");
 
     FileManager theFileManager;
-    DBManager theDBManager;
     EditorBackend theEditorBackend;
-    TitleSuggestionProvider theTitleSuggestionProvider(&theDBManager);
-    LinkProvider theLinkProvider(&theDBManager);
-    SqlTableModelProvider theTableModelProvider(&theDBManager);
-    SearchBackend theSearchBackend(&theDBManager);
-    Network theNetwork(&theDBManager);
+    TitleSuggestionProvider theTitleSuggestionProvider;
+    LinkProvider theLinkProvider;
+    SqlTableModelProvider theTableModelProvider;
+    SearchBackend theSearchBackend;
 
-    QObject::connect(&theFileManager, &FileManager::signalNewFiles, &theDBManager, &DBManager::slotNewFiles);
-    QObject::connect(&theFileManager, &FileManager::fileRenamed, &theDBManager, &DBManager::slotFileRenamed);
-    QObject::connect(&theFileManager, &FileManager::signalFileModified, &theDBManager, &DBManager::slotFileModified);
-    QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, &theDBManager, &DBManager::slotFilesDeleted);
-    QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, &theDBManager, &DBManager::slotWorkingDirectoryChanged);
-    QObject::connect(&theDBManager, &DBManager::signalDBAvailable, &theFileManager, &FileManager::slotScanDirectory);
-    QObject::connect(&theDBManager, &DBManager::signalDBAvailable, &theTableModelProvider, &SqlTableModelProvider::slotDBOpened);
-    QObject::connect(&theDBManager, &DBManager::signalDBInitialized, &theNetwork, &Network::initializeNetwork);
+    QObject::connect(&theFileManager, &FileManager::signalNewFiles, DBManager::getInstance(), &DBManager::slotNewFiles);
+    QObject::connect(&theFileManager, &FileManager::fileRenamed, DBManager::getInstance(), &DBManager::slotFileRenamed);
+    QObject::connect(&theFileManager, &FileManager::signalFileModified, DBManager::getInstance(), &DBManager::slotFileModified);
+    QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, DBManager::getInstance(), &DBManager::slotFilesDeleted);
+    QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, DBManager::getInstance(), &DBManager::slotWorkingDirectoryChanged);
+    QObject::connect(DBManager::getInstance(), &DBManager::signalDBAvailable, &theFileManager, &FileManager::slotScanDirectory);
+    QObject::connect(DBManager::getInstance(), &DBManager::signalDBAvailable, &theTableModelProvider, &SqlTableModelProvider::slotDBOpened);
+
 
     theFileManager.setRootPath(settings->rootDirectory());
     
@@ -67,11 +66,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
     engine.rootContext()->setContextProperty("theTableModelProvider", &theTableModelProvider);
     engine.rootContext()->setContextProperty("theSearchBackend", &theSearchBackend);
-    engine.rootContext()->setContextProperty("theNetwork", &theNetwork);
 
     engine.load(url);
-
-
 
     return app.exec();
 }

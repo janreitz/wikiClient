@@ -1,8 +1,8 @@
 #include "sqltablemodelprovider.h"
 
-SqlTableModelProvider::SqlTableModelProvider(DBManager* dbManager, QObject* parent)
+SqlTableModelProvider::SqlTableModelProvider(QObject* parent)
     : QObject(parent)
-    , m_dbManager(dbManager)
+    , m_dbManager(DBManager::getInstance())
 {
 
 }

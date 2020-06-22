@@ -2,8 +2,7 @@
 
 #include <QtSql/QSqlRecord>
 
-TitleSuggestionProvider::TitleSuggestionProvider(DBManager* dBManager)
-    : AbstractDBClient(dBManager)
+TitleSuggestionProvider::TitleSuggestionProvider()
 {
 }
 

@@ -20,7 +20,7 @@ public:
 
     Q_INVOKABLE void fullTextSearch(const QString& searchText);
 
-    SearchBackend(DBManager* dbManager);
+    SearchBackend();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;

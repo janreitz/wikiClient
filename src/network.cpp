@@ -1,10 +1,8 @@
 #include "network.h"
 
-Network::Network(DBManager* dbManager)
-    : AbstractDBClient(dbManager)
-    , m_timer(this)
+Network::Network()
+    : m_timer(this)
 {
-
 //    Node* node_1 = new Node(QPointF(200,400), "first", this);
 //    Node* node_2 = new Node(QPointF(150,450), "second", this);
 //    Node* node_3 = new Node(QPointF(200,500), "third", this);
@@ -20,7 +18,10 @@ Network::Network(DBManager* dbManager)
 //    m_edges << edge_1;
 //    m_edges << edge_2;
 //    m_edges << edge_3;
-
+    DBManager* theDBManager = DBManager::getInstance();
+    if (theDBManager->isOpen())
+        initializeNetwork();
+    connect(theDBManager, &DBManager::signalDBInitialized, this, &Network::initializeNetwork);
     connect(&m_timer, &QTimer::timeout, this, &Network::tick);
     m_timer.start(m_stepSize);
 }

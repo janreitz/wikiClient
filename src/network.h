@@ -24,7 +24,7 @@ public:
     int edgeCount() const;
     Edge* edgeAt(int index) const;
 
-    explicit Network(DBManager* dbManager);
+    explicit Network();
 
 public slots:
     void tick();

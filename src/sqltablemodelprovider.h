@@ -12,7 +12,7 @@ class SqlTableModelProvider : public QObject
     Q_PROPERTY(QSqlTableModel* model READ model NOTIFY modelChanged)
 
 public:
-    SqlTableModelProvider(DBManager* dbManager, QObject* parent = nullptr);
+    SqlTableModelProvider(QObject* parent = nullptr);
 
     QSqlTableModel* model();
     void setTable(const QString& tableName);

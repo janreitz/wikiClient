@@ -6,13 +6,20 @@ import Backend 1.0
 
 Item {
     id: root
+    objectName: "NetworkView::root"
     property var lastActiveEditor
     property var lastActiveMultiTabEditor
+
+    Network {
+        id: network
+        objectName: root.objectName + "::network"
+        Component.onCompleted: console.log(objectName + " -> completed")
+    }
 
     ListView {
         id: edgeList
         anchors.fill: parent
-        model: theNetwork.edges
+        model: network.edges
         delegate: edgeComp
         interactive: false
     }
@@ -40,7 +47,7 @@ Item {
         id: nodeList
         objectName: "nodeList"
         anchors.fill: parent
-        model: theNetwork.nodes
+        model: network.nodes
         delegate: nodeComp
         interactive: false
     }
@@ -117,10 +124,7 @@ Item {
                         }
                     }
                 }
-
             }
-
-
         }
     }
 }

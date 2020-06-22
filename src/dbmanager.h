@@ -16,8 +16,7 @@ class DBManager : public QObject
     //Q_PROPERTY(QSqlTableModel* tableModel READ tableModel NOTIFY tableModelChanged)
 
 public:
-    DBManager();
-
+    static DBManager* getInstance();
     bool connectToDatabase(const QString& filePath);
     void writeToFile(const QString& filePath);
     void close();
@@ -42,6 +41,7 @@ signals:
     void tableModelChanged();
 
 private:
+    DBManager();
 
     bool createNewDatabase(const QString& filePath);
     bool updateDocumentEntry();
@@ -52,6 +52,7 @@ private:
     bool m_dbEmpty = true;
     bool m_tableModelIsInitialized;
     std::shared_ptr<QSqlTableModel> m_tableModel;
+    static DBManager* m_instance;
 };
 
 #endif // DBHANDLER_H

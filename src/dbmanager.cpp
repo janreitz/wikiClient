@@ -6,10 +6,20 @@
 #include <QDateTime>
 #include <QDir>
 
+DBManager* DBManager::m_instance = nullptr;
+
 DBManager::DBManager()
     :QObject(nullptr)
     , m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
+}
+
+DBManager *DBManager::getInstance()
+{
+    if (!m_instance) {
+        DBManager::m_instance = new DBManager();
+    }
+    return m_instance;
 }
 
 void DBManager::slotWorkingDirectoryChanged(const QString& directoryPath)
