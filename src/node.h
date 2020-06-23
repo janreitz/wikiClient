@@ -24,7 +24,8 @@ public:
     QString name() const;
 
     void addEdge(Edge* edge);
-    void calculateForces();
+    void applyEdgeForces();
+    void applyForce(const QPointF& force);
     void updatePosition();
 
 public slots:
@@ -38,7 +39,7 @@ signals:
 private:
     bool m_isBeingDragged = false;
     QPointF m_position;
-    QPointF m_position_t_plus_1;
+    QPointF m_currentForce;
     QString m_name;
     QList<Edge*> m_edges;
 };

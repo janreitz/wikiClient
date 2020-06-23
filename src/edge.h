@@ -37,8 +37,6 @@ signals:
 
 private:
     double calcLength() const;
-    static double vectorLength(const QPointF&);
-    static std::optional<QPointF> normalizeVector(const QPointF&);
 
     double m_length, m_oldLength;
     double m_d_length_dt;

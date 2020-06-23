@@ -48,7 +48,9 @@ private:
     QHash<QString, Node*> m_nodesByName;
     QList<Edge*> m_edges;
     QTimer m_timer;
-    double m_stepSize = 50;
+    static constexpr double m_stepSize = 50;
+    static constexpr double m_repellingConstant = 5.0;
+    static constexpr double m_maxRepellingForce = 10.0;
 };
 
 #endif // NETWORK_H

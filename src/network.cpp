@@ -1,4 +1,5 @@
 #include "network.h"
+#include "utilities.h"
 
 Network::Network()
     : m_timer(this)
@@ -102,9 +103,34 @@ Edge* Network::edgeAt(int index) const
 
 void Network::tick()
 {
+    for (auto i = 0; i < m_nodes.count(); i++)
+    {
+        auto node_i = m_nodes.at(i);
+        const auto position_i = node_i->position();
+
+        for (auto j = i; j < m_nodes.count(); j++)
+        {
+            auto node_j = m_nodes.at(j);
+            const auto position_j = node_j->position();
+            const auto d_ij = position_i - position_j;
+            const auto length_d_ij = Utilities::vectorLength(d_ij);
+            const auto d_norm_ij = Utilities::normalizeVector(d_ij);
+            QPointF force;
+            if (d_norm_ij) {
+                Q_ASSERT(length_d_ij != 0); // A result from normalizeVector implies non-zero length
+                force = *d_norm_ij * qMin(m_repellingConstant / (length_d_ij * length_d_ij), m_maxRepellingForce);
+            } else {
+                force = m_maxRepellingForce * Utilities::randomNormalVector();
+            }
+            node_i->applyForce(force);
+            node_j->applyForce(-force);
+        }
+    }
     for (auto node : m_nodes)
     {
-        node->calculateForces();
+        node->applyEdgeForces();
+        // tether nodes to the origin
+        //node->applyForce(Utilities::normalizeVectorOrRandomize(node->position()) * -m_maxRepellingForce);
     }
     for (auto node : m_nodes)
     {

@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QRegularExpression>
+#include <QRandomGenerator>
 
 namespace Utilities
 {
@@ -64,6 +65,37 @@ namespace Utilities
         {
             return std::nullopt;
         }
+    }
+
+    double vectorLength(const QPointF &vec)
+    {
+        return sqrt(pow(vec.x(), 2) + pow(vec.y(), 2));
+    }
+
+    std::optional<QPointF> normalizeVector(const QPointF &vec)
+    {
+        const double length = vectorLength(vec);
+        if (length == 0)
+            return std::nullopt;
+        return vec/vectorLength(vec);
+    }
+
+    QPointF randomNormalVector()
+    {
+        int randX = QRandomGenerator::global()->bounded(100) - 50;
+        const int randY = QRandomGenerator::global()->bounded(100) - 50;
+        if (randX == 0 && randY == 0)
+        {
+            randX = 1;
+        }
+        return *Utilities::normalizeVector(QPointF(randX, randY));
+    }
+
+    QPointF normalizeVectorOrRandomize(const QPointF &vec)
+    {
+        if (auto normVec = normalizeVector(vec))
+            return *normVec;
+        return randomNormalVector();
     }
 
 }

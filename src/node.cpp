@@ -6,7 +6,7 @@
 Node::Node(const QPointF& position , const QString& name, QObject *parent)
     : QObject(parent)
     , m_position(position)
-    , m_position_t_plus_1(position)
+    , m_currentForce()
     , m_name(name)
 {
 
@@ -29,12 +29,9 @@ QPointF Node::position() const
 
 void Node::setPosition(const QPointF& pos)
 {
-    if (isnan(pos.x()) || isnan(pos.y()))
-    {
-        qDebug() << "Node::setPosition -> position less than zero";
-    }
+    Q_ASSERT(!isnan(pos.x()) | !isnan(pos.y()));
     m_position = pos;
-    m_position_t_plus_1 = pos;
+    m_currentForce = QPointF();
     emit positionChanged();
 }
 
@@ -52,7 +49,7 @@ void Node::addEdge(Edge *edge)
     }
 }
 
-void Node::calculateForces()
+void Node::applyEdgeForces()
 {
     QPointF resultingEdgeForce(0,0);
     for (auto edge: m_edges)
@@ -68,7 +65,13 @@ void Node::calculateForces()
     }
     Q_ASSERT(!isnan(resultingEdgeForce.x()) && !isnan(resultingEdgeForce.y()));
     // TODO Figure out a smart way to access relevant other nodes to add repelling forces.
-    m_position_t_plus_1 = m_position + resultingEdgeForce;
+    m_currentForce += resultingEdgeForce;
+}
+
+void Node::applyForce(const QPointF &force)
+{
+    Q_ASSERT(!isnan(force.x()) && !isnan(force.y()));
+    m_currentForce += force;
 }
 
 void Node::updatePosition()
@@ -76,7 +79,8 @@ void Node::updatePosition()
     if (m_isBeingDragged)
         return;
 
-    setPosition(m_position_t_plus_1);
+    setPosition(m_position + m_currentForce);
+    m_currentForce = QPointF();
 }
 
 void Node::dragStarted()

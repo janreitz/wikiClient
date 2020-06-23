@@ -1,6 +1,6 @@
 #include "edge.h"
+#include "utilities.h"
 #include <QDebug>
-#include <QRandomGenerator>
 
 Edge::Edge(Node* source, Node* target, QObject* parent)
     : QObject(parent)
@@ -60,22 +60,9 @@ void Edge::slotTargetPositionChanged()
 double Edge::calcLength() const
 {
     QPointF delta = m_target->position() - m_source->position();
-    const double length = vectorLength(delta);
+    const double length = Utilities::vectorLength(delta);
     Q_ASSERT(!isnan(length));
     return length;
-}
-
-double Edge::vectorLength(const QPointF & vec)
-{
-    return sqrt(pow(vec.x(), 2) + pow(vec.y(), 2));
-}
-
-std::optional<QPointF> Edge::normalizeVector(const QPointF & vec)
-{
-    const double length = vectorLength(vec);
-    if (length == 0)
-        return std::nullopt;
-    return vec/vectorLength(vec);
 }
 
 double Edge::force() const
@@ -90,17 +77,11 @@ double Edge::force() const
 
 QPointF Edge::normalizedVector() const
 {
-    const auto normVector = normalizeVector(m_target->position() - m_source->position());
+    const auto normVector = Utilities::normalizeVector(m_target->position() - m_source->position());
     if (normVector)
         return *normVector;
     // In case source and target have the same position, generate a random vector
-    int randX = QRandomGenerator::global()->bounded(100);
-    const int randY = QRandomGenerator::global()->bounded(100);
-    if (randX == 0 && randY == 0)
-    {
-        randX = 1;
-    }
-    return *normalizeVector(QPointF(randX, randY));
+    return Utilities::randomNormalVector();
 }
 
 void Edge::updatePositions()
