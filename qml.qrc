@@ -44,5 +44,11 @@
         <file>resources/icons/search.svg</file>
         <file>qml/views/SearchView.qml</file>
         <file>qml/views/NetworkView.qml</file>
+        <file>resources/fonts/FiraCode-Bold.ttf</file>
+        <file>resources/fonts/FiraCode-Light.ttf</file>
+        <file>resources/fonts/FiraCode-Medium.ttf</file>
+        <file>resources/fonts/FiraCode-Regular.ttf</file>
+        <file>resources/fonts/FiraCode-Retina.ttf</file>
+        <file>resources/fonts/FiraCode-SemiBold.ttf</file>
     </qresource>
 </RCC>

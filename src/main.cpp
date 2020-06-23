@@ -13,17 +13,20 @@
 #include <QQmlContext>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QFontDatabase>
 
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     QGuiApplication app(argc, argv);
 
     app.setOrganizationName("Jan Reitz");
     app.setOrganizationDomain("JFF");
     app.setWindowIcon(QIcon(":/resources/icons/owl_scribbles_reduced.svg"));
+
+    auto id = QFontDatabase::addApplicationFont(":/resources/fonts/FiraCode-Regular.ttf");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
 
     qmlRegisterType<EditorBackend>("Backend", 1, 0, "EditorBackend");
     qmlRegisterType<Network>("Backend", 1, 0, "Network");

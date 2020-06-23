@@ -56,6 +56,7 @@ FocusScope {
             }
             textFormat: TextEdit.PlainText
             wrapMode: TextArea.Wrap
+            tabStopDistance: 4
             selectByMouse: true
             persistentSelection: true
             placeholderText: "Your Awesome Wiki Article"
