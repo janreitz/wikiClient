@@ -153,7 +153,6 @@ Item {
     Loader {
         id: linkViewLoader
         onLoaded: {
-            console.log("linkViewLoader -> loaded")
             root.sideBarButtonPress(item)
         }
     }
@@ -172,7 +171,6 @@ Item {
     Loader {
         id: searchViewLoader
         onLoaded: {
-            console.log("searchViewLoader -> loaded")
             root.sideBarButtonPress(item)
         }
     }
@@ -192,7 +190,6 @@ Item {
     Loader {
         id: networkViewLoader
         onLoaded: {
-            console.log("fileViewLoader -> loaded")
             root.sideBarButtonPress(item)
         }
     }
@@ -212,7 +209,6 @@ Item {
     Loader {
         id: sqlViewLoader
         onLoaded: {
-            console.log("fileViewLoader -> loaded")
             root.sideBarButtonPress(item)
         }
     }
