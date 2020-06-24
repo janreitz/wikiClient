@@ -24,7 +24,7 @@ Network::Network()
         initializeNetwork();
     connect(theDBManager, &DBManager::signalDBInitialized, this, &Network::initializeNetwork);
     connect(&m_timer, &QTimer::timeout, this, &Network::tick);
-    m_timer.start(m_stepSize);
+    m_timer.start(stepSize * 1000);
 }
 
 void Network::initializeNetwork()

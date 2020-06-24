@@ -1,4 +1,5 @@
 #include "edge.h"
+#include "network.h"
 #include "utilities.h"
 #include <QDebug>
 
@@ -69,7 +70,7 @@ double Edge::force() const
 {
     const double springForce = (m_length - m_neutralLength) * m_springConstant;
     // This is a problem, since the sampling rate is unkown
-    const double dampingForce = (m_length - m_oldLength) / (m_stepSize / 1000) * m_dampingConstant;
+    const double dampingForce = (m_length - m_oldLength) / Network::stepSize * m_dampingConstant;
     const double resultingForce = springForce + dampingForce;
     Q_ASSERT(!isnan(resultingForce));
     return resultingForce;

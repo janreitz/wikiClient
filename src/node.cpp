@@ -1,5 +1,6 @@
 #include "node.h"
 #include "edge.h"
+#include "network.h"
 
 #include <QDebug>
 
@@ -79,7 +80,7 @@ void Node::updatePosition()
     if (m_isBeingDragged)
         return;
 
-    setPosition(m_position + m_currentForce);
+    setPosition(m_position + m_currentForce * Network::stepSize);
     m_currentForce = QPointF();
 }
 

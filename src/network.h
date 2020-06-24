@@ -26,6 +26,8 @@ public:
 
     explicit Network();
 
+    static constexpr double stepSize = 0.05; //seconds
+
 public slots:
     void tick();
     void initializeNetwork();
@@ -37,10 +39,8 @@ signals:
 private:
 
     void clear();
-
     static int nodeCount(QQmlListProperty<Node>*);
     static Node* nodeAt(QQmlListProperty<Node>*, int index);
-
     static int edgeCount(QQmlListProperty<Edge>*);
     static Edge* edgeAt(QQmlListProperty<Edge>*, int index);
 
@@ -48,8 +48,7 @@ private:
     QHash<QString, Node*> m_nodesByName;
     QList<Edge*> m_edges;
     QTimer m_timer;
-    static constexpr double m_stepSize = 50;
-    static constexpr double m_repellingConstant = 5.0;
+    static constexpr double m_repellingConstant = 10000;
     static constexpr double m_maxRepellingForce = 10.0;
 };
 
