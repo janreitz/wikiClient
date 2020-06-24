@@ -22,6 +22,7 @@ Item {
         model: network.edges
         delegate: edgeComp
         interactive: false
+        clip: true
         property var centerX: root.x + root.width/2
         property var centerY: root.y + root.height/2
     }
@@ -52,6 +53,7 @@ Item {
         model: network.nodes
         delegate: nodeComp
         interactive: false
+        clip: true
         property var centerX: root.x + root.width/2
         property var centerY: root.y + root.height/2
     }
