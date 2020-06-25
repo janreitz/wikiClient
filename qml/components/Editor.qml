@@ -74,6 +74,54 @@ FocusScope {
         }
     }
 
+    Rectangle {
+        id: popupMessage
+        anchors.horizontalCenter: root.horizontalCenter
+        anchors.bottom: root.bottom
+        anchors.bottomMargin: 20
+        color: "#ccc"
+        height: popupMessageText.implicitHeight + 5
+        width: popupMessageText.implicitWidth + 20
+        visible: false
+        radius: height/4
+
+        function show(message = "Popup Message", time = 3000){
+            popupMessageText.text = message
+            popupMessage.state = "on"
+            popupTimer.interval = time
+            popupTimer.start()
+        }
+
+        Text {
+            id: popupMessageText
+            anchors.centerIn: popupMessage
+            font: theme.fontTextBody
+            color: theSettings.colorTextDark
+        }
+
+        Timer {
+            id: popupTimer
+            onTriggered: popupMessage.state = "off"
+        }
+
+        states: [
+            State {
+                name: "on"
+                PropertyChanges {
+                    target: popupMessage
+                    visible: true
+                }
+            },
+            State {
+                name: "off"
+                PropertyChanges {
+                    target: popupMessage
+                    visible: false
+                }
+            }
+        ]
+    }
+
 
     EditorBackend {
         id: editorBackend
@@ -89,12 +137,14 @@ FocusScope {
             errorDialog.text = message
             errorDialog.visible = true
         }
+        onFileSaved: {
+            popupMessage.show(fileName + " saved")
+        }
     }
 
     MessageDialog {
         id: errorDialog
     }
-
     Shortcut {
         sequence: "Ctrl+M"
         onActivated: {

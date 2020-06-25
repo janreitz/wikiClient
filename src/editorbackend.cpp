@@ -299,7 +299,10 @@ void EditorBackend::saveAs(const QUrl &fileUrl)
     if (!doc)
         return;
 
-    const QString filePath = fileUrl.toLocalFile();
+    auto filePathOpt = Utilities::ensureLocalFile(fileUrl);
+    if (!filePathOpt)
+        return;
+    const QString filePath = *filePathOpt;
     const bool isHtml = QFileInfo(filePath).suffix().contains(QLatin1String("htm"));
     QFile file(filePath);
     if (!file.open(QFile::WriteOnly | QFile::Truncate | (isHtml ? QFile::NotOpen : QFile::Text))) {
@@ -308,7 +311,7 @@ void EditorBackend::saveAs(const QUrl &fileUrl)
     }
     file.write((isHtml ? doc->toHtml() : doc->toPlainText()).toUtf8());
     file.close();
-
+    emit fileSaved(file.fileName());
     setModified(false);
 
     if (fileUrl == m_fileUrl)

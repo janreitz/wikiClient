@@ -45,26 +45,33 @@ namespace Utilities
         return std::nullopt;
     }
 
+    std::optional<QString> ensureLocalFile(const QString &filePath)
+    {
+        QUrl fileUrl = QUrl::fromLocalFile(filePath);
+        if (fileUrl.isValid())
+            return fileUrl.toLocalFile();
+        return std::nullopt;
+    }
+
+    std::optional<QString> ensureLocalFile(const QUrl &localFileUrl)
+    {
+        if (localFileUrl.isLocalFile())
+            return localFileUrl.toLocalFile();
+        return std::nullopt;
+    }
+
     std::optional<QString> ensureLocalPathAndExists(const QString &filePathOrUrl)
     {
-        QString localPath;
-
-        if (filePathOrUrl.startsWith("file:"))
-        {
-            localPath = QUrl(filePathOrUrl).toLocalFile();
-        }
-        else
-        {
-            localPath = filePathOrUrl;
-        }
-        if (QFile::exists(localPath) || QDir(localPath).exists())
-        {
-            return localPath;
-        }
-        else
-        {
+        auto localPathOpt = ensureLocalFile(filePathOrUrl);
+        if (!localPathOpt)
             return std::nullopt;
-        }
+
+        QString localPath = *localPathOpt;
+
+        if (QFile::exists(localPath) || QDir(localPath).exists())
+            return localPath;
+        else
+            return std::nullopt;
     }
 
     double vectorLength(const QPointF &vec)

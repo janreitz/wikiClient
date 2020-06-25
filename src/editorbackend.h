@@ -108,6 +108,7 @@ signals:
 
     void loaded(const QString &text);
     void error(const QString &message);
+    void fileSaved(const QString& fileName);
 
     void modifiedChanged();
 
