@@ -7,6 +7,7 @@
 #include "settings.h"
 #include "searchbackend.h"
 #include "network.h"
+#include "gitmanager.h"
 
 #include <QObject>
 #include <QQuickItem>
@@ -37,6 +38,7 @@ int main(int argc, char *argv[])
     settings->readSettingsFile(":/resources/settings/default.json");
 
     FileManager theFileManager;
+    GitManager::getInstance()->gitInit(settings->rootDirectory());
     EditorBackend theEditorBackend;
     TitleSuggestionProvider theTitleSuggestionProvider;
     LinkProvider theLinkProvider;

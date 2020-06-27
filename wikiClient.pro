@@ -4,6 +4,11 @@ QT += quick \
 
 CONFIG += c++17
 
+LIBS += "C:/Users/jan-r/projects/libqgit2/build/bin/Debug/qgit2.lib"
+LIBS += "C:/Users/jan-r/projects/libqgit2/build/libgit2/Debug/git2.lib"
+INCLUDEPATH += "C:/Users/jan-r/projects/libqgit2/src"
+INCLUDEPATH += "C:/Users/jan-r/projects/libgit2/include"
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Refer to the documentation for the
@@ -23,6 +28,7 @@ SOURCES += \
         src/editorbackend.cpp \
         src/filemanager.cpp \
         src/fileparser.cpp \
+        src/gitmanager.cpp \
         src/linkprovider.cpp \
         src/main.cpp \
         src/markdownhighlighter.cpp \
@@ -58,6 +64,7 @@ HEADERS += \
     src/editorbackend.h \
     src/filemanager.h \
     src/fileparser.h \
+    src/gitmanager.h \
     src/linkprovider.h \
     src/markdownhighlighter.h \
     src/network.h \
