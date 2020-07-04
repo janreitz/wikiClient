@@ -1,6 +1,7 @@
 #include "editorbackend.h"
 #include "utilities.h"
 #include "settings.h"
+#include "gitmanager.h"
 
 #include <QFile>
 #include <QDir>
@@ -22,6 +23,7 @@ EditorBackend::EditorBackend(QObject *parent)
     , m_selectionStart(0)
     , m_selectionEnd(0)
 {
+    connect(this, &EditorBackend::fileSaved, GitManager::getInstance(), &GitManager::slotFileSaved);
 }
 
 QQuickTextDocument *EditorBackend::document() const

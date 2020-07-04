@@ -105,4 +105,19 @@ namespace Utilities
         return randomNormalVector();
     }
 
+    std::optional<QString> getRelativePathTo(const QString &dirPath, const QString &filePath)
+    {
+        QDir dir(dirPath);
+        if (!dir.exists())
+            return std::nullopt;
+        if (!dir.makeAbsolute())
+            return std::nullopt;
+        auto absDirPath = dir.path();
+        auto localPathOpt = ensureLocalPathAndExists(filePath);
+        if (!localPathOpt)
+            return std::nullopt;
+        if (localPathOpt->startsWith(absDirPath))
+            return localPathOpt->right(localPathOpt->length() - absDirPath.length() - 1); // -1 to remove the leading '/'
+    }
+
 }

@@ -21,9 +21,11 @@ public:
     Q_INVOKABLE void add(const QStringList& filePaths);
     Q_INVOKABLE void addAll();
     Q_INVOKABLE void commit(const QString& message);
+    Q_INVOKABLE void addAndCommitFile(const QString& fileName);
 
 public slots:
     void slotWorkingDirectoryChanged(const QString& newWorkingDirectory);
+    void slotFileSaved(const QString& filePath);
 
 signals:
     void error(const QString& errorMessage);
@@ -32,8 +34,12 @@ private:
     static GitManager* m_instance;
 
     explicit GitManager(QObject* parent = nullptr);
-    // Initialize empty git repository in given directory
 
+    // returns empty
+    void addHEADCommitIfNotBare(QList<LibQGit2::Commit>* parentCommits) const;
+
+    LibQGit2::Signature m_committer;
+    LibQGit2::Signature m_author;
     LibQGit2::Repository m_repo;
 };
 

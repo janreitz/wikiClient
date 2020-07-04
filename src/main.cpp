@@ -9,6 +9,8 @@
 #include "network.h"
 #include "gitmanager.h"
 
+#include "qgitglobal.h"
+
 #include <QObject>
 #include <QQuickItem>
 #include <QQmlContext>
@@ -19,6 +21,8 @@
 
 int main(int argc, char *argv[])
 {
+    LibQGit2::initLibQGit2();
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 

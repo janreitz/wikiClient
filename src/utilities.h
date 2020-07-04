@@ -5,6 +5,7 @@
 #include <QUrl>
 #include <optional>
 #include <QPointF>
+#include <QDir>
 
 namespace Utilities
 {
@@ -14,6 +15,7 @@ namespace Utilities
     std::optional<QString> ensureLocalFile(const QString &localPath);
     std::optional<QString> ensureLocalFile(const QUrl &localFileUrl);
     std::optional<QString> ensureLocalPathAndExists(const QString& filePathOrUrl);
+    std::optional<QString> getRelativePathTo(const QString& dirPath, const QString& filePath);
 
     double vectorLength(const QPointF& vec);
     std::optional<QPointF> normalizeVector(const QPointF& vec);
