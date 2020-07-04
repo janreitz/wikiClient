@@ -98,17 +98,17 @@ bool DBManager::createNewDatabase(const QString& filePath)
     if (!q.exec(createTableDocsQuery))
         qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTableDocsQuery;
     if (!q.exec(createTableLinksQuery))
-        qDebug() << "DBManager::createNewDB -> Query failed: " << createTableLinksQuery;
+        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTableLinksQuery;
     if (!q.exec(createTableFTSQuery))
-        qDebug() << "DBManager::createNewDB -> Query failed: " << createTableFTSQuery;
+        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTableFTSQuery;
     if (!q.exec(createTriggerInsertFTSQuery))
-        qDebug() << "DBManager::createNewDB -> Query failed: " << createTriggerInsertFTSQuery
+        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTriggerInsertFTSQuery
                  << " with Error: " << q.lastError();
     if (!q.exec(createTriggerDeleteFTSQuery))
-        qDebug() << "DBManager::createNewDB -> Query failed: " << createTriggerDeleteFTSQuery
+        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTriggerDeleteFTSQuery
                  << " with Error: " << q.lastError();
     if (!q.exec(createTriggerUpdateFTSQuery))
-        qDebug() << "DBManager::createNewDB -> Query failed: " << createTriggerUpdateFTSQuery
+        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTriggerUpdateFTSQuery
                  << " with Error: " << q.lastError();
 
     m_dbEmpty = true;
