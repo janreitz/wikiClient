@@ -14,9 +14,16 @@ public:
     static GitManager* getInstance();
     ~GitManager();
 
-    void gitInit(const QDir& directory);
+    void init(const QDir& directory);
     // Initialize empty git repository in current working directory
-    void gitInit();
+    void init();
+
+    Q_INVOKABLE void add(const QStringList& filePaths);
+    Q_INVOKABLE void addAll();
+    Q_INVOKABLE void commit(const QString& message);
+
+public slots:
+    void slotWorkingDirectoryChanged(const QString& newWorkingDirectory);
 
 signals:
     void error(const QString& errorMessage);

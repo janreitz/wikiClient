@@ -103,6 +103,22 @@ Item {
                     }
                 }
             }
+            IconButton {
+                id: gitButton
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: permanentSidebar.width * 0.7
+                height: width
+                source: "qrc:/resources/icons/git.svg"
+                onPressed: {
+                    // Is my item already loaded?
+                    if (gitViewLoader.status !== Loader.Ready) {
+                        // the loader will "press the button" after loading
+                        gitViewLoader.sourceComponent = gitViewComp;
+                    } else {
+                        root.sideBarButtonPress(gitViewLoader.item)
+                    }
+                }
+            }
         }
 
         IconButton {
@@ -223,6 +239,22 @@ Item {
         }
     }
 
+    Loader {
+        id: gitViewLoader
+        onLoaded: {
+            root.sideBarButtonPress(item)
+        }
+    }
+
+    Component {
+        id: gitViewComp
+        GitView {
+            id: gitView
+            anchors.fill: parent
+            anchors.margins: 20
+            objectName: "gitView"
+        }
+    }
     function sideBarButtonPress (buttonContentItem) {
         if (slideOutSidebar.contentItem) {
             // Is it me?

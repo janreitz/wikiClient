@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
     settings->readSettingsFile(":/resources/settings/default.json");
 
     FileManager theFileManager;
-    GitManager::getInstance()->gitInit(settings->rootDirectory());
     EditorBackend theEditorBackend;
     TitleSuggestionProvider theTitleSuggestionProvider;
     LinkProvider theLinkProvider;
@@ -50,6 +49,7 @@ int main(int argc, char *argv[])
     QObject::connect(&theFileManager, &FileManager::signalFileModified, DBManager::getInstance(), &DBManager::slotFileModified);
     QObject::connect(&theFileManager, &FileManager::signalFilesDeleted, DBManager::getInstance(), &DBManager::slotFilesDeleted);
     QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, DBManager::getInstance(), &DBManager::slotWorkingDirectoryChanged);
+    QObject::connect(&theFileManager, &QFileSystemModel::rootPathChanged, GitManager::getInstance(), &GitManager::slotWorkingDirectoryChanged);
     QObject::connect(DBManager::getInstance(), &DBManager::signalDBAvailable, &theFileManager, &FileManager::slotScanDirectory);
     QObject::connect(DBManager::getInstance(), &DBManager::signalDBAvailable, &theTableModelProvider, &SqlTableModelProvider::slotDBOpened);
 
@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("theSettings", settings);
     engine.rootContext()->setContextProperty("theFileManager", &theFileManager);
+    engine.rootContext()->setContextProperty("theGitManager", GitManager::getInstance());
     engine.rootContext()->setContextProperty("theTitleSuggestionProvider", &theTitleSuggestionProvider);
     engine.rootContext()->setContextProperty("theLinkProvider", &theLinkProvider);
     engine.rootContext()->setContextProperty("theTableModelProvider", &theTableModelProvider);

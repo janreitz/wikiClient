@@ -50,5 +50,7 @@
         <file>resources/fonts/FiraCode-Regular.ttf</file>
         <file>resources/fonts/FiraCode-Retina.ttf</file>
         <file>resources/fonts/FiraCode-SemiBold.ttf</file>
+        <file>resources/icons/git.svg</file>
+        <file>qml/views/GitView.qml</file>
     </qresource>
 </RCC>
