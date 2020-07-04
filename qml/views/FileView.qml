@@ -79,9 +79,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    var filePath = theFileManager.workingDirectory + "/" + parent.text;
-                    console.log("FileView item clicked -> " + filePath)
-                    root.lastActiveEditor.loadPath(filePath)
+                    root.lastActiveEditor.loadFileRelative(parent.text)
                 }
             }
         }
