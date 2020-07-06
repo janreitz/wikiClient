@@ -9,10 +9,12 @@ class Node : public QObject
     Q_OBJECT
     Q_PROPERTY(QPointF position READ position WRITE setPosition NOTIFY positionChanged);
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(QString docExists READ docExists NOTIFY docExistsChanged)
 
 public:
     explicit Node(const QPointF& position = QPointF(0,0),
                   const QString& name = "",
+                  const bool& docExists = true,
                   QObject *parent = nullptr);
     ~Node();
 
@@ -22,6 +24,7 @@ public:
     void setPosition(const QPointF& x);
 
     QString name() const;
+    bool docExists() const;
 
     void addEdge(Edge* edge);
     void applyEdgeForces();
@@ -35,12 +38,14 @@ public slots:
 signals:
     void positionChanged();
     void nameChanged();
+    void docExistsChanged();
 
 private:
     bool m_isBeingDragged = false;
     QPointF m_position;
     QPointF m_currentForce;
     QString m_name;
+    bool m_docExists;
     QList<Edge*> m_edges;
 };
 

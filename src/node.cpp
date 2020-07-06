@@ -4,11 +4,12 @@
 
 #include <QDebug>
 
-Node::Node(const QPointF& position , const QString& name, QObject *parent)
+Node::Node(const QPointF& position , const QString& name, const bool& docExists, QObject *parent)
     : QObject(parent)
     , m_position(position)
     , m_currentForce()
     , m_name(name)
+    , m_docExists(docExists)
 {
 
 }
@@ -40,6 +41,11 @@ void Node::setPosition(const QPointF& pos)
 QString Node::name() const
 {
     return m_name;
+}
+
+bool Node::docExists() const
+{
+    return m_docExists;
 }
 
 void Node::addEdge(Edge *edge)
