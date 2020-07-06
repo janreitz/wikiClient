@@ -48,8 +48,9 @@ private:
     QHash<QString, Node*> m_nodesByName;
     QList<Edge*> m_edges;
     QTimer m_timer;
-    static constexpr double m_repellingConstant = 10000;
-    static constexpr double m_maxRepellingForce = 10.0;
+    static constexpr double m_repellingConstant = 1000;
+    static constexpr double m_maxRepellingForce = 100.0;
+    static constexpr double m_centerTetherSpringConstant = 1;
 };
 
 #endif // NETWORK_H
