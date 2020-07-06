@@ -22,9 +22,10 @@ Document::Link::Link(const QString& source, const QString& _target, const QStrin
         linkType = LinkType::MEDIA;
         // Remove leading '/' if present.
         // In gollum this indicates top level directory
+        target = _target;
         if (target.startsWith("/"))
             target.remove(0,1);
-        target = _target;
+
     }
     // Should be an internal Link
     else
@@ -32,9 +33,9 @@ Document::Link::Link(const QString& source, const QString& _target, const QStrin
         linkType = LinkType::INTERNAL;
         // Remove leading '/' if present.
         // In gollum this indicates top level directory
-        if (_target.startsWith("/"))
-            target.remove(0,1);
         target = _target;
+        if (target.startsWith("/"))
+            target.remove(0,1);
     }
 }
 
