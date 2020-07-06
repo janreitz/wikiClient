@@ -14,7 +14,7 @@ QStringList TitleSuggestionProvider::getSuggestion(const QString& searchString)
     }
 
     QStringList titleSuggestions;
-    m_query.exec("SELECT Title FROM Documents WHERE Title LIKE '%" + searchString + "%'");
+    m_query.exec("SELECT title FROM documents WHERE title LIKE '%" + searchString + "%'");
     while (m_query.next())
     {
         titleSuggestions << m_query.value(0).toString();

@@ -12,10 +12,6 @@ SearchBackend::SearchBackend()
         mDBOpen = false;
         mQuery.clear();
     });
-
-//    m_searchResults << SearchResult("Title 1", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...")
-//                    << SearchResult("Title 2", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...")
-//                    << SearchResult("Title 3", "... Lorem <b>ipsum dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ...");
 }
 
 int SearchBackend::rowCount(const QModelIndex &) const
@@ -57,7 +53,7 @@ void SearchBackend::fullTextSearch(const QString& searchText)
         return;
     }
 
-    QString searchQuery("SELECT Name, Title, snippet(fts_Documents, 2, '<b>', '</b>', '...', 64) FROM fts_Documents WHERE Content MATCH '" + searchText + "';");
+    QString searchQuery("SELECT name, title, snippet(fts_documents, 2, '<b>', '</b>', '...', 64) FROM fts_documents WHERE content MATCH '" + searchText + "';");
 
     if (!mQuery.exec(searchQuery))
     {
