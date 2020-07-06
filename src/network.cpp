@@ -23,36 +23,39 @@ void Network::initializeNetwork()
 
     // get all document names
     QSet<QString> docNames;
-    m_query.exec("SELECT Name FROM Documents");
+    m_query.exec("SELECT name FROM documents");
     while (m_query.next())
     {
         docNames << m_query.value(0).toString();
     }
     // create Edges
-    m_query.exec("SELECT Source, Target FROM Links");
+    m_query.exec("SELECT source, target FROM links WHERE type='INTERNAL'");
     while (m_query.next())
     {
         auto sourceName = m_query.value(0).toString();
         auto targetName = m_query.value(1).toString();
-        if (docNames.contains(sourceName) && docNames.contains(targetName))
-        {
-            m_edges << new Edge(getOrCreateNode(sourceName),
-                                getOrCreateNode(targetName),
-                                this);
-        }
+        bool sourceNodeDocExists =  docNames.contains(sourceName);
+        bool targetNodeDocExists =  docNames.contains(targetName);
+        m_edges << new Edge(getOrCreateNode(sourceName, sourceNodeDocExists),
+                            getOrCreateNode(targetName, targetNodeDocExists),
+                            this);
     }
 }
 
-Node* Network::getOrCreateNode(const QString& nodeName)
+Node* Network::getOrCreateNode(const QString& nodeName, bool docExists)
 {
     Q_ASSERT(!nodeName.isEmpty());
+    if (!docExists)
+    {
+        //qDebug() << "Network::getOrCreateNode -> creating node " + nodeName + " that does not exists";
+    }
     if (m_nodesByName.contains(nodeName))
     {
         return m_nodesByName[nodeName];
     }
     else
     {
-        auto node= new Node(QPointF(0,0), nodeName, this);
+        auto node= new Node(QPointF(0,0), nodeName, docExists, this);
         m_nodes << node;
         emit nodesChanged();
         m_nodesByName[nodeName] = node;
