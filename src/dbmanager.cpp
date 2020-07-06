@@ -43,77 +43,8 @@ void DBManager::slotWorkingDirectoryChanged(const QString& directoryPath)
             emit signalDBAvailable();
         }
     }
-
-//    // Prevent error on existing .db
-//    while (QFile(filePath).exists())
-//    {
-//        auto fileInfo = QFileInfo(filePath);
-//        filePath = fileInfo.canonicalPath()
-//                + "/"
-//                + fileInfo.baseName()
-//                + "_new."
-//                + fileInfo.completeSuffix();
-//    }
-//    return createNewDatabase(filePath);
 }
 
-bool DBManager::createNewDatabase(const QString& filePath)
-{
-    //mDB = QSqlDatabase::addDatabase("QSQLITE");
-
-    if (!connectToDatabase(filePath))
-        return false;
-
-    QSqlQuery q(m_db);
-
-    const QString createTableDocsQuery = "CREATE TABLE Documents ("
-                                    "Name           TEXT,"
-                                    "Title          TEXT,"
-                                    "LastModified	TEXT,"
-                                    "Content        TEXT,"
-                                    "PRIMARY KEY(Name));";
-
-    const QString createTableLinksQuery = "CREATE TABLE Links ("
-                                          "ID INTEGER,"
-                                          "Source TEXT,"
-                                          "Target TEXT,"
-                                          "Display    TEXT,"
-                                          "PRIMARY KEY(ID),"
-                                          "UNIQUE(Source, Target));";
-    const QString createTableFTSQuery = "CREATE VIRTUAL TABLE fts_Documents USING fts5(Name, Title, Content);";
-    const QString createTriggerInsertFTSQuery = ""
-          "CREATE TRIGGER Documents_ai AFTER INSERT ON Documents BEGIN "
-            "INSERT INTO fts_Documents(Name, Title, Content) VALUES (new.Name, new.Title, new.Content); "
-          "END; ";
-    const QString createTriggerDeleteFTSQuery = ""
-          "CREATE TRIGGER Documents_ad AFTER DELETE ON Documents BEGIN "
-            "INSERT INTO fts_Documents(fts_Documents, Name, Title, Content) VALUES('delete', old.Name, old.Title, old.Content); "
-          "END; ";
-    const QString createTriggerUpdateFTSQuery = ""
-          "CREATE TRIGGER Documents_au AFTER UPDATE ON Documents BEGIN "
-            "INSERT INTO fts_Documents(fts_Documents, Name, Title, Content) VALUES('delete', old.Name, old.Title, old.Content); "
-            "INSERT INTO fts_Documents(Name, Title, Content) VALUES (new.Name, new.Title, new.Content); "
-          "END;";
-
-    if (!q.exec(createTableDocsQuery))
-        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTableDocsQuery;
-    if (!q.exec(createTableLinksQuery))
-        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTableLinksQuery;
-    if (!q.exec(createTableFTSQuery))
-        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTableFTSQuery;
-    if (!q.exec(createTriggerInsertFTSQuery))
-        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTriggerInsertFTSQuery
-                 << " with Error: " << q.lastError();
-    if (!q.exec(createTriggerDeleteFTSQuery))
-        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTriggerDeleteFTSQuery
-                 << " with Error: " << q.lastError();
-    if (!q.exec(createTriggerUpdateFTSQuery))
-        qDebug() << "DBManager::createNewDatabase -> Query failed: " << createTriggerUpdateFTSQuery
-                 << " with Error: " << q.lastError();
-
-    m_dbEmpty = true;
-    return true;
-}
 
 bool DBManager::connectToDatabase(const QString& filePath)
 {
@@ -139,6 +70,129 @@ bool DBManager::connectToDatabase(const QString& filePath)
 
     initializeTableModel();
     return true;
+}
+
+bool DBManager::createNewDatabase(const QString& filePath)
+{
+    if (!connectToDatabase(filePath))
+        return false;
+
+    QSqlQuery q(m_db);
+
+    QStringList createTableQueries;
+    createTableQueries << ""
+        "CREATE TABLE documents(id  INTEGER PRIMARY KEY,"
+        "name           TEXT,"
+        "title          TEXT,"
+        "last_modified	TEXT,"
+        "content        TEXT,"
+        "UNIQUE(name));";
+
+    createTableQueries << ""
+        "CREATE TABLE Links ("
+        "ID INTEGER PRIMARY KEY,"
+        "Source TEXT,"
+        "Target TEXT,"
+        "Display    TEXT,"
+        "UNIQUE(Source, Target));";
+
+    createTableQueries << ""
+        "CREATE VIRTUAL TABLE fts_documents "
+        "USING fts5(name, title, content, content='documents', content_rowid='id');";
+
+    createTableQueries << ""
+        "CREATE TRIGGER remove_from_fts_before_insert_if_name_exists  "
+        "BEFORE INSERT ON documents "
+        "WHEN EXISTS(SELECT name FROM fts_documents WHERE name=new.name) "
+        "BEGIN "
+            "INSERT INTO fts_documents(fts_documents, rowid, name, title, content)  "
+            "VALUES('delete', (SELECT rowid FROM fts_documents WHERE name=new.name),  new.name, new.title, new.content); "
+        "END; ";
+
+    createTableQueries << ""
+        "CREATE TRIGGER add_to_fts_after_insert  "
+        "AFTER INSERT ON documents "
+        "BEGIN "
+            "INSERT INTO fts_documents(rowid, name, title, content) "
+            "VALUES(new.id, new.name, new.title, new.content); "
+        "END;  ";
+
+    createTableQueries << ""
+        "CREATE TRIGGER remove_from_fts_after_delete  "
+        "AFTER DELETE ON documents "
+        "BEGIN "
+            "INSERT INTO fts_documents(fts_documents, rowid, name, title, content)  "
+            "VALUES('delete', old.id,  old.name, old.title, old.content); "
+        "END; ";
+
+    createTableQueries << ""
+        "CREATE TRIGGER Documents_au AFTER UPDATE ON Documents BEGIN "
+            "INSERT INTO fts_Documents(fts_Documents, Name, Title, Content) VALUES('delete', old.Name, old.Title, old.Content); "
+            "INSERT INTO fts_Documents(Name, Title, Content) VALUES (new.Name, new.Title, new.Content); "
+        "END;";
+
+    for (const QString query: createTableQueries)
+    {
+        if (!q.exec(query))
+        qDebug() << "DBManager::createNewDatabase -> Query failed: " << query;
+    }
+    m_dbEmpty = true;
+    return true;
+}
+
+void DBManager::addDocuments(const QStringList& filePaths)
+{
+    m_db.transaction();
+    // SQL Query to add Document
+    QSqlQuery insertDocumentsQuery(m_db);
+    QSqlQuery insertLinksQuery(m_db);
+
+    insertDocumentsQuery.prepare("REPLACE INTO documents (name, title, last_modified, content) "
+                                 "VALUES (:name, :title, :lastModified, :content)");
+
+    insertLinksQuery.prepare("INSERT OR IGNORE INTO Links (Source, Target, Display) "
+                             "VALUES (:source, :target, :display)");
+
+    for (auto filePath : filePaths)
+    {
+        auto fileInfo = QFileInfo(filePath);
+        auto lastModified = fileInfo.lastModified();
+
+        auto content = Utilities::stringFromFile(filePath);
+        if (!content) { continue;}
+
+        // parse title and links
+        auto doc = Document::fromString(fileInfo.baseName(), *content);
+        if (!doc) {continue;}
+        insertDocumentsQuery.bindValue(":name", doc->name);
+        insertDocumentsQuery.bindValue(":title", doc->title);
+        insertDocumentsQuery.bindValue(":last_modified", lastModified.toString());
+        insertDocumentsQuery.bindValue(":content", doc->content);
+        if (!insertDocumentsQuery.exec())
+            qDebug() << "DBManager::addDocuments -> Query failed" << insertDocumentsQuery.lastQuery()
+                     << "with Error" << insertDocumentsQuery.lastError();
+
+        for (auto link: doc->links)
+        {
+            insertLinksQuery.bindValue(":source", link.source);
+            insertLinksQuery.bindValue(":target", link.target);
+            insertLinksQuery.bindValue(":display", link.display);
+            if (!insertLinksQuery.exec())
+                qDebug() << "DBManager::addDocuments -> Query failed" << insertLinksQuery.lastQuery()
+                         << "with Error" << insertLinksQuery.lastError();
+        }
+    }
+
+    m_db.commit();
+
+    QSqlQuery vacuumQuery(m_db);
+    vacuumQuery.exec("VACUUM;");
+
+    if (m_dbEmpty)
+    {
+        emit signalDBInitialized();
+        m_dbEmpty = false;
+    }
 }
 
 void DBManager::close()
@@ -189,6 +243,7 @@ void DBManager::slotNewFiles(const QStringList& filePaths)
 
     addDocuments(filteredFilePaths);
 }
+
 void DBManager::slotFileRenamed(const QString &path, const QString &oldName, const QString &newName)
 {
     // SQL Query to change file name
@@ -196,65 +251,17 @@ void DBManager::slotFileRenamed(const QString &path, const QString &oldName, con
     Q_UNUSED(oldName)
     Q_UNUSED(newName)
 }
+
 void DBManager::slotFileModified(const QString& filePath)
 {
     // SQL Query to update contents
     Q_UNUSED(filePath)
 }
+
 void DBManager::slotFilesDeleted(const QStringList& filePaths)
 {
     // SQL Query to delete Document
     Q_UNUSED(filePaths)
-}
-void DBManager::addDocuments(const QStringList& filePaths)
-{
-    m_db.transaction();
-    // SQL Query to add Document
-    QSqlQuery insertDocumentsQuery(m_db);
-    QSqlQuery insertLinksQuery(m_db);
-
-    insertDocumentsQuery.prepare("REPLACE INTO Documents (Name, Title, LastModified, Content) "
-                                 "VALUES (:name, :title, :lastModified, :content)");
-
-    insertLinksQuery.prepare("INSERT OR IGNORE INTO Links (Source, Target, Display) "
-                             "VALUES (:source, :target, :display)");
-
-    for (auto filePath : filePaths)
-    {
-        auto fileInfo = QFileInfo(filePath);
-        auto lastModified = fileInfo.lastModified();
-
-        auto content = Utilities::stringFromFile(filePath);
-        if (!content) { continue;}
-
-        // parse title and links
-        auto doc = Document::fromString(fileInfo.baseName(), *content);
-        if (!doc) {continue;}
-        insertDocumentsQuery.bindValue(":name", doc->name);
-        insertDocumentsQuery.bindValue(":title", doc->title);
-        insertDocumentsQuery.bindValue(":lastModified", lastModified.toString());
-        insertDocumentsQuery.bindValue(":content", doc->content);
-        if (!insertDocumentsQuery.exec())
-            qDebug() << "DBManager::addDocuments -> Query failed" << insertDocumentsQuery.lastQuery()
-                     << "with Error" << insertDocumentsQuery.lastError();
-
-        for (auto link: doc->links)
-        {
-            insertLinksQuery.bindValue(":source", link.source);
-            insertLinksQuery.bindValue(":target", link.target);
-            insertLinksQuery.bindValue(":display", link.display);
-            if (!insertLinksQuery.exec())
-                qDebug() << "DBManager::addDocuments -> Query failed" << insertLinksQuery.lastQuery()
-                         << "with Error" << insertLinksQuery.lastError();
-        }
-    }
-
-    m_db.commit();
-    if (m_dbEmpty)
-    {
-        emit signalDBInitialized();
-        m_dbEmpty = false;
-    }
 }
 
 void DBManager::initializeTableModel()
