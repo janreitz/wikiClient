@@ -35,10 +35,20 @@ namespace Utilities
     {
         if (fileContent.at(0) == "#")
         {
-            QRegularExpression headerRegEx("#\\s(?<title>.+?)(?=\\\\)");
+//            const QString testString{"# A Conflict free json bla \r\n\r"};
+
+            QRegularExpression headerRegEx("#\\s(?<title>.*?)(\\\n|\\\r)");
+            Q_ASSERT(headerRegEx.isValid());
+
+//            auto testMatch = headerRegEx.match(testString);
+//            Q_ASSERT(testMatch.hasMatch());
+//            qDebug() << testMatch.captured("title");
+//            Q_ASSERT(testMatch.captured("title") == QString("A Conflict free json bla "));
+
             auto match = headerRegEx.match(fileContent);
             if (match.hasMatch())
             {
+                qDebug() << match.captured("title");
                 return match.captured("title");
             }
         }
