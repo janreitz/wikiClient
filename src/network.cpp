@@ -14,33 +14,49 @@ Network::Network()
 
 void Network::initializeNetwork()
 {
+    clear();
+
     if (!m_dbOpen) {
         qWarning() << "Network::initializeNetwork -> DB not open";
         return;
     }
 
     // get all document names
-    QStringList docNames;
+    QSet<QString> docNames;
     m_query.exec("SELECT Name FROM Documents");
-    // fill nodes
     while (m_query.next())
     {
-        auto name = m_query.value(0).toString();
-        Q_ASSERT(!name.isEmpty());
-        auto node = new Node(QPointF(0,0), name, this);
-        m_nodes << node;
-        m_nodesByName[name] = node;
+        docNames << m_query.value(0).toString();
     }
-
-    // get all links
+    // create Edges
     m_query.exec("SELECT Source, Target FROM Links");
-    // fill edges
     while (m_query.next())
     {
         auto sourceName = m_query.value(0).toString();
         auto targetName = m_query.value(1).toString();
-        if (m_nodesByName.contains(sourceName) && m_nodesByName.contains(targetName))
-            m_edges << new Edge(m_nodesByName[sourceName], m_nodesByName[targetName], this);
+        if (docNames.contains(sourceName) && docNames.contains(targetName))
+        {
+            m_edges << new Edge(getOrCreateNode(sourceName),
+                                getOrCreateNode(targetName),
+                                this);
+        }
+    }
+}
+
+Node* Network::getOrCreateNode(const QString& nodeName)
+{
+    Q_ASSERT(!nodeName.isEmpty());
+    if (m_nodesByName.contains(nodeName))
+    {
+        return m_nodesByName[nodeName];
+    }
+    else
+    {
+        auto node= new Node(QPointF(0,0), nodeName, this);
+        m_nodes << node;
+        emit nodesChanged();
+        m_nodesByName[nodeName] = node;
+        return node;
     }
 }
 
@@ -48,6 +64,7 @@ void Network::clear()
 {
     m_nodes.clear();
     m_edges.clear();
+    m_nodesByName.clear();
     emit nodesChanged();
     emit edgesChanged();
 }

@@ -44,6 +44,8 @@ private:
     static int edgeCount(QQmlListProperty<Edge>*);
     static Edge* edgeAt(QQmlListProperty<Edge>*, int index);
 
+    Node* getOrCreateNode(const QString& nodeName);
+
     QList<Node*> m_nodes;
     QHash<QString, Node*> m_nodesByName;
     QList<Edge*> m_edges;
