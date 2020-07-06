@@ -35,7 +35,7 @@ namespace Utilities
     {
         if (fileContent.at(0) == "#")
         {
-            QRegularExpression headerRegEx("#\\s(?<title>.*)");
+            QRegularExpression headerRegEx("#\\s(?<title>.+?)(?=\\\\)");
             auto match = headerRegEx.match(fileContent);
             if (match.hasMatch())
             {
