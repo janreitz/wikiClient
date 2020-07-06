@@ -89,11 +89,12 @@ bool DBManager::createNewDatabase(const QString& filePath)
         "UNIQUE(name));";
 
     createTableQueries << ""
-        "CREATE TABLE Links ("
-        "ID INTEGER PRIMARY KEY,"
-        "Source TEXT,"
-        "Target TEXT,"
-        "Display    TEXT,"
+        "CREATE TABLE links ("
+        "id INTEGER PRIMARY KEY,"
+        "source TEXT,"
+        "target TEXT,"
+        "display    TEXT,"
+        "type    TEXT,"
         "UNIQUE(Source, Target));";
 
     createTableQueries << ""
@@ -150,8 +151,8 @@ void DBManager::addDocuments(const QStringList& filePaths)
     insertDocumentsQuery.prepare("REPLACE INTO documents (name, title, last_modified, content) "
                                  "VALUES (:name, :title, :lastModified, :content)");
 
-    insertLinksQuery.prepare("INSERT OR IGNORE INTO Links (Source, Target, Display) "
-                             "VALUES (:source, :target, :display)");
+    insertLinksQuery.prepare("INSERT OR REPLACE INTO links (source, target, display, type) "
+                             "VALUES (:source, :target, :display, :type)");
 
     for (auto filePath : filePaths)
     {
@@ -177,6 +178,7 @@ void DBManager::addDocuments(const QStringList& filePaths)
             insertLinksQuery.bindValue(":source", link.source);
             insertLinksQuery.bindValue(":target", link.target);
             insertLinksQuery.bindValue(":display", link.display);
+            insertLinksQuery.bindValue(":type", QMetaEnum::fromType<Document::LinkType>().valueToKey(int(link.linkType)));
             if (!insertLinksQuery.exec())
                 qDebug() << "DBManager::addDocuments -> Query failed" << insertLinksQuery.lastQuery()
                          << "with Error" << insertLinksQuery.lastError();

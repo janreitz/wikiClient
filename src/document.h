@@ -1,21 +1,37 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
+#include <QObject>
 #include <QString>
 #include <QList>
 #include <optional>
 
-struct Link
+class Document: public QObject
 {
-    QString source;
-    QString target;
-    QString display;
+    Q_OBJECT
 
-    Link(const QString& source, const QString& target, const QString& display);
-};
+public:
 
-struct Document
-{
+    enum class LinkType {
+        INTERNAL,
+        EXTERNAL,
+        MEDIA
+    };
+    Q_ENUM(LinkType);
+
+    struct Link
+    {
+        QString source;
+        QString target;
+        QString display;
+        LinkType linkType;
+
+        Link(const QString& source, const QString& target, const QString& display);
+    };
+
+    Document();
+    Document(const Document& other);
+
     QString name;
     QString title;
     QString content;
