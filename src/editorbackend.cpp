@@ -16,6 +16,8 @@
 #include <QTextDocument>
 #include <QDebug>
 
+const QSet<QString> EditorBackend::decorators{"**", "__", "~~"};
+
 EditorBackend::EditorBackend(QObject *parent)
     : QObject(parent)
     , m_document(nullptr)
@@ -140,19 +142,201 @@ void EditorBackend::setAlignment(Qt::Alignment alignment)
     emit alignmentChanged();
 }
 
-bool EditorBackend::bold() const
+std::optional<QString> EditorBackend::currentWord() const
+{
+    QTextCursor cursor = textCursor();
+
+    if (cursor.isNull())
+        return std::nullopt;
+
+    // TODO check how this works when a partial word or multiple words are selected
+    cursor.select(QTextCursor::SelectionType::WordUnderCursor);
+    if (!cursor.hasSelection())
+        return std::nullopt;
+
+    const QString word = cursor.selectedText();
+    cursor.clearSelection();
+    return word;
+}
+
+
+bool EditorBackend::hasDecoration(const QString& decoration) const
+{
+    Q_ASSERT(decorators.contains(decoration));
+
+    QTextCursor cursor = textCursor();
+
+    if (cursor.isNull())
+        return false;
+
+    bool startsWithDecorator = false;
+    bool endsWithDecorator = false;
+
+    if (cursor.hasSelection())
+    {
+        const int originalSelectionStart = cursor.selectionStart();
+        const int originalSelectionEnd = cursor.selectionEnd();
+        cursor.setPosition(originalSelectionStart);
+        cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+        cursor.clearSelection();
+        cursor.movePosition(QTextCursor::MoveOperation::Left, QTextCursor::MoveMode::KeepAnchor, 2);
+        startsWithDecorator = cursor.selectedText().startsWith(decoration);
+
+        cursor.setPosition(originalSelectionEnd);
+        cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+        cursor.clearSelection();
+        cursor.movePosition(QTextCursor::MoveOperation::Right, QTextCursor::MoveMode::KeepAnchor, 2);
+        endsWithDecorator = cursor.selectedText().startsWith(decoration);
+
+        cursor.setPosition(originalSelectionStart);
+        cursor.setPosition(originalSelectionEnd, QTextCursor::MoveMode::KeepAnchor);
+    }
+    else
+    {
+        const int originalPosition = cursorPosition();
+        cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+        cursor.movePosition(QTextCursor::MoveOperation::Left, QTextCursor::MoveMode::KeepAnchor, 2);
+        startsWithDecorator = cursor.selectedText().startsWith(decoration);
+
+        cursor.setPosition(originalPosition);
+        cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+        cursor.clearSelection();
+        cursor.movePosition(QTextCursor::MoveOperation::Right, QTextCursor::MoveMode::KeepAnchor, 2);
+        endsWithDecorator = cursor.selectedText().startsWith(decoration);
+        cursor.setPosition(originalPosition);
+    }
+
+    return startsWithDecorator && endsWithDecorator;
+}
+
+bool EditorBackend::decorateCurrentWord(const QString& decoration)
+{
+    QTextCursor cursor = textCursor();
+
+    if (cursor.isNull())
+        return false;
+
+    const int pos = cursor.position();
+    cursor.beginEditBlock();
+    cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+    cursor.insertText(decoration);
+    cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+    cursor.insertText(decoration);
+    cursor.setPosition(pos + decoration.length());
+    cursor.endEditBlock();
+    return true;
+}
+
+bool EditorBackend::decorateCurrentSelection(const QString& decoration)
+{
+    QTextCursor cursor = textCursor();
+    if (cursor.isNull() || !cursor.hasSelection())
+        return false;
+
+    const int originalSelectionStart = cursor.selectionStart();
+    const int originalSelectionEnd = cursor.selectionEnd();
+    cursor.beginEditBlock();
+    cursor.setPosition(selectionStart());
+    cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+    cursor.insertText(decoration);
+    cursor.setPosition(originalSelectionEnd + decoration.length());
+    cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+    cursor.insertText(decoration);
+    cursor.setPosition(originalSelectionStart + decoration.length());
+    cursor.clearSelection();
+    cursor.setPosition(originalSelectionEnd + decoration.length(), QTextCursor::MoveMode::KeepAnchor);
+    cursor.endEditBlock();
+    return true;
+}
+
+bool EditorBackend::removeDecorationFromCurrentWord(const QString &decoration)
+{
+    QTextCursor cursor = textCursor();
+
+    if (cursor.isNull() || !hasDecoration(decoration))
+        return false;
+
+    const int pos = cursor.position();
+    cursor.beginEditBlock();
+    cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+    deletePreviousNChars(decoration.length());
+    cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+    deleteNChars(decoration.length());
+    cursor.setPosition(pos - decoration.length());
+    cursor.endEditBlock();
+    return true;
+}
+
+bool EditorBackend::removeDecorationFromCurrentSelection(const QString &decoration)
+{
+    QTextCursor cursor = textCursor();
+    if (cursor.isNull() || !cursor.hasSelection() || !hasDecoration(decoration))
+        return false;
+
+    const int originalSelectionStart = cursor.selectionStart();
+    const int originalSelectionEnd = cursor.selectionEnd();
+    cursor.beginEditBlock();
+    cursor.setPosition(selectionStart());
+    cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+    deletePreviousNChars(decoration.length());
+    cursor.setPosition(originalSelectionEnd - decoration.length());
+    cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+    deleteNChars(decoration.length());
+    cursor.setPosition(originalSelectionStart - decoration.length());
+    cursor.clearSelection();
+    cursor.setPosition(originalSelectionEnd - decoration.length(), QTextCursor::MoveMode::KeepAnchor);
+    cursor.endEditBlock();
+    return true;
+}
+
+void EditorBackend::toggleDecoration(const QString& decoration)
 {
     QTextCursor cursor = textCursor();
     if (cursor.isNull())
+        return;
+
+    if (cursor.hasSelection())
+    {
+        if (hasDecoration(decoration))
+        {
+            removeDecorationFromCurrentSelection(decoration);
+        }
+        else
+        {
+            decorateCurrentSelection(decoration);
+        }
+    }
+    else if (auto word = currentWord())
+    {
+        if (hasDecoration(decoration))
+        {
+            removeDecorationFromCurrentWord(decoration);
+        }
+        else
+        {
+            decorateCurrentWord("**");
+        }
+    }
+}
+
+bool EditorBackend::bold() const
+{
+    QTextCursor cursor = textCursor();
+
+    if (cursor.isNull())
         return false;
-    return textCursor().charFormat().fontWeight() == QFont::Bold;
+
+    return hasDecoration("**");
 }
 
 void EditorBackend::setBold(bool bold)
 {
-    QTextCharFormat format;
-    format.setFontWeight(bold ? QFont::Bold : QFont::Normal);
-    mergeFormatOnWordOrSelection(format);
+    QTextCursor cursor = textCursor();
+    if (cursor.isNull())
+        return;
+    if (bold == EditorBackend::bold())
+        return;
+    toggleDecoration("**");
     emit boldChanged();
 }
 
@@ -369,6 +553,28 @@ void EditorBackend::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
     if (!cursor.hasSelection())
         cursor.select(QTextCursor::WordUnderCursor);
     cursor.mergeCharFormat(format);
+}
+
+void EditorBackend::deleteNChars(int n)
+{
+    QTextCursor cursor = textCursor();
+    if (cursor.isNull())
+        return;
+
+    cursor.clearSelection();
+    cursor.setPosition(cursor.position() + n, QTextCursor::MoveMode::KeepAnchor);
+    cursor.removeSelectedText();
+}
+
+void EditorBackend::deletePreviousNChars(int n)
+{
+    QTextCursor cursor = textCursor();
+    if (cursor.isNull())
+        return;
+
+    cursor.clearSelection();
+    cursor.setPosition(cursor.position() - n, QTextCursor::MoveMode::KeepAnchor);
+    cursor.removeSelectedText();
 }
 
 bool EditorBackend::modified() const

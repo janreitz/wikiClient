@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQuickTextDocument>
 #include <QTextCharFormat>
+#include <optional>
 
 #include "markdownhighlighter.h"
 
@@ -119,6 +120,18 @@ private:
     QTextDocument *textDocument() const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
 
+    void deleteNChars(int n);
+    void deletePreviousNChars(int n);
+
+    bool hasDecoration(const QString& decoration) const;
+    bool decorateCurrentWord(const QString& decoration);
+    bool decorateCurrentSelection(const QString& decoration);
+    bool removeDecorationFromCurrentWord(const QString& decoration);
+    bool removeDecorationFromCurrentSelection(const QString& decoration);
+    void toggleDecoration(const QString& decoration);
+
+    std::optional<QString> currentWord() const;
+
     QQuickTextDocument *m_document;
     MarkdownHighlighter mMarkdownHighlighter;
 
@@ -129,6 +142,8 @@ private:
     QFont m_font;
     QUrl m_fileUrl;
     QString m_documentTitle;
+
+    static const QSet<QString> decorators;
 };
 
 #endif // EDITORBACKEND_H
