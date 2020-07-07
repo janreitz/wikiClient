@@ -5,6 +5,8 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QDir>
+#include <QDebug>
+#include <QMetaEnum>
 
 DBManager* DBManager::m_instance = nullptr;
 

@@ -1,6 +1,8 @@
 #include "network.h"
 #include "utilities.h"
 
+#include <QDebug>
+
 Network::Network()
     : m_timer(this)
 {

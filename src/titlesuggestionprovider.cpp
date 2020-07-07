@@ -1,6 +1,7 @@
 #include "titlesuggestionprovider.h"
 
 #include <QtSql/QSqlRecord>
+#include <QDebug>
 
 TitleSuggestionProvider::TitleSuggestionProvider()
 {

@@ -1,5 +1,7 @@
 #include "linkprovider.h"
 
+#include <QDebug>
+
 LinkProvider::LinkProvider()
 {
 }

@@ -1,5 +1,7 @@
 #include "searchbackend.h"
 
+#include <QDebug>
+
 SearchBackend::SearchBackend()
     : m_dbManager(DBManager::getInstance())
 {
