@@ -110,8 +110,7 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        var filePath = theFileManager.workingDirectory + "/" + model.name + ".md";
-                        root.lastActiveEditor.loadPath(filePath)
+                        root.lastActiveEditor.loadFileRelative(model.name + ".md")
                     }
                 }
             }
