@@ -7,7 +7,7 @@ Rectangle {
     color: "blue"
     property bool enabled
     property alias focusedSuggestion: listView.currentItem
-    property var suggestions: ["Suggestion1", "Suggestion2", "Suggestion3", "suggestion4"]
+    property var suggestions: []
     property int suggestionHeight
     signal signalSuggestionAccepted(string suggestion)
     signal signalExitedAbove()
