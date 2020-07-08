@@ -201,13 +201,23 @@ FocusScope {
         onActivated: editorBackend.italic = !editorBackend.italic
     }
     Shortcut {
-        sequence: StandardKey.Underline
-        onActivated: editorBackend.underline = !editorBackend.underline
+        sequence: "Ctrl+Shift+C"
+        onActivated: editorBackend.inlineCode = !editorBackend.inlineCode
     }
+    Shortcut {
+        sequence: "Ctrl+Shift+M"
+        onActivated: editorBackend.math = !editorBackend.math
+    }
+    Shortcut {
+        sequence: "Ctrl+L"
+        onActivated: editorBackend.addLinkTemplate()
+    }
+
+
 
     Menu {
         id: contextMenu
-        objectName: "Editor::contectMenu"
+        objectName: "Editor::contextMenu"
         MenuItem {
             text: "Open ..."
             onClicked: openDialog.open()

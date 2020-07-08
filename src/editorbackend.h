@@ -22,7 +22,8 @@ class EditorBackend : public QObject
 
     Q_PROPERTY(bool bold READ bold WRITE setBold NOTIFY boldChanged)
     Q_PROPERTY(bool italic READ italic WRITE setItalic NOTIFY italicChanged)
-    Q_PROPERTY(bool underline READ underline WRITE setUnderline NOTIFY underlineChanged)
+    Q_PROPERTY(bool inlineCode READ inlineCode WRITE setInlineCode NOTIFY inlineCodeChanged)
+    Q_PROPERTY(bool math READ math WRITE setMath NOTIFY mathChanged)
 
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
@@ -34,6 +35,8 @@ class EditorBackend : public QObject
     Q_PROPERTY(bool modified READ modified NOTIFY modifiedChanged)
 
 public:
+
+    Q_INVOKABLE void addLinkTemplate();
 
     Q_INVOKABLE void loadUrl(const QUrl &fileUrl);
     Q_INVOKABLE void loadAbsolutePath(const QString &filePath);
@@ -71,8 +74,11 @@ public:
     bool italic() const;
     void setItalic(bool italic);
 
-    bool underline() const;
-    void setUnderline(bool underline);
+    bool inlineCode() const;
+    void setInlineCode(bool inlineCode);
+
+    bool math() const;
+    void setMath(bool math);
 
     int fontSize() const;
     void setFontSize(int size);
@@ -99,7 +105,8 @@ signals:
 
     void boldChanged();
     void italicChanged();
-    void underlineChanged();
+    void inlineCodeChanged();
+    void mathChanged();
 
     void fontSizeChanged();
 
@@ -120,20 +127,20 @@ private:
     QTextDocument *textDocument() const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
 
-    void deleteNChars(int n);
-    void deletePreviousNChars(int n);
+    void deleteNChars(QTextCursor* cursor, int n);
+    void deletePreviousNChars(QTextCursor* cursor,int n);
 
-    bool hasDecoration(const QString& decoration) const;
-    bool decorateCurrentWord(const QString& decoration);
-    bool decorateCurrentSelection(const QString& decoration);
-    bool removeDecorationFromCurrentWord(const QString& decoration);
-    bool removeDecorationFromCurrentSelection(const QString& decoration);
-    void toggleDecoration(const QString& decoration);
+    bool hasDecoration(const QString& decorationStart, const QString& decorationEnd) const;
+    bool decorateCurrentWord(const QString& decorationStart, const QString& decorationEnd);
+    bool decorateCurrentSelection(const QString& decorationStart, const QString& decorationEnd);
+    bool removeDecorationFromCurrentWord(const QString& decorationStart, const QString& decorationEnd);
+    bool removeDecorationFromCurrentSelection(const QString& decorationStart, const QString& decorationEnd);
+    void toggleDecoration(const QString& decorationStart, const QString& decorationEnd);
 
     std::optional<QString> currentWord() const;
 
     QQuickTextDocument *m_document;
-    MarkdownHighlighter mMarkdownHighlighter;
+    MarkdownHighlighter m_markdownHighlighter;
 
     int m_cursorPosition;
     int m_selectionStart;
