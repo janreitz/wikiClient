@@ -22,7 +22,7 @@ Item {
         height: 30
 
         Button {
-            text: "Choose Working Directory"
+            text: "Choose Directory"
             onPressed: chooseDirDialog.open()
         }
     }
