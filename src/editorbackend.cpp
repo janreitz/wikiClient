@@ -21,9 +21,7 @@ const QSet<QString> EditorBackend::decorators{"**", "__", "~~"};
 EditorBackend::EditorBackend(QObject *parent)
     : QObject(parent)
     , m_document(nullptr)
-    , m_cursorPosition(-1)
-    , m_selectionStart(0)
-    , m_selectionEnd(0)
+    , m_cursor()
 {
     connect(this, &EditorBackend::fileSaved, GitManager::getInstance(), &GitManager::slotFileSaved);
 }
@@ -44,59 +42,61 @@ void EditorBackend::setDocument(QQuickTextDocument *document)
     if (m_document){
         connect(m_document->textDocument(), &QTextDocument::modificationChanged, this, &EditorBackend::modifiedChanged);
         m_markdownHighlighter.setDocument(document->textDocument());
+        m_cursor = QTextCursor(m_document->textDocument());
     }
     emit documentChanged();
 }
 
 int EditorBackend::cursorPosition() const
 {
-    return m_cursorPosition;
+    return m_cursor.position();
 }
 
 void EditorBackend::setCursorPosition(int position)
 {
-    if (position == m_cursorPosition)
+    if (position == cursorPosition())
         return;
 
-    m_cursorPosition = position;
-    reset();
+    m_cursor.setPosition(position);
+    // reset(); this was in the example code, but I don't understand it. Leave for future reference, Chesterton's fence and all that
     emit cursorPositionChanged();
 }
 
 int EditorBackend::selectionStart() const
 {
-    return m_selectionStart;
+    return m_cursor.selectionStart();
 }
 
 void EditorBackend::setSelectionStart(int position)
 {
-    if (position == m_selectionStart)
+    if (position == selectionStart())
         return;
 
-    m_selectionStart = position;
+    const int selectionEnd_ = selectionEnd();
+    m_cursor.setPosition(position);
+    m_cursor.setPosition(selectionEnd_, QTextCursor::MoveMode::KeepAnchor);
     emit selectionStartChanged();
 }
 
 int EditorBackend::selectionEnd() const
 {
-    return m_selectionEnd;
+    return m_cursor.selectionEnd();
 }
 
 void EditorBackend::setSelectionEnd(int position)
 {
-    if (position == m_selectionEnd)
+    if (position == selectionEnd())
         return;
 
-    m_selectionEnd = position;
+    m_cursor.setPosition(position, QTextCursor::MoveMode::KeepAnchor);
     emit selectionEndChanged();
 }
 
 QString EditorBackend::fontFamily() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return QString();
-    QTextCharFormat format = cursor.charFormat();
+    QTextCharFormat format = m_cursor.charFormat();
     return format.font().family();
 }
 
@@ -110,10 +110,9 @@ void EditorBackend::setFontFamily(const QString &family)
 
 QColor EditorBackend::textColor() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return QColor(Qt::black);
-    QTextCharFormat format = cursor.charFormat();
+    QTextCharFormat format = m_cursor.charFormat();
     return format.foreground().color();
 }
 
@@ -127,83 +126,98 @@ void EditorBackend::setTextColor(const QColor &color)
 
 Qt::Alignment EditorBackend::alignment() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return Qt::AlignLeft;
-    return textCursor().blockFormat().alignment();
+    return m_cursor.blockFormat().alignment();
 }
 
 void EditorBackend::setAlignment(Qt::Alignment alignment)
 {
     QTextBlockFormat format;
     format.setAlignment(alignment);
-    QTextCursor cursor = textCursor();
-    cursor.mergeBlockFormat(format);
+    m_cursor.mergeBlockFormat(format);
     emit alignmentChanged();
 }
 
-std::optional<QString> EditorBackend::currentWord() const
+std::optional<QString> EditorBackend::currentWord()
 {
-    QTextCursor cursor = textCursor();
-
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return std::nullopt;
 
-    // TODO check how this works when a partial word or multiple words are selected
-    cursor.select(QTextCursor::SelectionType::WordUnderCursor);
-    if (!cursor.hasSelection())
-        return std::nullopt;
+    // Remember original state
+    const int originalPosition = m_cursor.position();
+    int selectionStart_ = m_cursor.selectionStart();
 
-    const QString word = cursor.selectedText();
-    cursor.clearSelection();
+//    qDebug() << "EditorBackend::currentWord -> Current position: " << m_cursor.position();
+
+    m_cursor.select(QTextCursor::SelectionType::WordUnderCursor);
+    if (!m_cursor.hasSelection())
+    {
+//        qDebug() << "EditorBackend::currentWord -> Current word: No word under cursor";
+        return std::nullopt;
+    }
+
+    const QString word = m_cursor.selectedText();
+    m_cursor.clearSelection();
+//    qDebug() << "EditorBackend::currentWord -> Current word: " << word;
+
+    // Restore original state
+    if (originalPosition != selectionStart_)
+    {
+        m_cursor.setPosition(selectionStart_);
+        m_cursor.setPosition(originalPosition, QTextCursor::MoveMode::KeepAnchor);
+    }
+    else
+    {
+        m_cursor.setPosition(originalPosition);
+    }
     return word;
 }
 
 
-bool EditorBackend::hasDecoration(const QString& decorationStart, const QString& decorationEnd) const
+bool EditorBackend::hasDecoration(const QString& decorationStart, const QString& decorationEnd)
 {
-    QTextCursor cursor = textCursor();
 
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return false;
 
     bool startsWithDecorator = false;
     bool endsWithDecorator = false;
 
-    if (cursor.hasSelection())
+    if (m_cursor.hasSelection())
     {
-        const int originalSelectionStart = cursor.selectionStart();
-        const int originalSelectionEnd = cursor.selectionEnd();
-        cursor.setPosition(originalSelectionStart);
-        cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
-        cursor.clearSelection();
-        cursor.movePosition(QTextCursor::MoveOperation::Left, QTextCursor::MoveMode::KeepAnchor, decorationStart.length());
-        startsWithDecorator = cursor.selectedText().startsWith(decorationStart);
+        const int originalSelectionStart = m_cursor.selectionStart();
+        const int originalSelectionEnd = m_cursor.selectionEnd();
+        m_cursor.setPosition(originalSelectionStart);
+        m_cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+        m_cursor.clearSelection();
+        m_cursor.movePosition(QTextCursor::MoveOperation::Left, QTextCursor::MoveMode::KeepAnchor, decorationStart.length());
+        startsWithDecorator = m_cursor.selectedText().startsWith(decorationStart);
 
-        cursor.setPosition(originalSelectionEnd);
-        cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
-        cursor.clearSelection();
-        cursor.movePosition(QTextCursor::MoveOperation::Right, QTextCursor::MoveMode::KeepAnchor, decorationEnd.length());
-        endsWithDecorator = cursor.selectedText().startsWith(decorationEnd);
+        m_cursor.setPosition(originalSelectionEnd);
+        m_cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+        m_cursor.clearSelection();
+        m_cursor.movePosition(QTextCursor::MoveOperation::Right, QTextCursor::MoveMode::KeepAnchor, decorationEnd.length());
+        endsWithDecorator = m_cursor.selectedText().startsWith(decorationEnd);
 
-        cursor.setPosition(originalSelectionStart);
-        cursor.setPosition(originalSelectionEnd, QTextCursor::MoveMode::KeepAnchor);
+        m_cursor.setPosition(originalSelectionStart);
+        m_cursor.setPosition(originalSelectionEnd, QTextCursor::MoveMode::KeepAnchor);
     }
     else
     {
-        const int originalPosition = cursorPosition();
-        cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
-        cursor.movePosition(QTextCursor::MoveOperation::Left, QTextCursor::MoveMode::KeepAnchor, decorationStart.length());
-        qDebug() << "EditorBackend::hasDecoration -> selectedTextStart: " << cursor.selectedText();
-        startsWithDecorator = cursor.selectedText().startsWith(decorationStart);
+        const int originalPosition = m_cursor.position();
+        m_cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+        m_cursor.movePosition(QTextCursor::MoveOperation::Left, QTextCursor::MoveMode::KeepAnchor, decorationStart.length());
+//        qDebug() << "EditorBackend::hasDecoration -> selectedTextStart: " << m_cursor.selectedText();
+        startsWithDecorator = m_cursor.selectedText().startsWith(decorationStart);
 
-        cursor.setPosition(originalPosition);
-        cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
-        cursor.clearSelection();
-        cursor.movePosition(QTextCursor::MoveOperation::Right, QTextCursor::MoveMode::KeepAnchor, decorationEnd.length());
-        qDebug() << "EditorBackend::hasDecoration -> selectedTextEnd: " << cursor.selectedText();
-        endsWithDecorator = cursor.selectedText().startsWith(decorationEnd);
-        cursor.setPosition(originalPosition);
+        m_cursor.setPosition(originalPosition);
+        m_cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+        m_cursor.clearSelection();
+        m_cursor.movePosition(QTextCursor::MoveOperation::Right, QTextCursor::MoveMode::KeepAnchor, decorationEnd.length());
+//        qDebug() << "EditorBackend::hasDecoration -> selectedTextEnd: " << m_cursor.selectedText();
+        endsWithDecorator = m_cursor.selectedText().startsWith(decorationEnd);
+        m_cursor.setPosition(originalPosition);
     }
 
     return startsWithDecorator && endsWithDecorator;
@@ -211,108 +225,99 @@ bool EditorBackend::hasDecoration(const QString& decorationStart, const QString&
 
 bool EditorBackend::decorateCurrentWord(const QString& decorationStart, const QString& decorationEnd)
 {
-    QTextCursor cursor = textCursor();
 
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return false;
 
-    const int pos = cursor.position();
-    cursor.beginEditBlock();
-    cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
-    cursor.insertText(decorationStart);
-    cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
-    cursor.insertText(decorationEnd);
-    cursor.setPosition(pos + decorationStart.length());
-    cursor.endEditBlock();
+    const int pos = m_cursor.position();
+    m_cursor.beginEditBlock();
+    m_cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+    m_cursor.insertText(decorationStart);
+    m_cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+    m_cursor.insertText(decorationEnd);
+    m_cursor.setPosition(pos + decorationStart.length());
+    m_cursor.endEditBlock();
     return true;
 }
 
 bool EditorBackend::removeDecorationFromCurrentWord(const QString& decorationStart, const QString& decorationEnd)
 {
-    QTextCursor cursor = textCursor();
 
-    if (cursor.isNull() || !hasDecoration(decorationStart, decorationEnd))
+    if (m_cursor.isNull() || !hasDecoration(decorationStart, decorationEnd))
         return false;
 
-    const int originalPosition = cursor.position();
+    const int originalPosition = m_cursor.position();
 
-//    cursor.select(QTextCursor::SelectionType::WordUnderCursor);
-//    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> current Word"
-//             << cursor.selectedText();
-
-    cursor.beginEditBlock();
-    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> originalPosition = "
-             << cursor.position();
-    cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
-    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> StartOfWord = "
-             << cursor.position();
-    deletePreviousNChars(&cursor, decorationStart.length());
-    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> currentPosition = "
-             << cursor.position();
-    cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
-    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> EndOfWord = "
-             << cursor.position();
-    deleteNChars(&cursor, decorationEnd.length());
-    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> currentPosition = "
-             << cursor.position();
-    cursor.setPosition(originalPosition - decorationStart.length());
-    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> shouldBeOriginalPosition - 2 = "
-             << cursor.position();
-    cursor.endEditBlock();
+    m_cursor.beginEditBlock();
+//    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> originalPosition = "
+//             << m_cursor.position();
+    m_cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+//    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> StartOfWord = "
+//             << m_cursor.position();
+    deletePreviousNChars(&m_cursor, decorationStart.length());
+//    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> currentPosition = "
+//             << m_cursor.position();
+    m_cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+//    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> EndOfWord = "
+//             << m_cursor.position();
+    deleteNChars(&m_cursor, decorationEnd.length());
+//    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> currentPosition = "
+//             << m_cursor.position();
+    m_cursor.setPosition(originalPosition - decorationStart.length());
+//    qDebug() << "EditorBackend::removeDecorationFromCurrentWord -> shouldBeOriginalPosition - 2 = "
+//             << m_cursor.position();
+    m_cursor.endEditBlock();
     return true;
 }
 
 bool EditorBackend::decorateCurrentSelection(const QString& decorationStart, const QString& decorationEnd)
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull() || !cursor.hasSelection())
+    if (m_cursor.isNull() || !m_cursor.hasSelection())
         return false;
 
-    const int originalSelectionStart = cursor.selectionStart();
-    const int originalSelectionEnd = cursor.selectionEnd();
-    cursor.beginEditBlock();
-    cursor.setPosition(selectionStart());
-    cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
-    cursor.insertText(decorationStart);
-    cursor.setPosition(originalSelectionEnd + decorationStart.length());
-    cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
-    cursor.insertText(decorationEnd);
-    cursor.setPosition(originalSelectionStart + decorationStart.length());
-    cursor.clearSelection();
-    cursor.setPosition(originalSelectionEnd + decorationStart.length(), QTextCursor::MoveMode::KeepAnchor);
-    cursor.endEditBlock();
+    const int originalSelectionStart = m_cursor.selectionStart();
+    const int originalSelectionEnd = m_cursor.selectionEnd();
+    m_cursor.beginEditBlock();
+    m_cursor.setPosition(selectionStart());
+    m_cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+    m_cursor.insertText(decorationStart);
+    m_cursor.setPosition(originalSelectionEnd + decorationStart.length());
+    m_cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+    m_cursor.insertText(decorationEnd);
+    m_cursor.setPosition(originalSelectionStart + decorationStart.length());
+    m_cursor.clearSelection();
+    m_cursor.setPosition(originalSelectionEnd + decorationStart.length(), QTextCursor::MoveMode::KeepAnchor);
+    m_cursor.endEditBlock();
     return true;
 }
 
 bool EditorBackend::removeDecorationFromCurrentSelection(const QString& decorationStart, const QString& decorationEnd)
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull() || !cursor.hasSelection() || !hasDecoration(decorationStart, decorationEnd))
+    if (m_cursor.isNull() || !m_cursor.hasSelection() || !hasDecoration(decorationStart, decorationEnd))
         return false;
 
-    const int originalSelectionStart = cursor.selectionStart();
-    const int originalSelectionEnd = cursor.selectionEnd();
-    cursor.beginEditBlock();
-    cursor.setPosition(selectionStart());
-    cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
-    deletePreviousNChars(&cursor, decorationStart.length());
-    cursor.setPosition(originalSelectionEnd - decorationStart.length());
-    cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
-    deleteNChars(&cursor, decorationEnd.length());
-    cursor.setPosition(originalSelectionStart - decorationStart.length());
-    cursor.clearSelection();
-    cursor.setPosition(originalSelectionEnd - decorationStart.length(), QTextCursor::MoveMode::KeepAnchor);
-    cursor.endEditBlock();
+    const int originalSelectionStart = m_cursor.selectionStart();
+    const int originalSelectionEnd = m_cursor.selectionEnd();
+    m_cursor.beginEditBlock();
+    m_cursor.setPosition(selectionStart());
+    m_cursor.movePosition(QTextCursor::MoveOperation::StartOfWord);
+    deletePreviousNChars(&m_cursor, decorationStart.length());
+    m_cursor.setPosition(originalSelectionEnd - decorationStart.length());
+    m_cursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+    deleteNChars(&m_cursor, decorationEnd.length());
+    m_cursor.setPosition(originalSelectionStart - decorationStart.length());
+    m_cursor.clearSelection();
+    m_cursor.setPosition(originalSelectionEnd - decorationStart.length(), QTextCursor::MoveMode::KeepAnchor);
+    m_cursor.endEditBlock();
     return true;
 }
 
 void EditorBackend::toggleDecoration(const QString& decorationStart, const QString& decorationEnd)
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return;
 
-    if (cursor.hasSelection())
+    if (m_cursor.hasSelection())
     {
         if (hasDecoration(decorationStart, decorationEnd))
         {
@@ -336,10 +341,9 @@ void EditorBackend::toggleDecoration(const QString& decorationStart, const QStri
     }
 }
 
-bool EditorBackend::bold() const
+bool EditorBackend::bold()
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return false;
 
     return hasDecoration("**", "**");
@@ -347,8 +351,7 @@ bool EditorBackend::bold() const
 
 void EditorBackend::setBold(bool bold)
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return;
     if (bold == EditorBackend::bold())
         return;
@@ -356,10 +359,9 @@ void EditorBackend::setBold(bool bold)
     emit boldChanged();
 }
 
-bool EditorBackend::italic() const
+bool EditorBackend::italic()
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return false;
 
     return hasDecoration("_", "_");
@@ -367,8 +369,7 @@ bool EditorBackend::italic() const
 
 void EditorBackend::setItalic(bool italic)
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return;
     if (italic == EditorBackend::italic())
         return;
@@ -376,10 +377,9 @@ void EditorBackend::setItalic(bool italic)
     emit italicChanged();
 }
 
-bool EditorBackend::inlineCode() const
+bool EditorBackend::inlineCode()
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return false;
 
     return hasDecoration("`", "`");
@@ -387,8 +387,7 @@ bool EditorBackend::inlineCode() const
 
 void EditorBackend::setInlineCode(bool inlineCode)
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return;
     if (inlineCode == EditorBackend::inlineCode())
         return;
@@ -396,10 +395,9 @@ void EditorBackend::setInlineCode(bool inlineCode)
     emit inlineCodeChanged();
 }
 
-bool EditorBackend::math() const
+bool EditorBackend::math()
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return false;
 
     return hasDecoration("$", "$");
@@ -407,8 +405,7 @@ bool EditorBackend::math() const
 
 void EditorBackend::setMath(bool math)
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return;
     if (math == EditorBackend::math())
         return;
@@ -418,10 +415,9 @@ void EditorBackend::setMath(bool math)
 
 int EditorBackend::fontSize() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return 0;
-    QTextCharFormat format = cursor.charFormat();
+    QTextCharFormat format = m_cursor.charFormat();
     return format.font().pointSize();
 }
 
@@ -430,14 +426,13 @@ void EditorBackend::setFontSize(int size)
     if (size <= 0)
         return;
 
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return;
 
-    if (!cursor.hasSelection())
-        cursor.select(QTextCursor::WordUnderCursor);
+    if (!m_cursor.hasSelection())
+        m_cursor.select(QTextCursor::WordUnderCursor);
 
-    if (cursor.charFormat().property(QTextFormat::FontPointSize).toInt() == size)
+    if (m_cursor.charFormat().property(QTextFormat::FontPointSize).toInt() == size)
         return;
 
     QTextCharFormat format;
@@ -487,9 +482,32 @@ void EditorBackend::loadRelativePath(const QString &relativePath)
 void EditorBackend::addLinkTemplate()
 {
     toggleDecoration("[", "]()");
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    if (m_cursor.isNull())
         return;
+}
+
+bool EditorBackend::cursorIsAt(QTextCursor* m_cursor, const QTextCursor::MoveOperation& moveOp)
+{
+    if (m_cursor->isNull())
+        return false;;
+
+    const auto originalPos = m_cursor->position();
+    m_cursor->movePosition(moveOp);
+    const bool result = originalPos == m_cursor->position();
+    m_cursor->setPosition(originalPos);
+    return result;
+}
+
+void EditorBackend::addCodeBlock()
+{
+    if (m_cursor.isNull())
+        return;
+    m_cursor.movePosition(QTextCursor::MoveOperation::EndOfLine);
+    m_cursor.insertText("\n```\n```");
+    qDebug() << "position before set" << m_cursor.position();
+    m_cursor.setPosition(m_cursor.position()-4);
+    setCursorPosition(m_cursor.position()-4);
+    qDebug() << "position after set" << m_cursor.position();
 }
 
 void EditorBackend::loadUrl(const QUrl &fileUrl)
@@ -577,18 +595,7 @@ void EditorBackend::reset()
 
 QTextCursor EditorBackend::textCursor() const
 {
-    QTextDocument *doc = textDocument();
-    if (!doc)
-        return QTextCursor();
-
-    QTextCursor cursor = QTextCursor(doc);
-    if (m_selectionStart != m_selectionEnd) {
-        cursor.setPosition(m_selectionStart);
-        cursor.setPosition(m_selectionEnd, QTextCursor::KeepAnchor);
-    } else {
-        cursor.setPosition(m_cursorPosition);
-    }
-    return cursor;
+    return m_cursor;
 }
 
 QTextDocument *EditorBackend::textDocument() const
@@ -601,36 +608,35 @@ QTextDocument *EditorBackend::textDocument() const
 
 void EditorBackend::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
 {
-    QTextCursor cursor = textCursor();
-    if (!cursor.hasSelection())
-        cursor.select(QTextCursor::WordUnderCursor);
-    cursor.mergeCharFormat(format);
+    if (!m_cursor.hasSelection())
+        m_cursor.select(QTextCursor::WordUnderCursor);
+    m_cursor.mergeCharFormat(format);
 }
 
-void EditorBackend::deleteNChars(QTextCursor* cursor, int n)
+void EditorBackend::deleteNChars(QTextCursor* m_cursor, int n)
 {
-    qDebug() << "EditorBackend::deleteNChars -> cursor.position() = "
-             << cursor->position();
+    qDebug() << "EditorBackend::deleteNChars -> m_cursor.position() = "
+             << m_cursor->position();
 
-    cursor->clearSelection();
-    qDebug() << "EditorBackend::deleteNChars -> cursor.position() = "
-             << cursor->position();
-    cursor->setPosition(cursor->position() + n, QTextCursor::MoveMode::KeepAnchor);
-    qDebug() << "EditorBackend::deleteNChars " << cursor->selectedText();
-    cursor->removeSelectedText();
+    m_cursor->clearSelection();
+    qDebug() << "EditorBackend::deleteNChars -> m_cursor.position() = "
+             << m_cursor->position();
+    m_cursor->setPosition(m_cursor->position() + n, QTextCursor::MoveMode::KeepAnchor);
+    qDebug() << "EditorBackend::deleteNChars " << m_cursor->selectedText();
+    m_cursor->removeSelectedText();
 }
 
-void EditorBackend::deletePreviousNChars(QTextCursor* cursor, int n)
+void EditorBackend::deletePreviousNChars(QTextCursor* m_cursor, int n)
 {
-    qDebug() << "EditorBackend::deletePreviousNChars -> cursor.position() = "
-             << cursor->position();
+    qDebug() << "EditorBackend::deletePreviousNChars -> m_cursor.position() = "
+             << m_cursor->position();
 
-    cursor->clearSelection();
-    qDebug() << "EditorBackend::deletePreviousNChars -> cursor.position() = "
-             << cursor->position();
-    cursor->setPosition(cursor->position() - n, QTextCursor::MoveMode::KeepAnchor);
-    qDebug() << "EditorBackend::deletePreviousNChars " << cursor->selectedText();
-    cursor->removeSelectedText();
+    m_cursor->clearSelection();
+    qDebug() << "EditorBackend::deletePreviousNChars -> m_cursor.position() = "
+             << m_cursor->position();
+    m_cursor->setPosition(m_cursor->position() - n, QTextCursor::MoveMode::KeepAnchor);
+    qDebug() << "EditorBackend::deletePreviousNChars " << m_cursor->selectedText();
+    m_cursor->removeSelectedText();
 }
 
 bool EditorBackend::modified() const

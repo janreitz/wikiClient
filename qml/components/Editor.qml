@@ -212,7 +212,10 @@ FocusScope {
         sequence: "Ctrl+L"
         onActivated: editorBackend.addLinkTemplate()
     }
-
+    Shortcut {
+        sequence: "Ctrl+Alt+C"
+        onActivated: editorBackend.addCodeBlock()
+    }
 
 
     Menu {

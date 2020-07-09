@@ -37,6 +37,7 @@ class EditorBackend : public QObject
 public:
 
     Q_INVOKABLE void addLinkTemplate();
+    Q_INVOKABLE void addCodeBlock();
 
     Q_INVOKABLE void loadUrl(const QUrl &fileUrl);
     Q_INVOKABLE void loadAbsolutePath(const QString &filePath);
@@ -68,16 +69,16 @@ public:
     Qt::Alignment alignment() const;
     void setAlignment(Qt::Alignment alignment);
 
-    bool bold() const;
+    bool bold();
     void setBold(bool bold);
 
-    bool italic() const;
+    bool italic();
     void setItalic(bool italic);
 
-    bool inlineCode() const;
+    bool inlineCode();
     void setInlineCode(bool inlineCode);
 
-    bool math() const;
+    bool math();
     void setMath(bool math);
 
     int fontSize() const;
@@ -127,24 +128,23 @@ private:
     QTextDocument *textDocument() const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
 
+    bool cursorIsAt(QTextCursor* cursor, const QTextCursor::MoveOperation& moveOp);
+
     void deleteNChars(QTextCursor* cursor, int n);
     void deletePreviousNChars(QTextCursor* cursor,int n);
 
-    bool hasDecoration(const QString& decorationStart, const QString& decorationEnd) const;
+    bool hasDecoration(const QString& decorationStart, const QString& decorationEnd);
     bool decorateCurrentWord(const QString& decorationStart, const QString& decorationEnd);
     bool decorateCurrentSelection(const QString& decorationStart, const QString& decorationEnd);
     bool removeDecorationFromCurrentWord(const QString& decorationStart, const QString& decorationEnd);
     bool removeDecorationFromCurrentSelection(const QString& decorationStart, const QString& decorationEnd);
     void toggleDecoration(const QString& decorationStart, const QString& decorationEnd);
 
-    std::optional<QString> currentWord() const;
+    std::optional<QString> currentWord();
 
     QQuickTextDocument *m_document;
+    QTextCursor m_cursor;
     MarkdownHighlighter m_markdownHighlighter;
-
-    int m_cursorPosition;
-    int m_selectionStart;
-    int m_selectionEnd;
 
     QFont m_font;
     QUrl m_fileUrl;
