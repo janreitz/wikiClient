@@ -51,8 +51,8 @@ private:
     QList<Edge*> m_edges;
     QTimer m_timer;
     static constexpr double m_repellingConstant = 1000;
-    static constexpr double m_maxRepellingForce = 100.0;
-    static constexpr double m_centerTetherSpringConstant = 1;
+    static constexpr double m_maxRepellingForce = 100;
+    static constexpr double m_centerTetherSpringConstant = 0;
 };
 
 #endif // NETWORK_H

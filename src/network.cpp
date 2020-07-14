@@ -47,10 +47,6 @@ void Network::initializeNetwork()
 Node* Network::getOrCreateNode(const QString& nodeName, bool docExists)
 {
     Q_ASSERT(!nodeName.isEmpty());
-    if (!docExists)
-    {
-        //qDebug() << "Network::getOrCreateNode -> creating node " + nodeName + " that does not exists";
-    }
     if (m_nodesByName.contains(nodeName))
     {
         return m_nodesByName[nodeName];
