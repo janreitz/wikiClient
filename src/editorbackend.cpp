@@ -499,9 +499,9 @@ void EditorBackend::tabPressed()
 
 void EditorBackend::addLinkTemplate()
 {
-    toggleDecoration("[", "]()");
     if (m_cursor.isNull())
         return;
+    toggleDecoration("[", "]()");
 }
 
 bool EditorBackend::cursorIsAt(QTextCursor* m_cursor, const QTextCursor::MoveOperation& moveOp)
