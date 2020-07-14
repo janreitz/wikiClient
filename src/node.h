@@ -9,7 +9,7 @@ class Node : public QObject
     Q_OBJECT
     Q_PROPERTY(QPointF position READ position WRITE setPosition NOTIFY positionChanged);
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
-    Q_PROPERTY(QString docExists READ docExists NOTIFY docExistsChanged)
+    Q_PROPERTY(bool docExists READ docExists NOTIFY docExistsChanged)
 
 public:
     explicit Node(const QPointF& position = QPointF(0,0),

@@ -68,7 +68,16 @@ Item {
                 objectName: "node"
                 x: nodeRoot.ListView.view.centerX + modelData.position.x - diameter/2
                 y: nodeRoot.ListView.view.centerY + modelData.position.y - diameter/2
-                color: mouseArea.containsMouse ? "#ffcc66" : "#99cc99"
+                color: {
+                    if (modelData.docExists)
+                    {
+                        return mouseArea.containsMouse ? "#ffcc66" : "#99cc99"
+                    }
+                    else
+                    {
+                        return mouseArea.containsMouse ? "blue" : "red"
+                    }
+                }
                 width: diameter
                 height: diameter
                 radius: diameter / 2
