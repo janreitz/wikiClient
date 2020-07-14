@@ -267,17 +267,17 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
     format = QTextCharFormat();
     format.setForeground(QColor("#3E9CD6"));
     format.setFontWeight(QFont::Bold);
-    format.setFontPointSize(defaultFontSize * 1.6);
-    _formats[H1] = format;
-    format.setFontPointSize(defaultFontSize * 1.5);
-    _formats[H2] = format;
-    format.setFontPointSize(defaultFontSize * 1.4);
-    _formats[H3] = format;
     format.setFontPointSize(defaultFontSize * 1.3);
-    _formats[H4] = format;
+    _formats[H1] = format;
+    format.setFontPointSize(defaultFontSize * 1.25);
+    _formats[H2] = format;
     format.setFontPointSize(defaultFontSize * 1.2);
-    _formats[H5] = format;
+    _formats[H3] = format;
+    format.setFontPointSize(defaultFontSize * 1.15);
+    _formats[H4] = format;
     format.setFontPointSize(defaultFontSize * 1.1);
+    _formats[H5] = format;
+    format.setFontPointSize(defaultFontSize * 1.05);
     _formats[H6] = format;
     format.setFontPointSize(defaultFontSize);
 
@@ -316,7 +316,8 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
     // set character format for code blocks
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
-    // format.setBackground(QColor(220, 220, 220));
+    format.setFontPointSize(defaultFontSize * 0.8);
+    //format.setBackground(QColor(220, 220, 220));
     _formats[CodeBlock] = format;
     _formats[InlineCodeBlock] = format;
 
@@ -344,6 +345,7 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
     // set character format for tables
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
+    format.setFontPointSize(defaultFontSize * 0.8);
     format.setForeground(QColor(100, 148, 73));
     _formats[Table] = std::move(format);
 
@@ -364,36 +366,43 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
 
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
+    format.setFontPointSize(defaultFontSize * 0.8);
     format.setForeground(QColor(249, 38, 114));
     _formats[CodeKeyWord] = std::move(format);
 
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
+    format.setFontPointSize(defaultFontSize * 0.8);
     format.setForeground(QColor(163, 155, 78));
     _formats[CodeString] = std::move(format);
 
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
+    format.setFontPointSize(defaultFontSize * 0.8);
     format.setForeground(QColor(117, 113, 94));
     _formats[CodeComment] = std::move(format);
 
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
+    format.setFontPointSize(defaultFontSize * 0.8);
     format.setForeground(QColor(84, 174, 191));
     _formats[CodeType] = std::move(format);
 
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
+    format.setFontPointSize(defaultFontSize * 0.8);
     format.setForeground(QColor(219, 135, 68));
     _formats[CodeOther] = std::move(format);
 
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
+    format.setFontPointSize(defaultFontSize * 0.8);
     format.setForeground(QColor(174, 129, 255));
     _formats[CodeNumLiteral] = std::move(format);
 
     format = QTextCharFormat();
     format.setFont(QFont("Fira Code Regular"));
+    format.setFontPointSize(defaultFontSize * 0.8);
     format.setForeground(QColor(1, 138, 15));
     _formats[CodeBuiltIn] = std::move(format);
 }
