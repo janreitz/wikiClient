@@ -35,6 +35,10 @@ class EditorBackend : public QObject
     Q_PROPERTY(bool modified READ modified NOTIFY modifiedChanged)
 
 public:
+    // Insert spaces, so the cursor position in the current line
+    // is moved right to the next multiple of the specified number of spaces
+    // specified in the settings-file
+    Q_INVOKABLE void tabPressed();
 
     Q_INVOKABLE void addLinkTemplate();
     Q_INVOKABLE void addCodeBlock();
@@ -129,6 +133,7 @@ private:
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
 
     bool cursorIsAt(QTextCursor* cursor, const QTextCursor::MoveOperation& moveOp);
+    int cursorPositionInLine(QTextCursor* cursor) const;
 
     void deleteNChars(QTextCursor* cursor, int n);
     void deletePreviousNChars(QTextCursor* cursor,int n);

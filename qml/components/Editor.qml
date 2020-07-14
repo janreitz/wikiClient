@@ -61,6 +61,11 @@ FocusScope {
             persistentSelection: true
             placeholderText: "Your Awesome Wiki Article"
 
+            Keys.onTabPressed: {
+                editorBackend.tabPressed()
+                event.accepted = true
+            }
+
             MouseArea {
                 id: mouseArea
                 objectName: "Editor::mouseArea"
@@ -216,8 +221,6 @@ FocusScope {
         sequence: "Ctrl+Alt+C"
         onActivated: editorBackend.addCodeBlock()
     }
-
-
     Menu {
         id: contextMenu
         objectName: "Editor::contextMenu"

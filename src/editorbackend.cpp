@@ -479,6 +479,24 @@ void EditorBackend::loadRelativePath(const QString &relativePath)
     loadUrl(QUrl::fromLocalFile(Settings::getInstance()->rootDirectory() + QDir::separator() + relativePath));
 }
 
+void EditorBackend::tabPressed()
+{
+    if (m_cursor.isNull())
+        return;
+
+    const int positionInLine = cursorPositionInLine(&m_cursor);
+    const int spacesPerTab = Settings::getInstance()->spacesPerTab();
+    const int modPosition = positionInLine % spacesPerTab;
+    int numberOfSpaces = spacesPerTab;
+    if (modPosition != 0)
+    {
+        numberOfSpaces = spacesPerTab - modPosition;
+    }
+    const QString spaceString(" ");
+    const QString spaces = spaceString.repeated(numberOfSpaces);
+    m_cursor.insertText(spaces);
+}
+
 void EditorBackend::addLinkTemplate()
 {
     toggleDecoration("[", "]()");
@@ -489,13 +507,25 @@ void EditorBackend::addLinkTemplate()
 bool EditorBackend::cursorIsAt(QTextCursor* m_cursor, const QTextCursor::MoveOperation& moveOp)
 {
     if (m_cursor->isNull())
-        return false;;
+        return false;
 
     const auto originalPos = m_cursor->position();
     m_cursor->movePosition(moveOp);
     const bool result = originalPos == m_cursor->position();
     m_cursor->setPosition(originalPos);
     return result;
+}
+
+int EditorBackend::cursorPositionInLine(QTextCursor *cursor) const
+{
+    Q_ASSERT(!cursor->isNull());
+    const int originalPosition = cursor->position();
+    const int originalSelectionStart = cursor->selectionStart();
+    cursor->movePosition(QTextCursor::MoveOperation::StartOfLine);
+    const int lineStartPosition = cursor->position();
+    cursor->setPosition(originalSelectionStart);
+    cursor->setPosition(originalPosition, QTextCursor::MoveMode::KeepAnchor);
+    return originalPosition - lineStartPosition;
 }
 
 void EditorBackend::addCodeBlock()

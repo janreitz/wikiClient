@@ -1,5 +1,6 @@
 {
     "rootDirectory" : "C:\\Users\\jan-r\\projects\\wikiClient\\demo",
+    "spacesPerTab" : 3,
     "colorTextDark" : "#1E1E1E",
     "colorTextDarkHighlight" : "#68217A",
     "colorTextLight" : "#cccccc",

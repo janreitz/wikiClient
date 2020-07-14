@@ -10,6 +10,7 @@ class Settings : public QObject
 
     Q_OBJECT
     Q_PROPERTY(QString rootDirectory READ rootDirectory WRITE setRootDirectory NOTIFY rootDirectoryChanged);
+    Q_PROPERTY(int spacesPerTab READ spacesPerTab WRITE setSpacesPerTab NOTIFY spacesPerTabChanged);
 
     // Theme
     Q_PROPERTY(QColor colorTextDark READ colorTextDark WRITE setColorTextDark NOTIFY colorTextDarkChanged)
@@ -27,6 +28,9 @@ public:
 
     QString rootDirectory() const;
     void setRootDirectory(const QString& rootDirectory);
+
+    int spacesPerTab() const;
+    void setSpacesPerTab(int spacesPerTab);
 
     // Theme
     QColor colorTextDark() const;
@@ -55,6 +59,7 @@ public:
 
 signals:
     void rootDirectoryChanged();
+    void spacesPerTabChanged();
     // Theme
     void colorTextDarkChanged();
     void colorTextDarkHighlightChanged();
@@ -70,6 +75,7 @@ private:
 
 
     QString m_rootDirectory;
+    int m_spacesPerTab;
 
     QColor m_colorTextDark;
     QColor m_colorTextDarkHighlight;

@@ -61,6 +61,16 @@ void Settings::setRootDirectory(const QString& rootDirectory) {
     m_rootDirectory = rootDirectory;
     emit rootDirectoryChanged();
 }
+
+int Settings::spacesPerTab() const
+{
+    return m_spacesPerTab;
+}
+
+void Settings::setSpacesPerTab(int spacesPerTab)
+{
+    m_spacesPerTab = spacesPerTab;
+}
 QColor Settings::colorTextDark() const{
     return m_colorTextDark;
 }
