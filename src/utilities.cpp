@@ -123,4 +123,19 @@ namespace Utilities
         return std::nullopt;
     }
 
+    QPointF elementwiseMultiplication(const QPointF &vec1, const QPointF &vec2)
+    {
+        return QPointF(vec1.x() * vec2.x(), vec1.y() * vec2.y());
+    }
+
+    double scalarProduct(const QPointF &vec1, const QPointF &vec2)
+    {
+        return vec1.x()*vec2.x() + vec1.y()*vec2.y();
+    }
+
+    QPointF vectorProjection(const QPointF &vec1, const QPointF &vec2)
+    {
+        return (scalarProduct(vec1, vec2) / scalarProduct(vec2, vec2)) * vec2;
+    }
+
 }

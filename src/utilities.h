@@ -21,6 +21,9 @@ namespace Utilities
     std::optional<QPointF> normalizeVector(const QPointF& vec);
     QPointF normalizeVectorOrRandomize(const QPointF& vec);
     QPointF randomNormalVector();
+    QPointF elementwiseMultiplication(const QPointF& vec1, const QPointF& vec2);
+    double scalarProduct(const QPointF& vec1, const QPointF& vec2);
+    QPointF vectorProjection(const QPointF& projectThis, const QPointF& ontoThis);
 }
 
 #endif // UTILITIES_H
