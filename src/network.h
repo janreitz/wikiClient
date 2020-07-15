@@ -56,7 +56,7 @@ private:
     static constexpr double m_maxRepellingForce = 1000;
     static constexpr double m_centerTetherSpringConstant = 100;
     static constexpr double m_centerTetherDamperConstant = 0;
-    static constexpr double m_airFrictionConstant = 0;//0.00001;
+    static constexpr double m_airFrictionConstant = 0.001;
 };
 
 #endif // NETWORK_H

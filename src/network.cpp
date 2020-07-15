@@ -136,9 +136,8 @@ void Network::tick()
         node->applyEdgeForces();
         // tether nodes to the origin
         node->applyForce((-1) * Utilities::normalizeVectorOrRandomize(node->position()) * m_centerTetherSpringConstant);
-        const double nodeVelocity = Utilities::vectorLength(node->velocity());
         //node->applyForce((-1) * m_centerTetherDamperConstant * Utilities::vectorProjection(node->velocity(), node->position()));
-        node->applyForce((-1) * m_airFrictionConstant * nodeVelocity * nodeVelocity * node->velocity());
+        node->applyForce((-1) * m_airFrictionConstant * Utilities::vectorLength(node->velocity()) * node->velocity());
     }
     for (auto node : m_nodes)
     {
