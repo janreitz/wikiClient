@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QElapsedTimer>
 #include <QQmlListProperty>
 #include "node.h"
 #include "edge.h"
@@ -50,9 +51,12 @@ private:
     QHash<QString, Node*> m_nodesByName;
     QList<Edge*> m_edges;
     QTimer m_timer;
-    static constexpr double m_repellingConstant = 1000;
-    static constexpr double m_maxRepellingForce = 100;
-    static constexpr double m_centerTetherSpringConstant = 0;
+    QElapsedTimer m_elapsedTimer;
+    static constexpr double m_repellingConstant = 100000;
+    static constexpr double m_maxRepellingForce = 1000;
+    static constexpr double m_centerTetherSpringConstant = 100;
+    static constexpr double m_centerTetherDamperConstant = 0;
+    static constexpr double m_airFrictionConstant = 0.00001;
 };
 
 #endif // NETWORK_H

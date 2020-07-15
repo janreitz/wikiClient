@@ -5,6 +5,7 @@
 
 Network::Network()
     : m_timer(this)
+    , m_elapsedTimer()
 {
     DBManager* theDBManager = DBManager::getInstance();
     if (theDBManager->isOpen())
@@ -105,7 +106,8 @@ Edge* Network::edgeAt(int index) const
 }
 
 void Network::tick()
-{
+{   
+    m_elapsedTimer.start();
     for (auto i = 0; i < m_nodes.count(); i++)
     {
         auto node_i = m_nodes.at(i);
@@ -134,6 +136,9 @@ void Network::tick()
         node->applyEdgeForces();
         // tether nodes to the origin
         node->applyForce((-1) * Utilities::normalizeVectorOrRandomize(node->position()) * m_centerTetherSpringConstant);
+        const double nodeVelocity = Utilities::vectorLength(node->velocity());
+        //node->applyForce((-1) * m_centerTetherDamperConstant * Utilities::vectorProjection(node->velocity(), node->position()));
+        node->applyForce((-1) * m_airFrictionConstant * nodeVelocity * nodeVelocity * node->velocity());
     }
     for (auto node : m_nodes)
     {
@@ -143,6 +148,7 @@ void Network::tick()
     {
         edge->updatePositions();
     }
+    qDebug() << "Network::tick -> call took " << m_elapsedTimer.elapsed() << " ms";
 }
 
 int Network::nodeCount(QQmlListProperty<Node>* list) {
