@@ -23,6 +23,8 @@ public:
     QPointF position() const;
     void setPosition(const QPointF& x);
 
+    QPointF velocity() const;
+
     QString name() const;
     bool docExists() const;
 

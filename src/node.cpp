@@ -38,6 +38,11 @@ void Node::setPosition(const QPointF& pos)
     emit positionChanged();
 }
 
+QPointF Node::velocity() const
+{
+    return m_velocity;
+}
+
 
 QString Node::name() const
 {
