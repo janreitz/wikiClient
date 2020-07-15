@@ -7,7 +7,8 @@
 Node::Node(const QPointF& position , const QString& name, const bool& docExists, QObject *parent)
     : QObject(parent)
     , m_position(position)
-    , m_currentForce()
+    , m_velocity(0,0)
+    , m_currentForce(0,0)
     , m_name(name)
     , m_docExists(docExists)
 {
@@ -70,9 +71,7 @@ void Node::applyEdgeForces()
             resultingEdgeForce -= (edge->normalizedVector() * edge->force());
         }
     }
-    Q_ASSERT(!isnan(resultingEdgeForce.x()) && !isnan(resultingEdgeForce.y()));
-    // TODO Figure out a smart way to access relevant other nodes to add repelling forces.
-    m_currentForce += resultingEdgeForce;
+    applyForce(resultingEdgeForce);
 }
 
 void Node::applyForce(const QPointF &force)
@@ -81,12 +80,14 @@ void Node::applyForce(const QPointF &force)
     m_currentForce += force;
 }
 
-void Node::updatePosition()
+void Node::doStep()
 {
     if (m_isBeingDragged)
         return;
 
-    setPosition(m_position + m_currentForce * Network::stepSize);
+    const QPointF acceleration = m_currentForce / m_mass;
+    m_velocity += acceleration * Network::stepSize;
+    setPosition(m_position + m_velocity * Network::stepSize);
     m_currentForce = QPointF();
 }
 

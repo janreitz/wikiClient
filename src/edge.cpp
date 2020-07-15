@@ -60,8 +60,7 @@ void Edge::slotTargetPositionChanged()
 
 double Edge::calcLength() const
 {
-    QPointF delta = m_target->position() - m_source->position();
-    const double length = Utilities::vectorLength(delta);
+    const double length = Utilities::vectorLength(m_target->position() - m_source->position());
     Q_ASSERT(!isnan(length));
     return length;
 }
@@ -69,8 +68,7 @@ double Edge::calcLength() const
 double Edge::force() const
 {
     const double springForce = (m_length - m_neutralLength) * m_springConstant;
-    // This is a problem, since the sampling rate is unkown
-    const double dampingForce = (m_length - m_oldLength) / Network::stepSize * m_dampingConstant;
+    const double dampingForce = ((m_length - m_oldLength) / Network::stepSize) * m_dampingConstant;
     const double resultingForce = springForce + dampingForce;
     Q_ASSERT(!isnan(resultingForce));
     return resultingForce;

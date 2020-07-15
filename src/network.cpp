@@ -133,11 +133,11 @@ void Network::tick()
     {
         node->applyEdgeForces();
         // tether nodes to the origin
-        node->applyForce(Utilities::normalizeVectorOrRandomize(node->position()) * -m_centerTetherSpringConstant);
+        node->applyForce((-1) * Utilities::normalizeVectorOrRandomize(node->position()) * m_centerTetherSpringConstant);
     }
     for (auto node : m_nodes)
     {
-        node->updatePosition();
+        node->doStep();
     }
     for (auto edge : m_edges)
     {

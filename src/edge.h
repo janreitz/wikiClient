@@ -40,7 +40,7 @@ private:
 
     double m_length, m_oldLength;
     double m_d_length_dt;
-    static constexpr double m_springConstant = 0.05;
+    static constexpr double m_springConstant = 5;
     static constexpr double m_dampingConstant = 0.1;
     static constexpr double m_neutralLength = 100;
     QPointF m_start, m_end;

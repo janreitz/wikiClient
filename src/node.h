@@ -29,7 +29,7 @@ public:
     void addEdge(Edge* edge);
     void applyEdgeForces();
     void applyForce(const QPointF& force);
-    void updatePosition();
+    void doStep();
 
 public slots:
     void dragStarted();
@@ -43,10 +43,13 @@ signals:
 private:
     bool m_isBeingDragged = false;
     QPointF m_position;
+    QPointF m_velocity;
     QPointF m_currentForce;
     QString m_name;
     bool m_docExists;
     QList<Edge*> m_edges;
+
+    static constexpr int m_mass = 1;
 };
 
 uint qHash(const Node& node);
