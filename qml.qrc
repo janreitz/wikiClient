@@ -52,5 +52,6 @@
         <file>resources/fonts/FiraCode-SemiBold.ttf</file>
         <file>resources/icons/git.svg</file>
         <file>qml/views/GitView.qml</file>
+        <file>resources/icons/owl_scribbles_reduced.ico</file>
     </qresource>
 </RCC>
