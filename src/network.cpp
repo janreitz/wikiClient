@@ -45,6 +45,12 @@ void Network::initializeNetwork()
     }
 }
 
+void Network::nodePositionChanged()
+{
+    // Update position in m_nodesByPosition
+    // I need a biHash!
+}
+
 Node* Network::getOrCreateNode(const QString& nodeName, bool docExists)
 {
     Q_ASSERT(!nodeName.isEmpty());
@@ -58,6 +64,8 @@ Node* Network::getOrCreateNode(const QString& nodeName, bool docExists)
         m_nodes << node;
         emit nodesChanged();
         m_nodesByName[nodeName] = node;
+        m_nodesByPosition.insert(discretizeNodePosition(node->position()), node);
+        connect(node, &Node::positionChanged, this, &Network::nodePositionChanged);
         return node;
     }
 }
@@ -106,31 +114,64 @@ Edge* Network::edgeAt(int index) const
 }
 
 void Network::tick()
-{   
+{
     m_elapsedTimer.start();
-    for (auto i = 0; i < m_nodes.count(); i++)
-    {
-        auto node_i = m_nodes.at(i);
-        const auto position_i = node_i->position();
 
-        for (auto j = i; j < m_nodes.count(); j++)
+    for (auto cell : m_nodesByPosition.keys())
+    {
+        auto nodesInCell = m_nodesByPosition.values(cell);
+
+        for (auto i = 0; i < nodesInCell.count(); i++)
         {
-            auto node_j = m_nodes.at(j);
-            const auto position_j = node_j->position();
-            const auto d_ij = position_i - position_j;
-            const auto length_d_ij = Utilities::vectorLength(d_ij);
-            const auto d_norm_ij = Utilities::normalizeVector(d_ij);
-            QPointF force;
-            if (d_norm_ij) {
-                Q_ASSERT(length_d_ij != 0); // A result from normalizeVector implies non-zero length
-                force = *d_norm_ij * qMin(m_repellingConstant / (length_d_ij * length_d_ij), m_maxRepellingForce);
-            } else {
-                force = m_maxRepellingForce * Utilities::randomNormalVector();
+            auto node_i = nodesInCell.at(i);
+            const auto position_i = node_i->position();
+
+            for (auto j = i; j < nodesInCell.count(); j++)
+            {
+                auto node_j = nodesInCell.at(j);
+                const auto position_j = node_j->position();
+                const auto d_ij = position_i - position_j;
+                const auto length_d_ij = Utilities::vectorLength(d_ij);
+                const auto d_norm_ij = Utilities::normalizeVector(d_ij);
+                QPointF force;
+                if (d_norm_ij) {
+                    Q_ASSERT(length_d_ij != 0); // A result from normalizeVector implies non-zero length
+                    force = *d_norm_ij * qMin(m_repellingConstant / (length_d_ij * length_d_ij), m_maxRepellingForce);
+                } else {
+                    force = m_maxRepellingForce * Utilities::randomNormalVector();
+                }
+                node_i->applyForce(force);
+                node_j->applyForce(-force);
             }
-            node_i->applyForce(force);
-            node_j->applyForce(-force);
         }
     }
+
+// Jeder mit jedem
+//    for (auto i = 0; i < m_nodes.count(); i++)
+//    {
+//        auto node_i = m_nodes.at(i);
+//        const auto position_i = node_i->position();
+
+//        for (auto j = i; j < m_nodes.count(); j++)
+//        {
+//            auto node_j = m_nodes.at(j);
+//            const auto position_j = node_j->position();
+//            const auto d_ij = position_i - position_j;
+//            const auto length_d_ij = Utilities::vectorLength(d_ij);
+//            const auto d_norm_ij = Utilities::normalizeVector(d_ij);
+//            QPointF force;
+//            if (d_norm_ij) {
+//                Q_ASSERT(length_d_ij != 0); // A result from normalizeVector implies non-zero length
+//                force = *d_norm_ij * qMin(m_repellingConstant / (length_d_ij * length_d_ij), m_maxRepellingForce);
+//            } else {
+//                force = m_maxRepellingForce * Utilities::randomNormalVector();
+//            }
+//            node_i->applyForce(force);
+//            node_j->applyForce(-force);
+//        }
+//    }
+
+
     for (auto node : m_nodes)
     {
         node->applyEdgeForces();
@@ -164,5 +205,12 @@ int Network::edgeCount(QQmlListProperty<Edge>* list) {
 
 Edge* Network::edgeAt(QQmlListProperty<Edge>* list, int index) {
     return reinterpret_cast< Network* >(list->data)->edgeAt(index);
+}
+
+QPointF Network::discretizeNodePosition(const QPointF &nodePosition)
+{
+    const int roundedX = round(nodePosition.x() / m_gridSize);
+    const int roundedY = round(nodePosition.y() / m_gridSize);
+    return QPointF(roundedX, roundedY);
 }
 

@@ -106,7 +106,7 @@ void Node::dragFinished()
     m_isBeingDragged = false;
 }
 
-uint qHash(const Node &node)
-{
-    return qHash(node.name());
-}
+//uint qHash(const Node &node)
+//{
+//    return qHash(node.name());
+//}

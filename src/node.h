@@ -54,6 +54,6 @@ private:
     static constexpr int m_mass = 1;
 };
 
-uint qHash(const Node& node);
+//uint qHash(const Node& node);
 
 #endif // NODE_H
