@@ -5,9 +5,13 @@ QT += quick \
 CONFIG += c++17
 
 LIBS += "C:/Users/jan-r/projects/libqgit2/build/bin/Debug/qgit2.lib"
-LIBS += "C:/Users/jan-r/projects/libqgit2/build/libgit2/Debug/git2.lib"
 INCLUDEPATH += "C:/Users/jan-r/projects/libqgit2/src"
+
+LIBS += "C:/Users/jan-r/projects/libqgit2/build/libgit2/Debug/git2.lib"
 INCLUDEPATH += "C:/Users/jan-r/projects/libgit2/include"
+
+LIBS += "C:/Users/jan-r/projects/PerformanceSuite/target/release/PerformanceSuite.lib"
+INCLUDEPATH += C:/Users/jan-r/projects/PerformanceSuite/source
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -58,6 +62,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     src/abstractdbclient.h \
+    #src/bihash.h \
+    #src/bihash.hpp \
     src/dbmanager.h \
     src/document.h \
     src/edge.h \

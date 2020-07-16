@@ -1,5 +1,6 @@
 #include "network.h"
 #include "utilities.h"
+#include "performancesuite.h"
 
 #include <QDebug>
 
@@ -128,12 +129,11 @@ Edge* Network::edgeAt(int index) const
 
 void Network::tick()
 {
-    m_elapsedTimer.start();
+    //m_elapsedTimer.start();
+    PerformanceSuite::getInstance()->tick("Network::tick");
 
     for (auto cell : m_nodesByPosition.uniqueKeys())
     {
-        // TODO influence from nodes in neighboring cells
-
         auto nodesInCell = m_nodesByPosition.values(cell);
 
         const auto neighboringCells = Utilities::getNeighboringCells(cell);
@@ -214,7 +214,8 @@ void Network::tick()
     {
         edge->updatePositions();
     }
-    qDebug() << "Network::tick -> call took " << m_elapsedTimer.elapsed() << " ms";
+    PerformanceSuite::getInstance()->tock("Network::tick");
+    //qDebug() << "Network::tick -> call took " << m_elapsedTimer.elapsed() << " ms";
 }
 
 int Network::nodeCount(QQmlListProperty<Node>* list) {
