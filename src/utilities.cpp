@@ -76,7 +76,7 @@ namespace Utilities
             return std::nullopt;
     }
 
-    double vectorLength(const QPointF &vec)
+    float vectorLength(const QPointF &vec)
     {
         return sqrt(pow(vec.x(), 2) + pow(vec.y(), 2));
     }
@@ -128,7 +128,7 @@ namespace Utilities
         return QPointF(vec1.x() * vec2.x(), vec1.y() * vec2.y());
     }
 
-    double scalarProduct(const QPointF &vec1, const QPointF &vec2)
+    float scalarProduct(const QPointF &vec1, const QPointF &vec2)
     {
         return vec1.x()*vec2.x() + vec1.y()*vec2.y();
     }
@@ -138,4 +138,30 @@ namespace Utilities
         return (scalarProduct(vec1, vec2) / scalarProduct(vec2, vec2)) * vec2;
     }
 
+    QList<QPoint> getNeighboringCells(const QPoint &cell)
+    {
+        static const QList<QPoint> neighborVectors{
+            {1,0},
+            {0,1},
+            {1,1},
+            {-1,0},
+            {0,-1},
+            {-1,-1},
+            {1,-1},
+            {-1,1}
+        };
+
+        QList<QPoint> neighborCells;
+        for (const auto neighborVector : neighborVectors)
+        {
+            neighborCells << cell + neighborVector;
+        }
+        return neighborCells;
+    }
+
+}
+
+uint qHash(const QPointF &point)
+{
+    return qHash(QPair<qreal, qreal>(point.x(), point.y()));
 }

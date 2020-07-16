@@ -48,7 +48,20 @@ void Network::initializeNetwork()
 void Network::nodePositionChanged()
 {
     // Update position in m_nodesByPosition
-    // I need a biHash!
+    auto node = qobject_cast<Node*>(sender());
+    if (node)
+        internallyUpdateNodePosition(node);
+}
+
+void Network::internallyUpdateNodePosition(Node* node)
+{
+    const auto discretizedOldPosition = discretizeNodePosition(node->oldPosition());
+    const auto discretizedNewPosition = discretizeNodePosition(node->position());
+    if (discretizedNewPosition != discretizedOldPosition)
+    {
+        m_nodesByPosition.remove(discretizedOldPosition, node);
+        m_nodesByPosition.insert(discretizedNewPosition, node);
+    }
 }
 
 Node* Network::getOrCreateNode(const QString& nodeName, bool docExists)
@@ -65,7 +78,7 @@ Node* Network::getOrCreateNode(const QString& nodeName, bool docExists)
         emit nodesChanged();
         m_nodesByName[nodeName] = node;
         m_nodesByPosition.insert(discretizeNodePosition(node->position()), node);
-        connect(node, &Node::positionChanged, this, &Network::nodePositionChanged);
+        connect(node, &Node::positionChangedByUser, this, &Network::nodePositionChanged);
         return node;
     }
 }
@@ -117,18 +130,30 @@ void Network::tick()
 {
     m_elapsedTimer.start();
 
-    for (auto cell : m_nodesByPosition.keys())
+    for (auto cell : m_nodesByPosition.uniqueKeys())
     {
+        // TODO influence from nodes in neighboring cells
+
         auto nodesInCell = m_nodesByPosition.values(cell);
 
-        for (auto i = 0; i < nodesInCell.count(); i++)
+        const auto neighboringCells = Utilities::getNeighboringCells(cell);
+        QList<Node*> nodesInNeighboringCells;
+        for (const auto neighboringCell : neighboringCells)
         {
-            auto node_i = nodesInCell.at(i);
+            nodesInNeighboringCells += m_nodesByPosition.values(neighboringCell);
+        }
+
+        // IDEA Andere Zellen durch Schwerpunkt annähern
+        auto relevantNodes = nodesInCell + nodesInNeighboringCells;
+
+        for (auto i = 0; i < relevantNodes.count(); i++)
+        {
+            auto node_i = relevantNodes.at(i);
             const auto position_i = node_i->position();
 
-            for (auto j = i; j < nodesInCell.count(); j++)
+            for (auto j = i; j < relevantNodes.count(); j++)
             {
-                auto node_j = nodesInCell.at(j);
+                auto node_j = relevantNodes.at(j);
                 const auto position_j = node_j->position();
                 const auto d_ij = position_i - position_j;
                 const auto length_d_ij = Utilities::vectorLength(d_ij);
@@ -183,6 +208,7 @@ void Network::tick()
     for (auto node : m_nodes)
     {
         node->doStep();
+        internallyUpdateNodePosition(node);
     }
     for (auto edge : m_edges)
     {
@@ -207,10 +233,10 @@ Edge* Network::edgeAt(QQmlListProperty<Edge>* list, int index) {
     return reinterpret_cast< Network* >(list->data)->edgeAt(index);
 }
 
-QPointF Network::discretizeNodePosition(const QPointF &nodePosition)
+QPoint Network::discretizeNodePosition(const QPointF &nodePosition)
 {
     const int roundedX = round(nodePosition.x() / m_gridSize);
     const int roundedY = round(nodePosition.y() / m_gridSize);
-    return QPointF(roundedX, roundedY);
+    return QPoint(roundedX, roundedY);
 }
 

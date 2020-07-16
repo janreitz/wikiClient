@@ -45,22 +45,23 @@ private:
     static Node* nodeAt(QQmlListProperty<Node>*, int index);
     static int edgeCount(QQmlListProperty<Edge>*);
     static Edge* edgeAt(QQmlListProperty<Edge>*, int index);
-    QPointF discretizeNodePosition(const QPointF& nodePosition);
+    QPoint discretizeNodePosition(const QPointF& nodePosition);
 
     Node* getOrCreateNode(const QString& nodeName, bool docExists);
+    void internallyUpdateNodePosition(Node* node);
 
     QList<Node*> m_nodes;
     QHash<QString, Node*> m_nodesByName;
-    QMultiHash<QPointF, Node*> m_nodesByPosition;
+    QMultiHash<QPoint, Node*> m_nodesByPosition;
     QList<Edge*> m_edges;
     QTimer m_timer;
     QElapsedTimer m_elapsedTimer;
-    static constexpr double m_repellingConstant = 100000;
-    static constexpr double m_maxRepellingForce = 1000;
-    static constexpr double m_centerTetherSpringConstant = 100;
-    static constexpr double m_centerTetherDamperConstant = 0;
-    static constexpr double m_airFrictionConstant = 0.001;
-    static constexpr double m_gridSize = 300;
+    static constexpr float m_repellingConstant = 100000.0F;
+    static constexpr float m_maxRepellingForce = 1000.0F;
+    static constexpr float m_centerTetherSpringConstant = 100.0F;
+    static constexpr float m_centerTetherDamperConstant = 0.0F;
+    static constexpr float m_airFrictionConstant = 0.001F;
+    static constexpr float m_gridSize = 33.0F;
 };
 
 #endif // NETWORK_H

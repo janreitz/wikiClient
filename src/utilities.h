@@ -17,13 +17,24 @@ namespace Utilities
     std::optional<QString> ensureLocalPathAndExists(const QString& filePathOrUrl);
     std::optional<QString> getRelativePathTo(const QString& dirPath, const QString& filePath);
 
-    double vectorLength(const QPointF& vec);
+    float vectorLength(const QPointF& vec);
     std::optional<QPointF> normalizeVector(const QPointF& vec);
     QPointF normalizeVectorOrRandomize(const QPointF& vec);
     QPointF randomNormalVector();
     QPointF elementwiseMultiplication(const QPointF& vec1, const QPointF& vec2);
-    double scalarProduct(const QPointF& vec1, const QPointF& vec2);
+    float scalarProduct(const QPointF& vec1, const QPointF& vec2);
     QPointF vectorProjection(const QPointF& projectThis, const QPointF& ontoThis);
+
+//    Gets all surrounding cells
+//    X X X
+//    X   X
+//    X X X
+    QList<QPoint> getNeighboringCells(const QPoint& cell);
+
+
+
 }
+
+uint qHash(const QPointF& point);
 
 #endif // UTILITIES_H

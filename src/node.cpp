@@ -7,6 +7,7 @@
 Node::Node(const QPointF& position , const QString& name, const bool& docExists, QObject *parent)
     : QObject(parent)
     , m_position(position)
+    , m_oldPosition(position)
     , m_velocity(0,0)
     , m_currentForce(0,0)
     , m_name(name)
@@ -33,9 +34,19 @@ QPointF Node::position() const
 void Node::setPosition(const QPointF& pos)
 {
     Q_ASSERT(!isnan(pos.x()) | !isnan(pos.y()));
+    m_oldPosition = m_position;
     m_position = pos;
     m_currentForce = QPointF();
     emit positionChanged();
+    // This signal is emitted for the Network to avoid
+    // signal slot overhead when the Network sets the position
+    if (m_isBeingDragged)
+        emit positionChangedByUser();
+}
+
+QPointF Node::oldPosition() const
+{
+    return m_oldPosition;
 }
 
 QPointF Node::velocity() const

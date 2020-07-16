@@ -23,6 +23,8 @@ public:
     QPointF position() const;
     void setPosition(const QPointF& x);
 
+    QPointF oldPosition() const;
+
     QPointF velocity() const;
 
     QString name() const;
@@ -39,12 +41,14 @@ public slots:
 
 signals:
     void positionChanged();
+    void positionChangedByUser();
     void nameChanged();
     void docExistsChanged();
 
 private:
     bool m_isBeingDragged = false;
     QPointF m_position;
+    QPointF m_oldPosition;
     QPointF m_velocity;
     QPointF m_currentForce;
     QString m_name;
