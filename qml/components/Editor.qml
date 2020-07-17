@@ -56,7 +56,6 @@ FocusScope {
             }
             textFormat: TextEdit.PlainText
             wrapMode: TextArea.Wrap
-            tabStopDistance: 4
             selectByMouse: true
             persistentSelection: true
             placeholderText: "Your Awesome Wiki Article"
@@ -68,6 +67,7 @@ FocusScope {
 
             MouseArea {
                 id: mouseArea
+                anchors.fill: parent
                 objectName: "Editor::mouseArea"
                 acceptedButtons: Qt.RightButton
                 onClicked: {
@@ -229,14 +229,20 @@ FocusScope {
             onClicked: openDialog.open()
         }
         MenuItem {
-            text: "Toggle Rendering"
-            onClicked: {
-                textArea.textFormat = (textArea.textFormat == TextEdit.MarkdownText) ? TextEdit.NativeRendering : TextEdit.MarkdownText;
-            }
+            text: "Rich Text Rendering"
+            onClicked: textArea.textFormat = TextEdit.RichText
         }
         MenuItem {
-            text: "forceActiveFocus"
-            onClicked: textArea.forceActiveFocus();
+            text: "Markdown Rendering"
+            onClicked: textArea.textFormat = TextEdit.MarkdownText
+        }
+        MenuItem {
+            text: "Native Rendering"
+            onClicked: textArea.textFormat = TextEdit.NativeRendering
+        }
+        MenuItem {
+            text: "Plain Text"
+            onClicked: textArea.textFormat = TextEdit.PlainText
         }
     }
 
