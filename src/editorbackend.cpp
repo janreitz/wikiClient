@@ -615,6 +615,16 @@ QString EditorBackend::getHTML() const
     QTextDocument intermediateDoc{};
 
     intermediateDoc.setMarkdown(textDocument()->toPlainText());
+    auto htmlString = intermediateDoc.toHtml();
+
+    // The absolute path lets me update the css without restarting the program
+    // The resource system seems to load the file at startup and does not react to changes
+    // :/resources/settings/default.css
+    if (const auto cssString = Utilities::stringFromFile("C:/Users/jan-r/projects/wikiClient/source/resources/settings/default.css"))
+    {
+        intermediateDoc.setDefaultStyleSheet(*cssString);
+    }
+    intermediateDoc.setHtml(htmlString);
     return intermediateDoc.toHtml();
 }
 

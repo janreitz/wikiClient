@@ -4,7 +4,8 @@ import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.3
 
 import Backend 1.0
-import QtWebView 1.1
+// import QtWebView 1.1
+import QtWebEngine 1.8
 
 FocusScope {
     id: root
@@ -24,7 +25,7 @@ FocusScope {
         editorBackend.loadRelativePath(relativePath)
     }
     function toggleEditRender() {
-        webViewPlaceholder.visible = !webViewPlaceholder.visible;
+        renderView.visible = !renderView.visible;
         scrollView.visible = !scrollView.visible;
     }
 
@@ -33,10 +34,19 @@ FocusScope {
 //        console.log(objectName + " active focus " + focusReceivedOrLost);
 //    }
 
-    WebView {
-        id: webViewPlaceholder
+    WebEngineView {
+        id: renderView
         anchors.fill: parent
         visible: false
+
+        onUrlChanged: console.log("renderView::onUrlChanged -> " + url)
+
+        onNavigationRequested: {
+            console.log("renderView::onNavigationRequested ->" +
+                        " request.url " + request.url +
+                        " request.toString()" + request.toString() +
+                        " request.navigationType" + request.navigationType)
+        }
 
         onVisibleChanged: {
             if (visible) {
@@ -277,6 +287,13 @@ FocusScope {
             text: "Toggle Render Edit"
             onClicked: {
                 toggleEditRender()
+            }
+        }
+        MenuItem {
+            text: "Display raw html"
+            onClicked: {
+                textArea.textFormat = TextEdit.PlainText
+                textArea.text = editorBackend.getHTML()
             }
         }
     }

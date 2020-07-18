@@ -1,7 +1,8 @@
 QT += quick \
         sql \
         widgets \
-        webview
+        webview \
+        webengine
 
 CONFIG += c++17
 

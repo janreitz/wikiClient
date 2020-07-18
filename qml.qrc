@@ -53,5 +53,10 @@
         <file>resources/icons/git.svg</file>
         <file>qml/views/GitView.qml</file>
         <file>resources/icons/owl_scribbles_reduced.ico</file>
+        <file>resources/settings/default.css</file>
+        <file>resources/3rdParty/markdown.css</file>
+        <file>resources/3rdParty/MARKDOWN-LICENSE.txt</file>
+        <file>resources/3rdParty/marked.js</file>
+        <file>resources/3rdParty/MARKED-LICENSE.txt</file>
     </qresource>
 </RCC>
