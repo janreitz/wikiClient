@@ -16,8 +16,6 @@
 #include <QTextDocument>
 #include <QDebug>
 
-const QSet<QString> EditorBackend::decorators{"**", "__", "~~"};
-
 EditorBackend::EditorBackend(QObject *parent)
     : QObject(parent)
     , m_document(nullptr)
@@ -614,7 +612,10 @@ bool EditorBackend::currentFileUrlExists() const
 
 QString EditorBackend::getHTML() const
 {
-    return textDocument()->toHtml();
+    QTextDocument intermediateDoc{};
+
+    intermediateDoc.setMarkdown(textDocument()->toPlainText());
+    return intermediateDoc.toHtml();
 }
 
 void EditorBackend::reset()

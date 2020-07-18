@@ -5,6 +5,7 @@
 #include <QQuickTextDocument>
 #include <QTextCharFormat>
 #include <optional>
+#include <memory>
 
 #include "markdownhighlighter.h"
 
@@ -155,8 +156,6 @@ private:
     QFont m_font;
     QUrl m_fileUrl;
     QString m_documentTitle;
-
-    static const QSet<QString> decorators;
 };
 
 #endif // EDITORBACKEND_H

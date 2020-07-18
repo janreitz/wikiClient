@@ -5,12 +5,13 @@ QT += quick \
 
 CONFIG += c++17
 
-LIBS += "C:/Users/jan-r/projects/libqgit2/build/bin/Debug/qgit2.lib"
-INCLUDEPATH += "C:/Users/jan-r/projects/libqgit2/src"
-
+# libgit2
 LIBS += "C:/Users/jan-r/projects/libqgit2/build/libgit2/Debug/git2.lib"
 INCLUDEPATH += "C:/Users/jan-r/projects/libgit2/include"
-
+# LibQGit2 - Qt Wrapper for libgit2
+LIBS += "C:/Users/jan-r/projects/libqgit2/build/bin/Debug/qgit2.lib"
+INCLUDEPATH += "C:/Users/jan-r/projects/libqgit2/src"
+# Timing for performance measurements
 LIBS += "C:/Users/jan-r/projects/PerformanceSuite/target/release/PerformanceSuite.lib"
 INCLUDEPATH += C:/Users/jan-r/projects/PerformanceSuite/source
 
