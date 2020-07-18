@@ -4,6 +4,7 @@ import "../components"
 import QtQuick.Controls 2.13
 import QtQuick.Dialogs.qml 1.0
 import QtQuick.Layouts 1.3
+import QtWebView 1.1
 
 Window {
     id: mainWindow

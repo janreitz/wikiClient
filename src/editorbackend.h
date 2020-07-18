@@ -49,6 +49,7 @@ public:
     Q_INVOKABLE void loadRelativePath(const QString &filePath);
     Q_INVOKABLE void saveAs(const QUrl &fileUrl);
     Q_INVOKABLE bool currentFileUrlExists() const;
+    Q_INVOKABLE QString getHTML() const;
 
     explicit EditorBackend(QObject *parent = nullptr);
 

@@ -612,6 +612,11 @@ bool EditorBackend::currentFileUrlExists() const
     return QFile::exists(m_fileUrl.toLocalFile());
 }
 
+QString EditorBackend::getHTML() const
+{
+    return textDocument()->toHtml();
+}
+
 void EditorBackend::reset()
 {
     emit fontFamilyChanged();

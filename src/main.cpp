@@ -17,6 +17,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QFontDatabase>
+#include <QtWebView/QtWebView>
 
 
 int main(int argc, char *argv[])
@@ -24,6 +25,7 @@ int main(int argc, char *argv[])
     LibQGit2::initLibQGit2();
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QtWebView::initialize();
     QGuiApplication app(argc, argv);
 
     app.setOrganizationName("Jan Reitz");

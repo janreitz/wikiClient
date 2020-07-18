@@ -1,6 +1,7 @@
 QT += quick \
         sql \
         widgets \
+        webview
 
 CONFIG += c++17
 

@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.3
 
 import Backend 1.0
+import QtWebView 1.1
 
 FocusScope {
     id: root
@@ -13,6 +14,7 @@ FocusScope {
     property alias text: textArea.text
     property alias modified: editorBackend.modified
     property alias fileName: editorBackend.fileName
+
     function loadFileAbsolute(absolutePath) {
         console.log(objectName + "::scrollView::loadFile -> " + absolutePath)
         editorBackend.loadAbsolutePath(absolutePath)
@@ -21,11 +23,39 @@ FocusScope {
         console.log(objectName + "::scrollView::loadFile -> " + relativePath)
         editorBackend.loadRelativePath(relativePath)
     }
+    function toggleEditRender() {
+        webViewPlaceholder.visible = !webViewPlaceholder.visible;
+        scrollView.visible = !scrollView.visible;
+    }
 
 //    onActiveFocusChanged: {
 //        var focusReceivedOrLost = activeFocus ? "received" : "lost"
 //        console.log(objectName + " active focus " + focusReceivedOrLost);
 //    }
+
+    WebView {
+        id: webViewPlaceholder
+        anchors.fill: parent
+        visible: false
+
+        onVisibleChanged: {
+            if (visible) {
+                loadHtml(editorBackend.getHTML());
+            }
+        }
+
+        MouseArea {
+            id: renderMouseArea
+            anchors.fill: parent
+            objectName: "Editor::renderMouseArea"
+            acceptedButtons: Qt.RightButton
+            onClicked: {
+                console.log(parent.objectName + "::mouseArea clicked")
+                if (mouse.button === Qt.RightButton)
+                    renderContextMenu.popup()
+            }
+        }
+    }
 
     ScrollView {
         id: scrollView
@@ -37,7 +67,6 @@ FocusScope {
 //            var focusReceivedOrLost = activeFocus ? "received" : "lost"
 //            console.log(objectName + " active focus " + focusReceivedOrLost);
 //        }
-
 
         TextArea {
             id: textArea
@@ -73,7 +102,7 @@ FocusScope {
                 onClicked: {
                     console.log(parent.objectName + "::mouseArea clicked")
                     if (mouse.button === Qt.RightButton)
-                        contextMenu.popup()
+                        editContextMenu.popup()
                 }
             }
         }
@@ -222,8 +251,8 @@ FocusScope {
         onActivated: editorBackend.addCodeBlock()
     }
     Menu {
-        id: contextMenu
-        objectName: "Editor::contextMenu"
+        id: editContextMenu
+        objectName: "Editor::editContextMenu"
         MenuItem {
             text: "Open ..."
             onClicked: openDialog.open()
@@ -244,8 +273,24 @@ FocusScope {
             text: "Plain Text"
             onClicked: textArea.textFormat = TextEdit.PlainText
         }
+        MenuItem {
+            text: "Toggle Render Edit"
+            onClicked: {
+                toggleEditRender()
+            }
+        }
     }
 
+    Menu {
+        id: renderContextMenu
+        objectName: "Editor::renderContextMenu"
+        MenuItem {
+            text: "Toggle Render Edit"
+            onClicked: {
+                toggleEditRender()
+            }
+        }
+    }
 
     FileDialog {
         id: openDialog
