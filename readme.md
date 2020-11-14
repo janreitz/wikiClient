@@ -3,15 +3,18 @@
 
 ## Features
 * ~~Backlinks~~
-![](screenshots/backlinks.png)
+
+![](screenshots/backlinks.PNG)
 * ~~Graphview (based on dynamics simulation)~~
-![](screenshots/graph-view.png)
+
+![](screenshots/graph-view.PNG)
 * ~~FTS based on SQLite~~
 * ~~MultiTile Support for editor~~
   * ~~Basic functionality including drag and drop~~
   * ~~Rejoin tiles~~
   * ~~Navigation via Keyboard shortcut~~
-![](screenshots/multi-tile-editing.png)
+  
+![](screenshots/multi-tile-editing.PNG)
 * ~~Syntax Highlighting~~
 * ~~JSON config, similar to VSCode or Windows Terminal~~
 * ~~Markdown Shortcut Support~~
